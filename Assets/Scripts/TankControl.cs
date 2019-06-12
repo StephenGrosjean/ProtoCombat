@@ -9,6 +9,7 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float shootingSpeed;
+    [SerializeField] private float knockBack;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private ForceMode forceMode;
     private Rigidbody rigid;
@@ -35,6 +36,7 @@ public class TankControl : MonoBehaviour
         if (Input.GetMouseButton(0) && time >= shootingSpeed) {
             time = 0;
             Instantiate(shell, firePoint.position, transform.rotation);
+            rigid.AddRelativeForce(Vector3.left * knockBack);
         }
 
     }
