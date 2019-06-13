@@ -8,10 +8,12 @@ public class Destructible : MonoBehaviour
     [SerializeField] int force;
     [SerializeField] float breakForce;
 
+    private FragmentManager fragmentManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        fragmentManager = GameObject.Find("FragmentManager").GetComponent<FragmentManager>();
     }
 
     // Update is called once per frame
@@ -25,9 +27,9 @@ public class Destructible : MonoBehaviour
             Destroy(collision.gameObject);
             EnableObjectAndExplode(collision.transform.position, collision.transform.GetComponent<Rigidbody>());
         }
-        else {
-            if(GetComponent<Rigidbody>().velocity.magnitude >= breakForce) {
-                EnableObjectAndBreak();
+        else if(collision.transform.tag != "Fragment"){
+            if(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point).magnitude >= breakForce) {
+                EnableObjectAndBreak(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point));
             }
         }
     }
@@ -36,16 +38,24 @@ public class Destructible : MonoBehaviour
         transform.DetachChildren();
         foreach (Transform cube in cubes) {
             cube.gameObject.SetActive(true);
-            cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude*force, forcePosition, 3);
+            fragmentManager.AddFragment(cube.gameObject);
+
+            if (collisionRigid.gameObject.GetComponent<TankShell>().TypeShell == TankShell.ShellType.Small) {
+                cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude * force, forcePosition, 3);
+            }
+            else{
+                cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude * force * 100, forcePosition, 1);
+            }
         }
         Destroy(gameObject);
     }
 
-    void EnableObjectAndBreak() {
+    void EnableObjectAndBreak(Vector3 collisionVelocity) {
         transform.DetachChildren();
         foreach (Transform cube in cubes) {
             cube.gameObject.SetActive(true);
-            cube.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;
+            fragmentManager.AddFragment(cube.gameObject);
+            cube.gameObject.GetComponent<Rigidbody>().velocity = collisionVelocity;
         }
         Destroy(gameObject);
     }

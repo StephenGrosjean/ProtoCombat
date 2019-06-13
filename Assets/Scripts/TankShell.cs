@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class TankShell : MonoBehaviour
 {
+
+    public enum ShellType {
+        Small,
+        Large
+    }
+    
     [SerializeField] private float speed = 10;
+    [SerializeField] private GameObject explosionParticle;
+    [SerializeField] private ShellType typeShell;
+    public ShellType TypeShell { get { return typeShell; } set { typeShell = value; } }
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +29,7 @@ public class TankShell : MonoBehaviour
     }
 
     void OnCollisionEnter() {
+        Instantiate(explosionParticle, transform.position, Quaternion.identity);
         Destroy(gameObject, 0.1f);
     }
 }

@@ -8,12 +8,12 @@ public class TankControl : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private float speed;
     [SerializeField] private float maxSpeed;
-    [SerializeField] private float shootingSpeed;
+    [SerializeField] private float quickShootingSpeed, bigShootingSpeed;
     [SerializeField] private float knockBack;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private ForceMode forceMode;
     private Rigidbody rigid;
-    private float time;
+    public float quickFireReloadTime, bigFireReloadTime;
 
     // Start is called before the first frame update
     void Start()
@@ -24,8 +24,12 @@ public class TankControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(time < shootingSpeed) {
-            time += Time.deltaTime;
+        if(quickFireReloadTime < quickShootingSpeed) {
+            quickFireReloadTime += Time.deltaTime;
+        }
+
+        if (bigFireReloadTime < bigShootingSpeed) {
+            bigFireReloadTime += Time.deltaTime;
         }
 
         if (rigid.velocity.magnitude <= maxSpeed) {
@@ -33,9 +37,16 @@ public class TankControl : MonoBehaviour
         }
         transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal"), 0)*rotationSpeed);
 
-        if (Input.GetMouseButton(0) && time >= shootingSpeed) {
-            time = 0;
+        if (Input.GetMouseButton(0) && quickFireReloadTime >= quickShootingSpeed) {
+            quickFireReloadTime = 0;
             Instantiate(shell, firePoint.position, transform.rotation);
+            rigid.AddRelativeForce(Vector3.left * knockBack);
+        }
+
+        if (Input.GetKeyDown(KeyCode.X) && bigFireReloadTime >= bigShootingSpeed) {
+            bigFireReloadTime = 0;
+            GameObject obj = Instantiate(shell, firePoint.position, transform.rotation);
+            obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
             rigid.AddRelativeForce(Vector3.left * knockBack);
         }
 
