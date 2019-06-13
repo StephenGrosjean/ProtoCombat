@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Fragment : MonoBehaviour
 {
-    [SerializeField] private float destroyTimer = 5;
 
     private Material material;
     private Color baseColor;
@@ -14,7 +13,6 @@ public class Fragment : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Destroy(gameObject, destroyTimer);
         material = gameObject.GetComponent<Renderer>().material;
         baseColor = material.color;
         

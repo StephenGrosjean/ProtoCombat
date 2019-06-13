@@ -7,6 +7,7 @@ public class Destructible : MonoBehaviour
     [SerializeField] Transform[] cubes;
     [SerializeField] int force;
     [SerializeField] float breakForce;
+    [SerializeField] private GameObject light;
 
     private FragmentManager fragmentManager;
 
@@ -26,6 +27,7 @@ public class Destructible : MonoBehaviour
         if(collision.transform.tag == "Shell") {
             Destroy(collision.gameObject);
             EnableObjectAndExplode(collision.transform.position, collision.transform.GetComponent<Rigidbody>());
+            
         }
         else if(collision.transform.tag != "Fragment"){
             if(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point).magnitude >= breakForce) {
@@ -36,10 +38,12 @@ public class Destructible : MonoBehaviour
 
     void EnableObjectAndExplode(Vector3 forcePosition, Rigidbody collisionRigid) {
         transform.DetachChildren();
+        float i = 0;
         foreach (Transform cube in cubes) {
+            i+=0.1f;
             cube.gameObject.SetActive(true);
             fragmentManager.AddFragment(cube.gameObject);
-
+            Destroy(cube.gameObject, 5 + i);
             if (collisionRigid.gameObject.GetComponent<TankShell>().TypeShell == TankShell.ShellType.Small) {
                 cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude * force, forcePosition, 3);
             }
@@ -47,16 +51,22 @@ public class Destructible : MonoBehaviour
                 cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude * force * 100, forcePosition, 1);
             }
         }
+        Destroy(light);
         Destroy(gameObject);
     }
 
     void EnableObjectAndBreak(Vector3 collisionVelocity) {
         transform.DetachChildren();
+        float i = 0;
+
         foreach (Transform cube in cubes) {
+            i += 0.1f;
             cube.gameObject.SetActive(true);
+            Destroy(cube.gameObject, 5 + i);
             fragmentManager.AddFragment(cube.gameObject);
             cube.gameObject.GetComponent<Rigidbody>().velocity = collisionVelocity;
         }
+        Destroy(light);
         Destroy(gameObject);
     }
 }
