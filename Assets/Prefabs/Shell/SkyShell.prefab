@@ -41,7 +41,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 9
   m_Type: 2
-  m_Color: {r: 0.18798423, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.0048570633, g: 0, b: 1, a: 1}
   m_Intensity: 30
   m_Range: 20
   m_SpotAngle: 30
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 6259658261396579625}
   - component: {fileID: 413829757959654854}
   m_Layer: 10
-  m_Name: SmallShell
+  m_Name: SkyShell
   m_TagString: Shell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -122,7 +122,7 @@ Transform:
   m_GameObject: {fileID: 2483962128604501344}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 8712511436481703472}
   m_Father: {fileID: 0}
@@ -153,7 +153,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e1ec878668d1a4c439bafb61cf55ae9b, type: 2}
+  - {fileID: 2100000, guid: e38e700424c7e3e4889de26dd09d9489, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -198,9 +198,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e017fec9f89d3c84a98452a269c63a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1500
-  explosionParticle: {fileID: 100008, guid: 95cb04c70e05847c0a30450e4c714700, type: 3}
+  speed: 2000
+  explosionParticle: {fileID: 100008, guid: 28ef9f9aa43ef84478629dc5ee3a2d47, type: 3}
   typeShell: 0
+  skyShell: 1
 --- !u!54 &6259658261396579625
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -235,7 +236,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e1ec878668d1a4c439bafb61cf55ae9b, type: 2}
+  - {fileID: 2100000, guid: e38e700424c7e3e4889de26dd09d9489, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

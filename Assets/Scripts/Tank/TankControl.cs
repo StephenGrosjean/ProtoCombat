@@ -19,6 +19,7 @@ public class TankControl : MonoBehaviour
     [SerializeField] private ForceMode moveForceMode;
 
     [Header("Trail Settings")]
+    [SerializeField] private bool spawnTrail;
     [SerializeField] private GameObject trailLight;
     [SerializeField] private float lightSpacing;
     [SerializeField] private int maxTrailLights = 100;
@@ -42,6 +43,7 @@ public class TankControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if(quickFireReloadTime < quickShootingSpeed) {
             quickFireReloadTime += Time.deltaTime;
         }
@@ -68,10 +70,11 @@ public class TankControl : MonoBehaviour
             bigFireReloadTime = 0;
             GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);
             obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
+            obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
             rigid.AddRelativeForce(Vector3.left * knockBack * 5);
         }
 
-        if(rigid.velocity.magnitude != 0) {
+        if(rigid.velocity.magnitude != 0 && spawnTrail) {
             spawnLightTimer += Time.deltaTime;
             if(spawnLightTimer > lightSpacing) {
                 spawnLightTimer = 0;
@@ -85,6 +88,12 @@ public class TankControl : MonoBehaviour
             trailLights.RemoveAt(0);
             Destroy(trailLights[0]);
         }
+
+        if (Input.GetKeyDown(KeyCode.B)) {
+            GetComponent<SkyShellSpawning>().StartBombardment();
+        }
+
+
 
     }
 

@@ -15,23 +15,28 @@ public class Fragment : MonoBehaviour
     {
         material = gameObject.GetComponent<Renderer>().material;
         baseColor = material.color;
-        
+        Invoke("DisableRigid", 5);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (destroy) {
+       /* if (destroy) {
             lerpTime += 0.1f;
             material.color = Color.Lerp(baseColor, new Color(baseColor.r, baseColor.g, baseColor.b, 0), lerpTime);
         }
 
         if(lerpTime >= 1) {
             Destroy(gameObject);
-        }
+        }*/
     }
 
-    public void Delete() {
-        destroy = true;
+
+    private void OnDestroy() {
+        GameObject.Find("FragmentManager").GetComponent<FragmentManager>().RemoveFragment(gameObject);
+    }
+
+    void DisableRigid() {
+        Destroy(GetComponent<Rigidbody>());
     }
 }

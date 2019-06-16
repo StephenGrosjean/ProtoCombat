@@ -42,8 +42,9 @@ public class Destructible : MonoBehaviour
         foreach (Transform cube in cubes) {
             i+=0.1f;
             cube.gameObject.SetActive(true);
+
             fragmentManager.AddFragment(cube.gameObject);
-            Destroy(cube.gameObject, 5 + i);
+            Destroy(cube.gameObject, 30 + i);
             if (collisionRigid.gameObject.GetComponent<TankShell>().TypeShell == TankShell.ShellType.Small) {
                 cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude * force, forcePosition, 3);
             }
@@ -62,7 +63,7 @@ public class Destructible : MonoBehaviour
         foreach (Transform cube in cubes) {
             i += 0.1f;
             cube.gameObject.SetActive(true);
-            Destroy(cube.gameObject, 5 + i);
+            Destroy(cube.gameObject, 30 + i);
             fragmentManager.AddFragment(cube.gameObject);
             cube.gameObject.GetComponent<Rigidbody>().velocity = collisionVelocity;
         }

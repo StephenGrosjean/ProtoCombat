@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 8c2214bdaaee4644c9f1db230a86b2f5
+guid: 0aa2eb047b62cb0449ff065973158c16
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
   externalObjects: {}
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -31,7 +31,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1
@@ -80,7 +80,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.01
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

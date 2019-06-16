@@ -1272,7 +1272,7 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0.079197645, g: 1, b: 0, a: 1}
+        key1: {r: 0.057249546, g: 0, b: 1, a: 1}
         key2: {r: 0.20784314, g: 0.011764706, b: 0, a: 0.4509804}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -1280,7 +1280,7 @@ ParticleSystem:
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 65535
+        ctime1: 65342
         ctime2: 65535
         ctime3: 0
         ctime4: 0
@@ -5983,15 +5983,15 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0.8398131, g: 1, b: 0.8117647, a: 1}
-        key2: {r: 0.18431371, g: 1, b: 0.1883833, a: 0}
-        key3: {r: 0.27537334, g: 0.62352943, b: 0.23529409, a: 0}
+        key1: {r: 0.8242015, g: 0.8117647, b: 1, a: 1}
+        key2: {r: 0.29038376, g: 0.18431371, b: 1, a: 0}
+        key3: {r: 0.31192365, g: 0.23529409, b: 0.62352943, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 12336
+        ctime1: 11951
         ctime2: 26985
         ctime3: 65535
         ctime4: 0
@@ -10697,7 +10697,7 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0.99215686, g: 1, b: 0.44705883, a: 1}
+        key1: {r: 0.5381401, g: 0.4470588, b: 1, a: 1}
         key2: {r: 0.20784314, g: 0.011764706, b: 0, a: 0.4509804}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -14138,7 +14138,7 @@ GameObject:
   - component: {fileID: 400008}
   - component: {fileID: -4539487337420803849}
   m_Layer: 0
-  m_Name: SmallShellBurst
+  m_Name: SkyShellBurst 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15453,15 +15453,15 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0.8398131, g: 1, b: 0.8117647, a: 1}
-        key2: {r: 0.18431371, g: 1, b: 0.1883833, a: 0}
-        key3: {r: 0.27537334, g: 0.62352943, b: 0.23529409, a: 0}
+        key1: {r: 0.8242015, g: 0.8117647, b: 1, a: 1}
+        key2: {r: 0.29038376, g: 0.18431371, b: 1, a: 0}
+        key3: {r: 0.31192365, g: 0.23529409, b: 0.62352943, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 12336
+        ctime1: 11951
         ctime2: 26985
         ctime3: 65535
         ctime4: 0

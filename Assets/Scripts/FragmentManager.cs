@@ -5,6 +5,7 @@ using UnityEngine;
 public class FragmentManager : MonoBehaviour
 {
     [SerializeField] private int fragmentMaxCount;
+   
 
     public List<GameObject> fragments;
    
@@ -25,6 +26,21 @@ public class FragmentManager : MonoBehaviour
     }
 
     public void AddFragment(GameObject frag) {
+        if(fragments.Count > fragmentMaxCount) {
+            int position = Random.Range(1, GetFragmentCount());
+            GameObject fragmentToDestroy = fragments[position].gameObject;
+            fragments.RemoveAt(position);
+            Destroy(fragmentToDestroy);
+        }
         fragments.Add(frag);
+
+    }
+
+    public int GetFragmentCount() {
+        return fragments.Count;
+    }
+
+    public void RemoveFragment(GameObject frag) {
+        fragments.Remove(frag);
     }
 }
