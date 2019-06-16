@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class TankControl : MonoBehaviour
 {
+    [SerializeField] private int playerID;
+
     [Header("Fire Settings")]
     [SerializeField] private GameObject smallShell;
     [SerializeField] private GameObject largeShell;
@@ -20,6 +22,7 @@ public class TankControl : MonoBehaviour
     [SerializeField] private ForceMode moveForceMode;
 
     [Header("UI Settings")]
+    [SerializeField] private bool useUI;
     [SerializeField] private Image reloadNormal;
     [SerializeField] private Image reloadLarge;
 
@@ -65,9 +68,10 @@ public class TankControl : MonoBehaviour
         transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal"), 0)*rotationSpeed);
 
         //RELOAD UI
-        reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
-        reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
-
+        if (useUI) {
+            reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
+            reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
+        }
 
         //FIRE
         if (Input.GetMouseButton(0) && quickFireReloadTime >= quickShootingSpeed) {
