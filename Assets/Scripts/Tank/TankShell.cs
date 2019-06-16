@@ -54,6 +54,11 @@ public class TankShell : MonoBehaviour
                 Instantiate(explosionParticle, transform.position, Quaternion.identity);
                 Destroy(gameObject, 0.1f);
             }
+            if(collision.gameObject.tag == "Tank") {
+                collision.gameObject.GetComponent<TankHealth>().TakeDamage(5);
+                Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                Destroy(gameObject, 0.1f);
+            }
 
             if (health > 0) {
                 rigid.velocity *= 2;
@@ -64,6 +69,7 @@ public class TankShell : MonoBehaviour
                 Instantiate(explosionParticle, transform.position, Quaternion.identity);
                 Destroy(gameObject, 0.1f);
             }
+            
         }
 
     }
