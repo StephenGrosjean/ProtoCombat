@@ -21,10 +21,6 @@ public class TankShell : MonoBehaviour
     private Rigidbody rigid;
     private GameObject launcherParent;
 
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + rigid.velocity * 10);
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -69,7 +65,11 @@ public class TankShell : MonoBehaviour
                 Instantiate(explosionParticle, transform.position, Quaternion.identity);
                 Destroy(gameObject, 0.1f);
             }
-            
+
+        }
+        else {
+            Instantiate(explosionParticle, transform.position, Quaternion.identity);
+            Destroy(gameObject, 0.1f);
         }
 
     }

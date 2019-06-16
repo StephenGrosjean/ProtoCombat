@@ -26,6 +26,11 @@ public class TankControl : MonoBehaviour
     [SerializeField] private Image reloadNormal;
     [SerializeField] private Image reloadLarge;
 
+    [Header("ForceField Settings")]
+    [SerializeField] private GameObject forceField;
+    [SerializeField] private Vector3 forcefieldSize;
+    [SerializeField] private float shieldActivationSpeed;
+    private bool shieldEnabled;
 
     /*[Header("Trail Settings")]
     [SerializeField] private bool spawnTrail;
@@ -42,6 +47,7 @@ public class TankControl : MonoBehaviour
 
     private Rigidbody rigid;
     private float quickFireReloadTime, bigFireReloadTime;
+    public float shieldActivationTime;
     
 
     // Start is called before the first frame update
@@ -54,7 +60,13 @@ public class TankControl : MonoBehaviour
     void Update()
     {
 
-        if(quickFireReloadTime < quickShootingSpeed) {
+        if (shieldActivationTime < shieldActivationSpeed && shieldEnabled) {
+            shieldActivationTime += Time.deltaTime;
+        }else if (!shieldEnabled && shieldActivationTime >= 0) {
+            shieldActivationTime -= Time.deltaTime;
+        }
+
+        if (quickFireReloadTime < quickShootingSpeed) {
             quickFireReloadTime += Time.deltaTime;
         }
 
@@ -76,7 +88,9 @@ public class TankControl : MonoBehaviour
         //FIRE
         if (Input.GetMouseButton(0) && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
-            Instantiate(smallShell, firePoint.position, transform.rotation);
+            GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
+            obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
+
             rigid.AddRelativeForce(Vector3.left * knockBack);
         }
 
@@ -90,27 +104,33 @@ public class TankControl : MonoBehaviour
         }
 
 
+        //FORCEFIELD
+        if (Input.GetKeyDown(KeyCode.F)) {
+            shieldEnabled = !shieldEnabled;
+        }
+        forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
+
         //TRAIL
-       /* if(rigid.velocity.magnitude != 0 && spawnTrail) {
-            spawnLightTimer += Time.deltaTime;
-            if(spawnLightTimer > lightSpacing) {
-                spawnLightTimer = 0;
-                GameObject lightTrail1 = Instantiate(trailLight, new Vector3(tracks[0].position.x, -2.25f, tracks[0].position.z), trailLight.transform.rotation);
-                GameObject lightTrail2 = Instantiate(trailLight, new Vector3(tracks[1].position.x, -2.25f, tracks[1].position.z), trailLight.transform.rotation);
-                trailLights.Add(lightTrail1);
-                trailLights.Add(lightTrail2);
+        /* if(rigid.velocity.magnitude != 0 && spawnTrail) {
+             spawnLightTimer += Time.deltaTime;
+             if(spawnLightTimer > lightSpacing) {
+                 spawnLightTimer = 0;
+                 GameObject lightTrail1 = Instantiate(trailLight, new Vector3(tracks[0].position.x, -2.25f, tracks[0].position.z), trailLight.transform.rotation);
+                 GameObject lightTrail2 = Instantiate(trailLight, new Vector3(tracks[1].position.x, -2.25f, tracks[1].position.z), trailLight.transform.rotation);
+                 trailLights.Add(lightTrail1);
+                 trailLights.Add(lightTrail2);
 
-                lightTrail1.transform.SetParent(trailContainer);
-                lightTrail2.transform.SetParent(trailContainer);
+                 lightTrail1.transform.SetParent(trailContainer);
+                 lightTrail2.transform.SetParent(trailContainer);
 
-            }
-        }
+             }
+         }
 
-        if(trailLights.Count > maxTrailLights) {
-            trailLights.RemoveAt(0);
-            Destroy(trailLights[0]);
-        }
-        */
+         if(trailLights.Count > maxTrailLights) {
+             trailLights.RemoveAt(0);
+             Destroy(trailLights[0]);
+         }
+         */
 
         //SKY BOMBING
         if (Input.GetKeyDown(KeyCode.B)) {
