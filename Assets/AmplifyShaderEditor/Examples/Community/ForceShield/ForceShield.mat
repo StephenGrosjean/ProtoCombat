@@ -42,7 +42,7 @@ Material:
     m_Floats:
     - _HitSize: 0.2
     - _HitTime: 0
-    - _IntersectIntensity: 0.44
+    - _IntersectIntensity: 0.68
     - _Opacity: 0.4
     - _ShieldAnimSpeed: 7.3
     - _ShieldDistortion: 0.0093

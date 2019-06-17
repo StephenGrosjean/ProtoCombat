@@ -88,6 +88,7 @@ public class TankControl : MonoBehaviour
         //FIRE
         if (Input.GetMouseButton(0) && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
             GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
@@ -97,6 +98,7 @@ public class TankControl : MonoBehaviour
         //LARGE FIRE
         if (Input.GetKeyDown(KeyCode.X) && bigFireReloadTime >= bigShootingSpeed) {
             bigFireReloadTime = 0;
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
             GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);
             obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
@@ -109,6 +111,7 @@ public class TankControl : MonoBehaviour
             shieldEnabled = !shieldEnabled;
         }
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
+
 
         //TRAIL
         /* if(rigid.velocity.magnitude != 0 && spawnTrail) {

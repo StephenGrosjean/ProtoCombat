@@ -27,7 +27,7 @@ public class LookAtCam : MonoBehaviour
         distance = Vector3.Distance(firstTarget.position, secondTarget.position);
 
         middleVector = distance/2 * Vector3.Normalize(secondTarget.position - firstTarget.position) + firstTarget.position;
-        Camera.main.gameObject.transform.position = new Vector3(middleVector.x+xOffset, Camera.main.gameObject.transform.position.y, middleVector.z);
+        transform.position = new Vector3(middleVector.x+xOffset, transform.position.y, middleVector.z);
         float fovCalc = 0.7f * (distance + fovOffset) + 21.8f;
         if (fovCalc > 65) {
             Camera.main.fieldOfView = fovCalc;
