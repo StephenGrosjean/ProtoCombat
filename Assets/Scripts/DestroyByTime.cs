@@ -1,19 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Destroy by time script
+/// </summary>
 public class DestroyByTime : MonoBehaviour
 {
-    [SerializeField] private float time = 2;
-    // Start is called before the first frame update
+    [SerializeField] private float time = 2; //Time to destroy
+
     void Start()
     {
         Destroy(gameObject, time);   
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

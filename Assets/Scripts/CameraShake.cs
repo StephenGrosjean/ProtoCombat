@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Script for Shaking the Camera
+
 public class CameraShake : MonoBehaviour
 {
-
+    
     public void ShakeCam(float duration, float magnitude) {
         StartCoroutine(Shake(duration, magnitude));
     }

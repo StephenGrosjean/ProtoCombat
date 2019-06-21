@@ -2,23 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script to make objects change in glow
+/// </summary>
+
 public class GlowSwitch : MonoBehaviour
 {
-    [SerializeField] private int glowDivider;
-    private Material material;
-    private Color baseColor;
+    [SerializeField] private int glowDivider; //Value to divide glow
+    private Material material; //Material of the object
+    private Color baseColor; //Base color of the object
 
-    // Start is called before the first frame update
     void Start()
     {
-        material = GetComponent<Renderer>().material;
-        baseColor = material.GetColor("_EmissionColor");
+        material = GetComponent<Renderer>().material; //Get material
+        baseColor = material.GetColor("_EmissionColor"); //Get emissionColor
         
     }
 
-    // Update is called once per frame
     void Update()
     {
-        material.SetColor("_EmissionColor", Color.Lerp(baseColor, baseColor / glowDivider, Mathf.Sin(Time.time)));
+        material.SetColor("_EmissionColor", Color.Lerp(baseColor, baseColor / glowDivider, Mathf.Sin(Time.time))); //Change Glow intensity
     }
 }

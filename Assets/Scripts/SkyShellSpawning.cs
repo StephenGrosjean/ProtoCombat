@@ -2,30 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script sky shell bombing
+/// </summary>
+
 public class SkyShellSpawning : MonoBehaviour
 {
-    [SerializeField] private Vector2 mapSize;
-    [SerializeField] private int shellNb;
-    [SerializeField] private GameObject shellPrefab;
-    [SerializeField] private float timer;
+    [SerializeField] private Vector2 mapSize; //Current Map Size
+    [SerializeField] private int shellNb; //How many shells to spawn
+    [SerializeField] private GameObject shellPrefab; //What to spawn
+    [SerializeField] private float timer; //Time interval between spawns
 
+    //Draw Map size
     private void OnDrawGizmosSelected() {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(Vector3.zero, new Vector3(mapSize.x, 10, mapSize.y));
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Start Bombardment
     public void StartBombardment() {
         StartCoroutine("Bombard");
     }

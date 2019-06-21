@@ -2,18 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Basic script to control global behaviour
+/// </summary>
 public class Game : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
+        //Quit game if press escape
         if (Input.GetKeyDown(KeyCode.Escape)) {
             Application.Quit();
         } 

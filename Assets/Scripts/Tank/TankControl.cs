@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Script for controling the tank
+/// </summary>
+
 public class TankControl : MonoBehaviour
 {
-    [SerializeField] private int playerID;
+    //[SerializeField] private int playerID; (NOT USED)
 
     [Header("Fire Settings")]
     [SerializeField] private GameObject smallShell;
@@ -23,15 +27,16 @@ public class TankControl : MonoBehaviour
 
     [Header("UI Settings")]
     [SerializeField] private bool useUI;
-    [SerializeField] private Image reloadNormal;
-    [SerializeField] private Image reloadLarge;
+    [SerializeField] private Image reloadNormal; //Reload image for the normal shell
+    [SerializeField] private Image reloadLarge; //Reload image for the big shell
 
     [Header("ForceField Settings")]
-    [SerializeField] private GameObject forceField;
-    [SerializeField] private Vector3 forcefieldSize;
-    [SerializeField] private float shieldActivationSpeed;
-    private bool shieldEnabled;
+    [SerializeField] private GameObject forceField; //Forcefield object
+    [SerializeField] private Vector3 forcefieldSize; //Size of the forceField
+    [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
+    private bool shieldEnabled; //Is the shield is active?
 
+    //NOT USED
     /*[Header("Trail Settings")]
     [SerializeField] private bool spawnTrail;
     [SerializeField] private GameObject trailLight;
@@ -45,38 +50,43 @@ public class TankControl : MonoBehaviour
     private List<GameObject> trailLights = new List<GameObject>();
     private float spawnLightTimer;*/
 
-    private Rigidbody rigid;
-    private float quickFireReloadTime, bigFireReloadTime;
-    public float shieldActivationTime;
+    private Rigidbody rigid; //Rigidbody of the tank
+    private float quickFireReloadTime, bigFireReloadTime; //Current reload time of each shot
+    private float shieldActivationTime; //Current shield activation time
     
 
-    // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        //Increase shield activation Time
         if (shieldActivationTime < shieldActivationSpeed && shieldEnabled) {
             shieldActivationTime += Time.deltaTime;
-        }else if (!shieldEnabled && shieldActivationTime >= 0) {
+        }
+        //Decrease shield activation Time
+        else if (!shieldEnabled && shieldActivationTime >= 0) {
             shieldActivationTime -= Time.deltaTime;
         }
 
+        //Increase small shell reloadTime
         if (quickFireReloadTime < quickShootingSpeed) {
             quickFireReloadTime += Time.deltaTime;
         }
 
+        //Increase big shell reloadTime
         if (bigFireReloadTime < bigShootingSpeed) {
             bigFireReloadTime += Time.deltaTime;
         }
 
+        //Add tank forward speed if under the maxSpeed limit
         if (rigid.velocity.magnitude <= maxSpeed) {
             rigid.AddRelativeForce(new Vector3(Input.GetAxis("Vertical"), 0, 0) * speed, moveForceMode);
         }
+
+        //Rotate the tank 
         transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal"), 0)*rotationSpeed);
 
         //RELOAD UI
@@ -113,7 +123,7 @@ public class TankControl : MonoBehaviour
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
 
 
-        //TRAIL
+        //TRAIL (NOT USED)
         /* if(rigid.velocity.magnitude != 0 && spawnTrail) {
              spawnLightTimer += Time.deltaTime;
              if(spawnLightTimer > lightSpacing) {
@@ -139,9 +149,6 @@ public class TankControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B)) {
             GetComponent<SkyShellSpawning>().StartBombardment();
         }
-
-
-
     }
 
 

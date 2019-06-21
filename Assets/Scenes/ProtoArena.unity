@@ -11503,9 +11503,6 @@ MonoBehaviour:
   secondTarget: {fileID: 1429634534}
   xOffset: -25
   fovOffset: 13
-  middleVector: {x: 0, y: 0, z: 0}
-  point: 0
-  distance: 0
 --- !u!4 &1831249980
 Transform:
   m_ObjectHideFlags: 0

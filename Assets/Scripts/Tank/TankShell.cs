@@ -2,66 +2,73 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Script for the Tank Shells
+/// </summary>
 public class TankShell : MonoBehaviour
 {
-
+    //Shell Type
     public enum ShellType {
         Small,
         Large
     }
     
-    [SerializeField] private float speed = 10;
-    [SerializeField] private GameObject explosionParticle;
-    [SerializeField] private ShellType typeShell;
-    [SerializeField] private bool skyShell;
-    public ShellType TypeShell { get { return typeShell; } set { typeShell = value; } }
 
-    private int health = 1;
+    [SerializeField] private float speed = 10; //Speed of the shell
+    [SerializeField] private GameObject explosionParticle; //Particle to spawn at shell destroy
+    [SerializeField] private ShellType typeShell; //Type of the shell
+    [SerializeField] private bool skyShell; //Is SkyShell ?
+    public ShellType TypeShell { get { return typeShell; } set { typeShell = value; } } //GetSet the shell Type
 
-    private Rigidbody rigid;
-    private GameObject launcherParent;
+    private int health = 1; //Health of the shell (Used of the bounce)  (AKA number of bounce)
 
+    private Rigidbody rigid; //Rigidbody of the shell
+    private GameObject launcherParent; //Who launched it?
 
-    // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
 
+        //Add force to launch shell depending of the skyshell parameter 
         if (!skyShell) {
             rigid.AddRelativeForce(-Vector3.left * speed);
-
+            health = -1;
         }
         else {
             rigid.AddRelativeForce(Vector3.down * speed);
 
         }
+        //Destroy the shell after 5 sec
         Destroy(gameObject, 5);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Collision detection
     void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject != launcherParent) {
+        //Check if is colliding with the launcher 
+        if (collision.gameObject != launcherParent || launcherParent == null) {
+            //Check with who it is colliding
             if(collision.gameObject.tag == "Destroyable") {
                 Instantiate(explosionParticle, transform.position, Quaternion.identity);
                 Destroy(gameObject, 0.1f);
             }
-            if(collision.gameObject.tag == "Tank") {
-                collision.gameObject.GetComponent<TankHealth>().TakeDamage(5);
+            else if(collision.gameObject.tag == "Tank") {
+                collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
+                Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                Destroy(gameObject, 0.1f);
+            }
+            else {
                 Instantiate(explosionParticle, transform.position, Quaternion.identity);
                 Destroy(gameObject, 0.1f);
             }
 
+            //Decrease life for the bounce
             if (health > 0) {
-                rigid.velocity *= 2;
+                rigid.velocity *= 2; //Double the velocity
                 health--;
 
             }
-            else {
+            else { //Destroy if no life (bounce) remain
                 Instantiate(explosionParticle, transform.position, Quaternion.identity);
                 Destroy(gameObject, 0.1f);
             }
@@ -73,11 +80,7 @@ public class TankShell : MonoBehaviour
         }
 
     }
-
-    Vector3 CalculateBounce(Vector3 contactVelocity, Vector3 contactNormal) {
-       return Vector3.Reflect(contactVelocity, contactNormal);
-    }
-
+     //Set the launcher Object
     public void SetLauncherParent(GameObject launcher) {
         launcherParent = launcher;
     }
