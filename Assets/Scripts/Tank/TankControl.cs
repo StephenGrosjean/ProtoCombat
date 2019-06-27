@@ -63,7 +63,7 @@ public class TankControl : MonoBehaviour
     void Update()
     {
         //Increase shield activation Time
-        if (shieldActivationTime < shieldActivationSpeed && shieldEnabled) {
+        if (shieldEnabled && shieldActivationTime < shieldActivationSpeed) {
             shieldActivationTime += Time.deltaTime;
         }
         //Decrease shield activation Time
@@ -83,11 +83,11 @@ public class TankControl : MonoBehaviour
 
         //Add tank forward speed if under the maxSpeed limit
         if (rigid.velocity.magnitude <= maxSpeed) {
-            rigid.AddRelativeForce(new Vector3(Input.GetAxis("Vertical"), 0, 0) * speed, moveForceMode);
+            rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
         }
 
         //Rotate the tank 
-        transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal"), 0)*rotationSpeed);
+        transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0)*rotationSpeed);
 
         //RELOAD UI
         if (useUI) {
@@ -96,7 +96,7 @@ public class TankControl : MonoBehaviour
         }
 
         //FIRE
-        if (Input.GetMouseButton(0) && quickFireReloadTime >= quickShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.ACTION) && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
             GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
@@ -106,7 +106,7 @@ public class TankControl : MonoBehaviour
         }
 
         //LARGE FIRE
-        if (Input.GetKeyDown(KeyCode.X) && bigFireReloadTime >= bigShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.ACTION2) && bigFireReloadTime >= bigShootingSpeed) {
             bigFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
             GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);
@@ -117,7 +117,7 @@ public class TankControl : MonoBehaviour
 
 
         //FORCEFIELD
-        if (Input.GetKeyDown(KeyCode.F)) {
+        if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
             shieldEnabled = !shieldEnabled;
         }
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
@@ -146,7 +146,7 @@ public class TankControl : MonoBehaviour
          */
 
         //SKY BOMBING
-        if (Input.GetKeyDown(KeyCode.B)) {
+        if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
             GetComponent<SkyShellSpawning>().StartBombardment();
         }
     }
