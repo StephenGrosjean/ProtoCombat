@@ -15,7 +15,6 @@ public class TankNetwork : MonoBehaviour
         if (!myView.IsMine) {
             GetComponent<TankControl>().enabled = false;
             GetComponent<SkyShellSpawning>().enabled = false;
-
         }
     }
 

@@ -17,7 +17,7 @@ public class TankControl : MonoBehaviour
 
     [Header("Part settings")]
     [SerializeField] private Transform turret;
-    [SerializeField] private Transform body;
+    //[SerializeField] private Transform body;
 
     [Header("Fire Settings")]
     [SerializeField] private GameObject smallShell;
@@ -98,7 +98,7 @@ public class TankControl : MonoBehaviour
         }
 
         //Rotate the tank 
-        //transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0)*rotationSpeed);
+        transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0)*rotationSpeed);
 
         turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
 
@@ -110,7 +110,7 @@ public class TankControl : MonoBehaviour
         }
 
         //FIRE
-        if (GameInput.GetInputDown(GameInput.InputType.ACTION) && quickFireReloadTime >= quickShootingSpeed) {
+        if (GameInput.GetAxisRaw(GameInput.AxisType.R_VERTICAL) > 0.0f && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
             //GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
@@ -121,7 +121,7 @@ public class TankControl : MonoBehaviour
         }
 
         //LARGE FIRE
-        if (GameInput.GetInputDown(GameInput.InputType.ACTION2) && bigFireReloadTime >= bigShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.ACTION) && bigFireReloadTime >= bigShootingSpeed) {
             bigFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
             //GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);

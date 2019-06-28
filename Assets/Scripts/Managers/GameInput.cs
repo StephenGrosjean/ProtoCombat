@@ -17,7 +17,6 @@ public static class GameInput {
         UP,
         DOWN,
         ACTION,
-        ACTION2,
         DEFENSE,
         DASH,
         PAUSE
@@ -68,47 +67,39 @@ public static class GameInput {
         {
             case InputType.LEFT:
                 result = GetInput(InputControlType.LeftStickLeft, timeType) ||
-                         GetInput(InputControlType.RightStickLeft, timeType) ||
                          GetInput(InputControlType.DPadLeft, timeType) ||
                          GetInput(KeyCode.D, timeType) ||
                          GetInput(KeyCode.RightArrow, timeType);
                 break;
             case InputType.RIGHT:
                 result = GetInput(InputControlType.LeftStickRight, timeType) ||
-                         GetInput(InputControlType.RightStickRight, timeType) ||
                          GetInput(InputControlType.DPadRight, timeType) ||
                          GetInput(KeyCode.A, timeType) ||
                          GetInput(KeyCode.LeftArrow, timeType);
                 break;
             case InputType.UP:
                 result = GetInput(InputControlType.LeftStickUp, timeType) ||
-                         GetInput(InputControlType.RightStickUp, timeType) ||
                          GetInput(InputControlType.DPadUp, timeType) ||
                          GetInput(KeyCode.W, timeType) ||
                          GetInput(KeyCode.UpArrow, timeType);
                 break;
             case InputType.DOWN:
                 result = GetInput(InputControlType.LeftStickDown, timeType) ||
-                         GetInput(InputControlType.RightStickDown, timeType) ||
                          GetInput(InputControlType.DPadDown, timeType) ||
                          GetInput(KeyCode.S, timeType) ||
                          GetInput(KeyCode.DownArrow, timeType);
                 break;
             case InputType.ACTION:
                 result = GetInput(InputControlType.Action2, timeType) ||
-                         GetInput(0, timeType); // Clique gauche
-                break;
-            case InputType.ACTION2:
-                result = GetInput(InputControlType.Action1, timeType) ||
-                         GetInput(KeyCode.R, timeType); // Clique gauche
+                         GetInput(KeyCode.Q, timeType);
                 break;
             case InputType.DEFENSE:
                 result = GetInput(InputControlType.RightTrigger, timeType) ||
-                         GetInput(KeyCode.F, timeType);
+                         GetInput(KeyCode.E, timeType);
                 break;
             case InputType.DASH:
                 result = GetInput(InputControlType.LeftTrigger, timeType) ||
-                         GetInput(1, timeType); // Click droit
+                         GetInput(KeyCode.F, timeType);
                 break;
             case InputType.PAUSE:
                 result = GetInput(InputControlType.Start, timeType) ||
