@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
+using System.IO;
+
 
 /// <summary>
 /// Script for controling the tank
@@ -58,6 +62,9 @@ public class TankControl : MonoBehaviour
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
+        reloadNormal = GameObject.Find("ReloadMachineGun").GetComponent<Image>();
+        reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
+
     }
 
     void Update()
@@ -99,7 +106,8 @@ public class TankControl : MonoBehaviour
         if (GameInput.GetInputDown(GameInput.InputType.ACTION) && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
-            GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
+            //GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"), firePoint.position, transform.rotation);
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
             rigid.AddRelativeForce(Vector3.left * knockBack);
@@ -109,7 +117,9 @@ public class TankControl : MonoBehaviour
         if (GameInput.GetInputDown(GameInput.InputType.ACTION2) && bigFireReloadTime >= bigShootingSpeed) {
             bigFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
-            GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);
+            //GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), firePoint.position, transform.rotation);
+
             obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
             rigid.AddRelativeForce(Vector3.left * knockBack * 5);
@@ -146,9 +156,9 @@ public class TankControl : MonoBehaviour
          */
 
         //SKY BOMBING
-        if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
+       /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
             GetComponent<SkyShellSpawning>().StartBombardment();
-        }
+        }*/
     }
 
 
