@@ -176,36 +176,28 @@ public static class GameInput {
                     deltaMove = device.GetControl(InputControlType.LeftStickX).Value;
                 else if (device.GetControl(InputControlType.DPadX).IsPressed)
                     deltaMove = device.GetControl(InputControlType.DPadX).Value;
-                else if(Mathf.Abs(Input.GetAxis("Horizontal")) > deadZoneKeyboard)
-                    deltaMove = Input.GetAxis("Horizontal");
+                else if(Mathf.Abs(Input.GetAxis("L_Horizontal")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxis("L_Horizontal");
                 break;
             case AxisType.L_VERTICAL:
                 if (device.GetControl(InputControlType.LeftStickY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.LeftStickY).Value;
                 else if (device.GetControl(InputControlType.DPadY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.DPadY).Value;
-                else if(Mathf.Abs(Input.GetAxis("Vertical")) > deadZoneKeyboard)
-                    deltaMove = Input.GetAxis("Vertical");
+                else if(Mathf.Abs(Input.GetAxis("L_Vertical")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxis("L_Vertical");
                 break;
             case AxisType.R_HORIZONTAL:
                 if (device.GetControl(InputControlType.RightStickX).IsPressed)
                     deltaMove = device.GetControl(InputControlType.RightStickX).Value;
-                else
-                {
-                    float value = GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.x;
-                    if (Mathf.Abs(value) > 0.5f)
-                        deltaMove = value;
-                }
+                else if (Mathf.Abs(Input.GetAxis("R_Horizontal")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxis("R_Horizontal");
                 break;
             case AxisType.R_VERTICAL:
                 if (device.GetControl(InputControlType.LeftStickY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.RightStickY).Value;
-                else
-                {
-                    float value = GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.y;
-                    if (Mathf.Abs(value) > 0.5f)
-                        deltaMove = value;
-                }
+                else if (Mathf.Abs(Input.GetAxis("R_Vertical")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxis("R_Vertical");
                 break;
         }
         if (logInput && deltaMove != 0.0f)
@@ -225,38 +217,28 @@ public static class GameInput {
                     deltaMove = device.GetControl(InputControlType.LeftStickX).RawValue;
                 else if (device.GetControl(InputControlType.DPadX).IsPressed)
                     deltaMove = device.GetControl(InputControlType.DPadX).RawValue;
-                else if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > deadZoneKeyboard)
-                    deltaMove = Input.GetAxisRaw("Horizontal");
+                else if (Mathf.Abs(Input.GetAxisRaw("L_Horizontal")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxisRaw("L_Horizontal");
                 break;
             case AxisType.L_VERTICAL:
                 if (device.GetControl(InputControlType.LeftStickY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.LeftStickY).RawValue;
                 else if (device.GetControl(InputControlType.DPadY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.DPadY).RawValue;
-                else if (Mathf.Abs(Input.GetAxisRaw("Vertical")) > deadZoneKeyboard)
-                    deltaMove = Input.GetAxisRaw("Vertical");
+                else if (Mathf.Abs(Input.GetAxisRaw("L_Vertical")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxisRaw("L_Vertical");
                 break;
             case AxisType.R_HORIZONTAL:
                 if (device.GetControl(InputControlType.RightStickX).IsPressed)
                     deltaMove = device.GetControl(InputControlType.RightStickX).RawValue;
-                else if (Mathf.Abs(GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.x) > 0.5f)
-                {
-                    if (GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.x > 0.0f)
-                        deltaMove = 1.0f;
-                    else
-                        deltaMove = -1.0f;
-                }
+                else if (Mathf.Abs(Input.GetAxisRaw("R_Horizontal")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxisRaw("R_Horizontal");
                 break;
             case AxisType.R_VERTICAL:
                 if (device.GetControl(InputControlType.LeftStickY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.RightStickY).RawValue;
-                else if (Mathf.Abs(GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.y) > 0.5f)
-                {
-                    if(GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.y > 0.0f)
-                        deltaMove = 1.0f;
-                    else
-                        deltaMove = -1.0f;
-                }
+                else if (Mathf.Abs(Input.GetAxisRaw("R_Vertical")) > deadZoneKeyboard)
+                    deltaMove = Input.GetAxisRaw("R_Vertical");
                 break;
         }
         if (logInput && deltaMove != 0.0f)
