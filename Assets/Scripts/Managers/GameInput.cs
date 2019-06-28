@@ -190,14 +190,22 @@ public static class GameInput {
             case AxisType.R_HORIZONTAL:
                 if (device.GetControl(InputControlType.RightStickX).IsPressed)
                     deltaMove = device.GetControl(InputControlType.RightStickX).Value;
-                else if (Mathf.Abs(GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.x) > 0.5f)
-                    deltaMove = GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.x;
+                else
+                {
+                    float value = GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.x;
+                    if (Mathf.Abs(value) > 0.5f)
+                        deltaMove = value;
+                }
                 break;
             case AxisType.R_VERTICAL:
                 if (device.GetControl(InputControlType.LeftStickY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.RightStickY).Value;
-                else if (Mathf.Abs(GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.y) > 0.5f)
-                    deltaMove = GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.y;
+                else
+                {
+                    float value = GetDirection(DirectionType.R_INPUT, new Vector2()).normalized.y;
+                    if (Mathf.Abs(value) > 0.5f)
+                        deltaMove = value;
+                }
                 break;
         }
         if (logInput && deltaMove != 0.0f)
