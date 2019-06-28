@@ -15,6 +15,10 @@ public class TankControl : MonoBehaviour
 {
     //[SerializeField] private int playerID; (NOT USED)
 
+    [Header("Part settings")]
+    [SerializeField] private Transform turret;
+    [SerializeField] private Transform body;
+
     [Header("Fire Settings")]
     [SerializeField] private GameObject smallShell;
     [SerializeField] private GameObject largeShell;
@@ -94,7 +98,10 @@ public class TankControl : MonoBehaviour
         }
 
         //Rotate the tank 
-        transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0)*rotationSpeed);
+        //transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0)*rotationSpeed);
+
+        turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
+
 
         //RELOAD UI
         if (useUI) {
@@ -107,7 +114,7 @@ public class TankControl : MonoBehaviour
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
             //GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"), firePoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"), firePoint.position, turret.rotation);
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
             rigid.AddRelativeForce(Vector3.left * knockBack);
