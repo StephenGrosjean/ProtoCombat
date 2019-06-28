@@ -9458,7 +9458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 663a2d11fcf07bf41b866afd7dda9c31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fragmentMaxCount: 500
+  fragmentMaxCount: 100
   fragments: []
 --- !u!4 &1409182542
 Transform:

@@ -1815,7 +1815,6 @@ GameObject:
   - component: {fileID: 5248441054663291495}
   - component: {fileID: 6343971566616367388}
   - component: {fileID: 2691118871404932236}
-  - component: {fileID: 3805215731915607087}
   m_Layer: 13
   m_Name: Cube
   m_TagString: Destroyable
@@ -2004,7 +2003,7 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 1
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 2691118871404932236}
@@ -2026,22 +2025,6 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
---- !u!114 &3805215731915607087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5248441054663291492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64179f3720bbfe947b7724caa67b7c1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 1
-  m_TeleportIfDistanceGreaterThan: 5
 --- !u!1 &5303851845185564108
 GameObject:
   m_ObjectHideFlags: 0
