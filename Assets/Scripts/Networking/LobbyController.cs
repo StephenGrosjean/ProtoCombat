@@ -58,7 +58,7 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         PhotonNetwork.LeaveRoom();
     }
 
-    //Called when a player enter or leave the lobby (Can only be called when connected to the lobby)
+    //Called when a player enter or leave the lobby (Can only be called when connected to the lobby).
     public override void OnRoomListUpdate(List<RoomInfo> roomList) {
         foreach (RoomInfo room in roomList) {
             if (room.PlayerCount > 0 && room.IsOpen && room.PlayerCount < roomSize) {
