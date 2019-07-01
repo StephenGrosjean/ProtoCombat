@@ -4,17 +4,25 @@ using Photon.Pun;
 using Photon.Realtime;
 
 public class NetworkManager : MonoBehaviourPunCallbacks {
-    //[SerializeField] private List<RoomInfo> listRooms;
-    //[SerializeField] private int maxRooms;
+    [SerializeField] private List<GameObject> enableOnConnection;
 
     void Start() {
-        PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster() {
         base.OnConnectedToMaster();
 
+        foreach(GameObject gm in enableOnConnection) {
+            gm.SetActive(true);
+        }
 
-        Debug.Log("Connected to master");
+        Debug.Log("Connected to " + PhotonNetwork.CloudRegion + " server");
+    }
+
+    public override void OnDisconnected(DisconnectCause cause) {
+        foreach (GameObject gm in enableOnConnection) {
+            gm.SetActive(false);
+        }
     }
 }

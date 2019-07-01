@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -17,6 +19,11 @@ public class MainMenuController : MonoBehaviour
         optionsPanel.SetActive(false);
 
         subTitle.text = onlineText;
+        PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = PlayerPrefs.GetString("Region");
+
+        //        PhotonNetwork.ConnectToRegion(PlayerPrefs.GetString("Region"));
+        PhotonNetwork.ConnectUsingSettings();
+
     }
 
     public void GotoLocal() {
@@ -36,10 +43,13 @@ public class MainMenuController : MonoBehaviour
 
         subTitle.text = mainMenuText;
 
+        if (PhotonNetwork.IsConnectedAndReady) {
+            PhotonNetwork.Disconnect();
+        }
     }
 
     public void GotoOptions() {
-        onlinePanel.SetActive(true);
+        onlinePanel.SetActive(false);
         localPanel.SetActive(false);
         mainMenuPanel.SetActive(false);
         optionsPanel.SetActive(true);

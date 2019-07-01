@@ -6,7 +6,7 @@ using TMPro;
 
 public class LobbyController : MonoBehaviourPunCallbacks {
 
-    [SerializeField] private GameObject matchmakingButton, cancelButton; //UI Buttons
+    [SerializeField] private GameObject matchmakingButton, cancelButton, disconnectButton; //UI Buttons
     [SerializeField] private int roomSize; //Size of the room to be created
     [SerializeField] private List<GameObject> roomsObj = new List<GameObject>(); //List of rooms
     [SerializeField] private GameObject roomPrefab; //Room prefab for the list
@@ -26,6 +26,7 @@ public class LobbyController : MonoBehaviourPunCallbacks {
     //Function for the matchmaking button
     public void RandomMatchmaking() {
         matchmakingButton.SetActive(false);
+        disconnectButton.SetActive(false);
         cancelButton.SetActive(true);
         PhotonNetwork.JoinRandomRoom(); //Join a random room 
         Debug.Log("Started matchmaking");
@@ -54,6 +55,7 @@ public class LobbyController : MonoBehaviourPunCallbacks {
     //Cancel function for the cancel Button
     public void DelayCancel() {
         cancelButton.SetActive(false);
+        disconnectButton.SetActive(true);
         matchmakingButton.SetActive(true);
         PhotonNetwork.LeaveRoom();
     }

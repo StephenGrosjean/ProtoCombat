@@ -14,7 +14,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MultiArena.unity
     guid: d67468fa5e7d0a640bcca4b0597b17ca
-  - enabled: 1
-    path: Assets/Scenes/ProtoArena.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}
