@@ -71,7 +71,7 @@ public class TankControl : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //Increase shield activation Time
         if (shieldEnabled && shieldActivationTime < shieldActivationSpeed) {
@@ -100,7 +100,7 @@ public class TankControl : MonoBehaviour
         //Rotate the tank 
         transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0)*rotationSpeed);
 
-        turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
+        //turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
 
 
         //RELOAD UI
@@ -117,7 +117,7 @@ public class TankControl : MonoBehaviour
             GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"), firePoint.position, turret.rotation);
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
-            rigid.AddRelativeForce(Vector3.left * knockBack);
+            rigid.AddRelativeForce(-Vector3.left * knockBack);
         }
 
         //LARGE FIRE
@@ -129,7 +129,7 @@ public class TankControl : MonoBehaviour
 
             obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
-            rigid.AddRelativeForce(Vector3.left * knockBack * 5);
+            rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
         }
 
 
