@@ -3,6 +3,9 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEngine.UI;
+using System.Collections;
+
 
 public class LobbyController : MonoBehaviourPunCallbacks {
 
@@ -11,6 +14,9 @@ public class LobbyController : MonoBehaviourPunCallbacks {
     [SerializeField] private List<GameObject> roomsObj = new List<GameObject>(); //List of rooms
     [SerializeField] private GameObject roomPrefab; //Room prefab for the list
     [SerializeField] private Transform roomContainer; //Container of the rooms UI
+    [SerializeField] private TMP_InputField roomName; //Name of custom room;
+    [SerializeField] private TextMeshProUGUI errorMessage; //Error message text
+    [SerializeField] private GameObject errorMessagePanel; //Error message panel
 
     //Called when client is connected to master server
     public override void OnConnectedToMaster() {
@@ -48,8 +54,11 @@ public class LobbyController : MonoBehaviourPunCallbacks {
 
     //Called when CreateRoom failed, probably because a room as already the same name
     public override void OnCreateRoomFailed(short returnCode, string message) {
-        Debug.Log("Failed to create room... trying again");
-        CreateRoom();
+        Debug.Log("Return code : " + returnCode.ToString() + " message : " + message);
+        if(returnCode == 32766) {
+            StartCoroutine("DisplayErrorMessage", "Room with that name already exist");
+        }
+        //CreateRoom();
     }
 
     //Cancel function for the cancel Button
@@ -58,6 +67,30 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         disconnectButton.SetActive(true);
         matchmakingButton.SetActive(true);
         PhotonNetwork.LeaveRoom();
+    }
+
+    public void CreateCustomRoom() {
+        if(roomName.text != "" && !ConsistsOfWhiteSpace(roomName.text)) {
+            if (!GetComponent<BadWordsFilter>().CheckIfIsBadWord(roomName.text)) {
+                RoomOptions roomOps = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize };
+                PhotonNetwork.CreateRoom(roomName.text, roomOps); //Creating a room with the desired options
+            }
+            else {
+                StartCoroutine("DisplayErrorMessage", "O.o How dare you!");
+            }
+
+        }
+        else {
+            StartCoroutine("DisplayErrorMessage", "Room name can't be empty");
+        }
+
+    }
+
+    IEnumerator DisplayErrorMessage(string text) {
+        errorMessage.text = text;
+        errorMessagePanel.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        errorMessagePanel.SetActive(false);
     }
 
     //Called when a player enter or leave the lobby (Can only be called when connected to the lobby).
@@ -103,4 +136,14 @@ public class LobbyController : MonoBehaviourPunCallbacks {
             roomsObj.Remove(roomsObj[i]);
         }
     }
+
+    //Check if string is only white space
+    public bool ConsistsOfWhiteSpace(string s) {
+        foreach (char c in s) {
+            if (c != ' ') return false;
+        }
+        return true;
+
+    }
+
 }
