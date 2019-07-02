@@ -109,8 +109,13 @@ public class TankControl : MonoBehaviour
             reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
         }
 
+        //MOVE CANNON
+        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, Vector2.zero);
+        float angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
+        turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+
         //FIRE
-        if (GameInput.GetAxisRaw(GameInput.AxisType.R_VERTICAL) > 0.0f && quickFireReloadTime >= quickShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.ACTION) && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
             //GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
@@ -121,17 +126,17 @@ public class TankControl : MonoBehaviour
         }
 
         //LARGE FIRE
+        /*
         if (GameInput.GetInputDown(GameInput.InputType.ACTION) && bigFireReloadTime >= bigShootingSpeed) {
             bigFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
             //GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), firePoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), firePoint.position, turret.rotation);
 
             obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
             rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
-        }
-
+        }*/
 
         //FORCEFIELD
         if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {

@@ -5,18 +5,19 @@ using InControl;
 
 public static class GameInput {
 
-    static bool logInput = false;
+    static bool logInput = true;
 
     static float deadZoneKeyboard = 0.1f;
     public static bool keyboardLastPressed = false;
 
     public enum InputType
     {
-        LEFT,
+        LEFT, // Directions like thoses are usefull for the navigation in the menu
         RIGHT,
         UP,
         DOWN,
-        ACTION,
+
+        ACTION, //shoot in game, confirm in menus
         DEFENSE,
         DASH,
         PAUSE
@@ -36,7 +37,6 @@ public static class GameInput {
     }
     public enum DirectionType
     {
-        MOUSE,
         R_INPUT,
         L_INPUT
     }
@@ -68,37 +68,41 @@ public static class GameInput {
             case InputType.LEFT:
                 result = GetInput(InputControlType.LeftStickLeft, timeType) ||
                          GetInput(InputControlType.DPadLeft, timeType) ||
+                         GetInput(InputControlType.RightStickLeft, timeType) ||
                          GetInput(KeyCode.D, timeType) ||
                          GetInput(KeyCode.RightArrow, timeType);
                 break;
             case InputType.RIGHT:
                 result = GetInput(InputControlType.LeftStickRight, timeType) ||
                          GetInput(InputControlType.DPadRight, timeType) ||
+                         GetInput(InputControlType.RightStickRight, timeType) ||
                          GetInput(KeyCode.A, timeType) ||
                          GetInput(KeyCode.LeftArrow, timeType);
                 break;
             case InputType.UP:
                 result = GetInput(InputControlType.LeftStickUp, timeType) ||
                          GetInput(InputControlType.DPadUp, timeType) ||
+                         GetInput(InputControlType.RightStickUp, timeType) ||
                          GetInput(KeyCode.W, timeType) ||
                          GetInput(KeyCode.UpArrow, timeType);
                 break;
             case InputType.DOWN:
                 result = GetInput(InputControlType.LeftStickDown, timeType) ||
                          GetInput(InputControlType.DPadDown, timeType) ||
+                         GetInput(InputControlType.RightStickDown, timeType) ||
                          GetInput(KeyCode.S, timeType) ||
                          GetInput(KeyCode.DownArrow, timeType);
                 break;
             case InputType.ACTION:
-                result = GetInput(InputControlType.Action2, timeType) ||
+                result = GetInput(InputControlType.RightTrigger, timeType) ||
                          GetInput(KeyCode.Q, timeType);
                 break;
             case InputType.DEFENSE:
-                result = GetInput(InputControlType.RightTrigger, timeType) ||
+                result = GetInput(InputControlType.RightBumper, timeType) ||
                          GetInput(KeyCode.E, timeType);
                 break;
             case InputType.DASH:
-                result = GetInput(InputControlType.LeftTrigger, timeType) ||
+                result = GetInput(InputControlType.Action2, timeType) ||
                          GetInput(KeyCode.F, timeType);
                 break;
             case InputType.PAUSE:
@@ -185,7 +189,7 @@ public static class GameInput {
                     deltaMove = Input.GetAxis("R_Horizontal");
                 break;
             case AxisType.R_VERTICAL:
-                if (device.GetControl(InputControlType.LeftStickY).IsPressed)
+                if (device.GetControl(InputControlType.RightStickY).IsPressed)
                     deltaMove = device.GetControl(InputControlType.RightStickY).Value;
                 else if (Mathf.Abs(Input.GetAxis("R_Vertical")) > deadZoneKeyboard)
                     deltaMove = Input.GetAxis("R_Vertical");
@@ -244,7 +248,7 @@ public static class GameInput {
         Vector2 direction = new Vector2(0, 0);
         CheckLastControllerUsed();
         
-        if(directionType == DirectionType.MOUSE && keyboardLastPressed)
+        if(directionType == DirectionType.R_INPUT && keyboardLastPressed)
         {
             Vector3 v3 = Input.mousePosition;
             v3.z = 10.0f;
@@ -266,7 +270,7 @@ public static class GameInput {
         direction.Normalize();
 
         if (logInput && (direction.x != 0.0f || direction.y != 0.0f))
-            Debug.Log("Moving : " + direction.ToString());
+            Debug.Log("Direction : " + direction.ToString());
 
         return direction;
     }
