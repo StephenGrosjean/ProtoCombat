@@ -12,6 +12,12 @@ public class MainMenuController : MonoBehaviour
 
     [SerializeField] private string onlineText, localText, mainMenuText, optionsText;
 
+    private void Start() {
+        if (PhotonNetwork.IsConnected) {
+            PhotonNetwork.Disconnect();
+        }
+    }
+
     public void GotoOnline() {
         onlinePanel.SetActive(true);
         localPanel.SetActive(false);
