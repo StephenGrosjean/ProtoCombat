@@ -8,9 +8,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
     [SerializeField] private List<GameObject> enableOnConnection;
     [SerializeField] private TextMeshProUGUI connectText;
     [SerializeField] private Color connectedColor, disconnectedColor;
+    [SerializeField] private TextMeshProUGUI lobbyPlayersText;
 
     void Start() {
         //PhotonNetwork.ConnectUsingSettings();
+    }
+
+    private void Update() {
+        if(PhotonNetwork.CountOfPlayersOnMaster < 2) {
+            lobbyPlayersText.text = PhotonNetwork.CountOfPlayersOnMaster + " Player in lobby";
+        }
+        else {
+            lobbyPlayersText.text = PhotonNetwork.CountOfPlayersOnMaster + " Players in lobby";
+        }
     }
 
     public override void OnConnectedToMaster() {
@@ -24,6 +34,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
         }
 
         Debug.Log("Connected to " + PhotonNetwork.CloudRegion + " server");
+    }
+
+    public override void OnJoinedLobby() {
+        base.OnJoinedLobby();
+
+        Debug.Log("Lobby Joined");
     }
 
     public override void OnDisconnected(DisconnectCause cause) {
