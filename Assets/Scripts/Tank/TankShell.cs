@@ -14,7 +14,6 @@ public class TankShell : MonoBehaviour
         Small,
         Large
     }
-    
 
     [SerializeField] private float speed = 10; //Speed of the shell
     [SerializeField] private GameObject explosionParticle; //Particle to spawn at shell destroy

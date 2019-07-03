@@ -16,8 +16,10 @@ public static class GameInput {
         RIGHT,
         UP,
         DOWN,
+        ACTION_CONFIRM,
+        ACTION_BACK,
 
-        ACTION, //shoot in game, confirm in menus
+        SHOOT, //shoot in game, confirm in menus
         DEFENSE,
         DASH,
         PAUSE
@@ -93,17 +95,29 @@ public static class GameInput {
                          GetInput(KeyCode.S, timeType) ||
                          GetInput(KeyCode.DownArrow, timeType);
                 break;
-            case InputType.ACTION:
+            case InputType.ACTION_CONFIRM:
+                result = GetInput(InputControlType.Action1, timeType) ||
+                         GetInput(0, timeType);
+                break;
+            case InputType.ACTION_BACK:
+                result = GetInput(InputControlType.Action2, timeType) ||
+                         GetInput(KeyCode.Escape, timeType);
+                break;
+            case InputType.SHOOT:
                 result = GetInput(InputControlType.RightTrigger, timeType) ||
-                         GetInput(KeyCode.Q, timeType);
+                         GetInput(InputControlType.RightBumper, timeType) ||
+                         GetInput(0, timeType);
                 break;
             case InputType.DEFENSE:
-                result = GetInput(InputControlType.RightBumper, timeType) ||
+                result = GetInput(InputControlType.LeftTrigger, timeType) ||
+                         GetInput(InputControlType.LeftBumper, timeType) ||
                          GetInput(KeyCode.E, timeType);
                 break;
             case InputType.DASH:
                 result = GetInput(InputControlType.Action2, timeType) ||
-                         GetInput(KeyCode.F, timeType);
+                         GetInput(InputControlType.RightStickButton, timeType) ||
+                         GetInput(KeyCode.Q, timeType) ||
+                         GetInput(1, timeType); 
                 break;
             case InputType.PAUSE:
                 result = GetInput(InputControlType.Start, timeType) ||
@@ -243,6 +257,7 @@ public static class GameInput {
         return deltaMove;
     }
 
+    // Asks for the screenPosition if using the keyboard
     public static Vector2 GetDirection(DirectionType directionType, Vector2 origin)
     {
         Vector2 direction = new Vector2(0, 0);
@@ -251,10 +266,13 @@ public static class GameInput {
         if(directionType == DirectionType.R_INPUT && keyboardLastPressed)
         {
             Vector3 v3 = Input.mousePosition;
+            Debug.Log(v3);
             v3.z = 10.0f;
-            v3 = Camera.main.ScreenToWorldPoint(v3);
+            //v3 = Camera.main.ScreenToWorldPoint(v3);
+
 
             direction = new Vector2(origin.x - v3.x, origin.y - v3.y);
+            //Debug.Log(v3);
         }
         else if(directionType == DirectionType.R_INPUT)
         {

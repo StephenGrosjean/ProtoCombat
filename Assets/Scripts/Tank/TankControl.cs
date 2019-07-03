@@ -8,7 +8,7 @@ using System.IO;
 
 
 /// <summary>
-/// Script for controling the tank
+/// Script for controlling the tank
 /// </summary>
 
 public class TankControl : MonoBehaviour
@@ -22,7 +22,7 @@ public class TankControl : MonoBehaviour
     [Header("Fire Settings")]
     [SerializeField] private GameObject smallShell;
     [SerializeField] private GameObject largeShell;
-    [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform shootingPoint;
     [SerializeField] private float quickShootingSpeed;
     [SerializeField] private float bigShootingSpeed;
 
@@ -61,14 +61,12 @@ public class TankControl : MonoBehaviour
     private Rigidbody rigid; //Rigidbody of the tank
     private float quickFireReloadTime, bigFireReloadTime; //Current reload time of each shot
     private float shieldActivationTime; //Current shield activation time
-    
 
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
         reloadNormal = GameObject.Find("ReloadMachineGun").GetComponent<Image>();
         reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
-
     }
 
     void FixedUpdate()
@@ -98,7 +96,7 @@ public class TankControl : MonoBehaviour
         }
 
         //Rotate the tank 
-        transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0)*rotationSpeed);
+        transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
 
         //turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
 
@@ -110,16 +108,17 @@ public class TankControl : MonoBehaviour
         }
 
         //MOVE CANNON
-        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, Vector2.zero);
-        float angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, new Vector2(screenPos.x, screenPos.y));
+        float angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90.0f;
         turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
 
         //FIRE
-        if (GameInput.GetInputDown(GameInput.InputType.ACTION) && quickFireReloadTime >= quickShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
-            //GameObject obj = Instantiate(smallShell, firePoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"), firePoint.position, turret.rotation);
+            //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"), shootingPoint.position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
             rigid.AddRelativeForce(-Vector3.left * knockBack);
@@ -127,11 +126,11 @@ public class TankControl : MonoBehaviour
 
         //LARGE FIRE
         /*
-        if (GameInput.GetInputDown(GameInput.InputType.ACTION) && bigFireReloadTime >= bigShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && bigFireReloadTime >= bigShootingSpeed) {
             bigFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
-            //GameObject obj = Instantiate(largeShell, firePoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), firePoint.position, turret.rotation);
+            //GameObject obj = Instantiate(largeShell, shootingPoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), shootingPoint.position, turret.rotation);
 
             obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
