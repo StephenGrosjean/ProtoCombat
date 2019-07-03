@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,36 +11,39 @@ using System.IO;
 /// <summary>
 /// Script for controlling the tank
 /// </summary>
-
 public class TankControl : MonoBehaviour
 {
     //[SerializeField] private int playerID; (NOT USED)
 
-    [Header("Part settings")]
-    [SerializeField] private Transform turret;
+    [Header("Part settings")] [SerializeField]
+    private Transform turret;
     //[SerializeField] private Transform body;
 
-    [Header("Fire Settings")]
-    [SerializeField] private GameObject smallShell;
+    [Header("Fire Settings")] [SerializeField]
+    private GameObject smallShell;
+
     [SerializeField] private GameObject largeShell;
     [SerializeField] private Transform shootingPoint;
     [SerializeField] private float quickShootingSpeed;
     [SerializeField] private float bigShootingSpeed;
 
-    [Header("Control Settings")]
-    [SerializeField] private float speed;
+    [Header("Control Settings")] [SerializeField]
+    private float speed;
+
     [SerializeField] private float maxSpeed;
     [SerializeField] private float knockBack;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private ForceMode moveForceMode;
 
-    [Header("UI Settings")]
-    [SerializeField] private bool useUI;
+    [Header("UI Settings")] [SerializeField]
+    private bool useUI;
+
     [SerializeField] private Image reloadNormal; //Reload image for the normal shell
     [SerializeField] private Image reloadLarge; //Reload image for the big shell
 
-    [Header("ForceField Settings")]
-    [SerializeField] private GameObject forceField; //Forcefield object
+    [Header("ForceField Settings")] [SerializeField]
+    private GameObject forceField; //Forcefield object
+
     [SerializeField] private Vector3 forcefieldSize; //Size of the forceField
     [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
     private bool shieldEnabled; //Is the shield is active?
@@ -62,6 +66,8 @@ public class TankControl : MonoBehaviour
     private float quickFireReloadTime, bigFireReloadTime; //Current reload time of each shot
     private float shieldActivationTime; //Current shield activation time
 
+    private float angle;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -72,27 +78,33 @@ public class TankControl : MonoBehaviour
     void FixedUpdate()
     {
         //Increase shield activation Time
-        if (shieldEnabled && shieldActivationTime < shieldActivationSpeed) {
+        if (shieldEnabled && shieldActivationTime < shieldActivationSpeed)
+        {
             shieldActivationTime += Time.deltaTime;
         }
         //Decrease shield activation Time
-        else if (!shieldEnabled && shieldActivationTime >= 0) {
+        else if (!shieldEnabled && shieldActivationTime >= 0)
+        {
             shieldActivationTime -= Time.deltaTime;
         }
 
         //Increase small shell reloadTime
-        if (quickFireReloadTime < quickShootingSpeed) {
+        if (quickFireReloadTime < quickShootingSpeed)
+        {
             quickFireReloadTime += Time.deltaTime;
         }
 
         //Increase big shell reloadTime
-        if (bigFireReloadTime < bigShootingSpeed) {
+        if (bigFireReloadTime < bigShootingSpeed)
+        {
             bigFireReloadTime += Time.deltaTime;
         }
 
         //Add tank forward speed if under the maxSpeed limit
-        if (rigid.velocity.magnitude <= maxSpeed) {
-            rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
+        if (rigid.velocity.magnitude <= maxSpeed)
+        {
+            rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed,
+                moveForceMode);
         }
 
         //Rotate the tank 
@@ -102,7 +114,8 @@ public class TankControl : MonoBehaviour
 
 
         //RELOAD UI
-        if (useUI) {
+        if (useUI)
+        {
             reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
             reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
         }
@@ -110,15 +123,21 @@ public class TankControl : MonoBehaviour
         //MOVE CANNON
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, new Vector2(screenPos.x, screenPos.y));
-        float angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90.0f;
-        turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+
+        if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f)
+        {
+            angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90.0f;
+            turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+        }
 
         //FIRE
-        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed)
+        {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
             //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"), shootingPoint.position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
+                shootingPoint.position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
             obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
             rigid.AddRelativeForce(-Vector3.left * knockBack);
@@ -138,9 +157,11 @@ public class TankControl : MonoBehaviour
         }*/
 
         //FORCEFIELD
-        if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
+        if (GameInput.GetInputDown(GameInput.InputType.DEFENSE))
+        {
             shieldEnabled = !shieldEnabled;
         }
+
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
 
 
@@ -167,10 +188,8 @@ public class TankControl : MonoBehaviour
          */
 
         //SKY BOMBING
-       /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
-            GetComponent<SkyShellSpawning>().StartBombardment();
-        }*/
+        /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
+             GetComponent<SkyShellSpawning>().StartBombardment();
+         }*/
     }
-
-
 }

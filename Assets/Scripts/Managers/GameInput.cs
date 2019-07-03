@@ -266,13 +266,10 @@ public static class GameInput {
         if(directionType == DirectionType.R_INPUT && keyboardLastPressed)
         {
             Vector3 v3 = Input.mousePosition;
-            Debug.Log(v3);
             v3.z = 10.0f;
             //v3 = Camera.main.ScreenToWorldPoint(v3);
 
-
             direction = new Vector2(origin.x - v3.x, origin.y - v3.y);
-            //Debug.Log(v3);
         }
         else if(directionType == DirectionType.R_INPUT)
         {
