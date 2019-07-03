@@ -681,6 +681,8 @@ MonoBehaviour:
   knockBack: 100
   rotationSpeed: 4
   moveForceMode: 0
+  dashPower: 2000
+  dashCooldownTime: 3
   useUI: 0
   reloadNormal: {fileID: 0}
   reloadLarge: {fileID: 0}

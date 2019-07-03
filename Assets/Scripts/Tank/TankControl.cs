@@ -35,6 +35,10 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private ForceMode moveForceMode;
 
+    [Header("Dash Settings")]
+    [SerializeField] private float dashPower;
+    [SerializeField] private float dashCooldownTime;
+
     [Header("UI Settings")] [SerializeField]
     private bool useUI;
 
@@ -63,7 +67,7 @@ public class TankControl : MonoBehaviour
     private float spawnLightTimer;*/
 
     private Rigidbody rigid; //Rigidbody of the tank
-    private float quickFireReloadTime, bigFireReloadTime; //Current reload time of each shot
+    private float quickFireReloadTime, bigFireReloadTime, dashReloadTime; //Current reload time of each shot
     private float shieldActivationTime; //Current shield activation time
 
     private float angle;
@@ -86,6 +90,12 @@ public class TankControl : MonoBehaviour
         else if (!shieldEnabled && shieldActivationTime >= 0)
         {
             shieldActivationTime -= Time.deltaTime;
+        }
+
+        //Increase dash reload time
+        if (dashReloadTime < dashCooldownTime)
+        {
+            dashReloadTime += Time.deltaTime;
         }
 
         //Increase small shell reloadTime
@@ -111,6 +121,13 @@ public class TankControl : MonoBehaviour
         transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
 
         //turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
+
+        //DASH
+        if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime)
+        {
+            dashReloadTime = 0;
+            rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
+        }
 
 
         //RELOAD UI
