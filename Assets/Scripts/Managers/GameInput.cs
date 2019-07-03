@@ -5,7 +5,7 @@ using InControl;
 
 public static class GameInput {
 
-    static bool logInput = true;
+    static bool logInput = false;
 
     static float deadZoneKeyboard = 0.1f;
     public static bool keyboardLastPressed = false;
@@ -115,7 +115,7 @@ public static class GameInput {
                 break;
             case InputType.DASH:
                 result = GetInput(InputControlType.Action2, timeType) ||
-                         GetInput(InputControlType.RightStickButton, timeType) ||
+                         GetInput(InputControlType.LeftStickButton, timeType) ||
                          GetInput(KeyCode.Q, timeType) ||
                          GetInput(1, timeType); 
                 break;
