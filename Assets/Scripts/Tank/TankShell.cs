@@ -25,7 +25,6 @@ public class TankShell : MonoBehaviour
     private int health = 1; //Health of the shell (Used of the bounce)  (AKA number of bounce)
 
     private Rigidbody rigid; //Rigidbody of the shell
-    private GameObject launcherParent; //Who launched it?
 
     private PhotonView photonView;
 
@@ -68,7 +67,7 @@ public class TankShell : MonoBehaviour
         GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySound(SoundManager.SoundList.EXPLOSION);//0.1719f
         if (photonView.Owner == PhotonNetwork.MasterClient) {
             //Check if is colliding with the launcher 
-            if (collision.gameObject != launcherParent || launcherParent == null)
+            if (collision.gameObject.GetComponent<TankControl>() && collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
             {
                 //Check with who it is colliding
                 if (collision.gameObject.tag == "Destroyable")
@@ -128,15 +127,12 @@ public class TankShell : MonoBehaviour
         PhotonNetwork.Destroy(photonView);
     }
 
-     //Set the launcher Object
-    public void SetLauncherParent(GameObject launcher) {
-        launcherParent = launcher;
-    }
-
-    public void InitializeShell(int playerOwnerId, GameObject launcher, float lag)
+    [PunRPC]
+    public void InitializeShell(int playerOwnerId, PhotonMessageInfo info)
     {
+        float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
+
         this.playerOwnerId = playerOwnerId;
-        this.SetLauncherParent(launcher);
 
         rigid.AddRelativeForce(-Vector3.left * speed);
         rigid.position += rigid.velocity * lag;

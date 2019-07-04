@@ -41,5 +41,6 @@ MonoBehaviour:
   - privateAddFragment
   - EnableObjectAndBreak
   - EnableObjectAndExplode
+  - InitializeShell
   DisableAutoOpenWizard: 1
   ShowSettings: 1

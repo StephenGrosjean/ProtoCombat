@@ -174,7 +174,7 @@ public class TankControl : MonoBehaviour
             GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
                 shootingPoint.position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
 
-            obj.GetComponent<TankShell>().InitializeShell(this.playerId, this.gameObject, 0.0f);
+            obj.GetComponent<TankShell>().GetComponent<PhotonView>().RPC("InitializeShell", RpcTarget.All, this.playerId);
 
             rigid.AddRelativeForce(-Vector3.left * knockBack);
         }
