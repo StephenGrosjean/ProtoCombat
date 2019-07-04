@@ -72,11 +72,14 @@ public class TankControl : MonoBehaviour
 
     private float angle;
 
+    private SoundManager soundManager;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
         reloadNormal = GameObject.Find("ReloadMachineGun").GetComponent<Image>();
         reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
+        soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     void FixedUpdate()
@@ -177,6 +180,7 @@ public class TankControl : MonoBehaviour
         if (GameInput.GetInputDown(GameInput.InputType.DEFENSE))
         {
             shieldEnabled = !shieldEnabled;
+            soundManager.PlaySound(SoundManager.SoundList.SHIELD);
         }
 
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
@@ -208,5 +212,10 @@ public class TankControl : MonoBehaviour
         /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
              GetComponent<SkyShellSpawning>().StartBombardment();
          }*/
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        soundManager.PlaySound(SoundManager.SoundList.STRIK);
     }
 }
