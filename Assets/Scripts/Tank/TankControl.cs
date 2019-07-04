@@ -77,11 +77,14 @@ public class TankControl : MonoBehaviour
     private float angle;
     public bool controllable; // Is true if the tank is spawned
 
+    private SoundManager soundManager;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
         reloadNormal = GameObject.Find("ReloadMachineGun").GetComponent<Image>();
         reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
+        soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     void Awake()
@@ -192,6 +195,7 @@ public class TankControl : MonoBehaviour
         if (GameInput.GetInputDown(GameInput.InputType.DEFENSE))
         {
             shieldEnabled = !shieldEnabled;
+            soundManager.PlaySound(SoundManager.SoundList.SHIELD);
         }
 
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
@@ -235,5 +239,10 @@ public class TankControl : MonoBehaviour
             position, Quaternion.Euler(new Vector3(0, aAngle + 180.0f, 0)));
         
         //rigid.AddRelativeForce(-Vector3.left * knockBack);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        soundManager.PlaySound(SoundManager.SoundList.STRIK);
     }
 }

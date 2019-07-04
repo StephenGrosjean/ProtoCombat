@@ -9,16 +9,21 @@ public class SoundManager : MonoBehaviour
     public static SoundManager _instance;
     List<AudioSource> emitters = new List<AudioSource>();
 
+    public enum MusicList
+    {
+        MENU,
+        INGAME,
+        LASTGAME,
+        NONE
+    }
+    MusicList currentMusicPlaying = MusicList.NONE;
+
     public enum SoundList
     {
-        WALK,
-        PUNCH,
-        IS_HIT,
-        HAND_MOVEMENT,
-        WIN_SOUND,
-        LOSE_SOUND,
-        TAKE_FLAG,
-        FLAG_BACK
+        FIRE,
+        EXPLOSION,
+        SHIELD,
+        STRIK
     }
 
     public struct LoopedSound
@@ -28,41 +33,36 @@ public class SoundManager : MonoBehaviour
     }
     List<LoopedSound> loopedSoundList = new List<LoopedSound>();
 
-    List<AudioClip> listWalkSounds = new List<AudioClip>();
-    List<AudioClip> listPunchSounds = new List<AudioClip>();
     List<AudioClip> listHitSounds = new List<AudioClip>();
 
     [Header("VolumeSounds")]
     [SerializeField] AudioMixer audioMixer;
 
+    [Header("Musics")]
+    [SerializeField] AudioClip menuMusicClip;
+    [SerializeField] AudioClip inGameMusicClip;
+    [SerializeField] AudioClip lastMusicClip;
+
+    [Header("Tank Effects")]
+    [SerializeField] List<AudioClip> listShieldSoundClip;
+    [SerializeField] AudioClip strikSoundClip;
+
+    [Header("Shoot Effects")]
+    [SerializeField] AudioClip shootSoundClip;
+    [SerializeField] AudioClip explosionSoundClip;
+
     [Header("Sounds")]
     [SerializeField] AudioClip winSoundClip;
     [SerializeField] AudioClip loseSoundClip;
-    [SerializeField] AudioClip takeFlagSoundClip;
-    [SerializeField] AudioClip flagBackSoundClip;
-    [SerializeField] AudioClip handMovementSoundClip;
-
-    [Header("WalkClips")]
-    [SerializeField] AudioClip walkClip1;
-    [SerializeField] AudioClip walkClip2;
-    [SerializeField] AudioClip walkClip3;
-    [SerializeField] AudioClip walkClip4;
-    [SerializeField] AudioClip walkClip5;
 
     [Header("HitClips")]
     [SerializeField] AudioClip hitClip1;
     [SerializeField] AudioClip hitClip2;
 
-    [Header("punchClips")]
-    [SerializeField] AudioClip punchClip1;
-    [SerializeField] AudioClip punchClip2;
-    [SerializeField] AudioClip punchClip3;
-    [SerializeField] AudioClip punchClip4;
-    [SerializeField] AudioClip punchClip5;
-
     [Header("Emmiters")]
     [SerializeField] GameObject emitterPrefab;
     [SerializeField] int emitterNumber;
+
     [SerializeField] AudioSource musicEmitter;
 
     private void Awake()
@@ -85,9 +85,10 @@ public class SoundManager : MonoBehaviour
             DontDestroyOnLoad(audioObject);
         }
 
-        listWalkSounds = new List<AudioClip> { walkClip1, walkClip2, walkClip3, walkClip4, walkClip5};
-        listPunchSounds = new List<AudioClip> { punchClip1, punchClip2, punchClip3, punchClip4, punchClip5 };
         listHitSounds = new List<AudioClip> { hitClip1, hitClip2};
+
+
+        PlayMusic(MusicList.MENU);
     }
 
     private void Update()
@@ -122,44 +123,26 @@ public class SoundManager : MonoBehaviour
             int index = 0;
             switch (sound)
             {
-                case SoundList.WALK:
-                    index = Random.Range(0, listWalkSounds.Count);
-                    emitterAvailable.clip = listWalkSounds[index];
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Walk")[0];
+                case SoundList.FIRE:
+                    emitterAvailable.clip = shootSoundClip;
+                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;
-                case SoundList.PUNCH:
-                    index = Random.Range(0, listPunchSounds.Count);
-                    emitterAvailable.clip = listPunchSounds[index];
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Punch")[0];
+                case SoundList.EXPLOSION:
+                    emitterAvailable.clip = explosionSoundClip;
+                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;
-                case SoundList.IS_HIT:
-                    index = Random.Range(0, listHitSounds.Count);
-                    emitterAvailable.clip = listHitSounds[index];
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effects")[0];
+                case SoundList.SHIELD:
+                    index = Random.Range(0, listShieldSoundClip.Count);
+                    emitterAvailable.clip = listShieldSoundClip[index];
+                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;
-                case SoundList.HAND_MOVEMENT:
-                    emitterAvailable.clip = handMovementSoundClip;
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effects")[0];
-                    break;
-                case SoundList.FLAG_BACK:
-                    emitterAvailable.clip = flagBackSoundClip;
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("LittleMusics")[0];
-                    break;
-                case SoundList.TAKE_FLAG:
-                    emitterAvailable.clip = takeFlagSoundClip;
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("LittleMusics")[0];
-                    break;
-                case SoundList.WIN_SOUND:
-                    emitterAvailable.clip = winSoundClip;
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("LittleMusics")[0];
-                    break;
-                case SoundList.LOSE_SOUND:
-                    emitterAvailable.clip = loseSoundClip;
-                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("LittleMusics")[0];
+                case SoundList.STRIK:
+                    emitterAvailable.clip = strikSoundClip;
+                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;
             }
 
-            if(timeToLoop > 0.0f)
+            if (timeToLoop > 0.0f)
             {
                 emitterAvailable.loop = true;
                 LoopedSound newLoopSound = new LoopedSound
@@ -177,8 +160,36 @@ public class SoundManager : MonoBehaviour
         {
             Debug.Log("no emitter available");
             return null;
-        }        
+        }
     }
+
+    public void PlayMusic(MusicList music)
+    {
+        if (currentMusicPlaying != music)
+        {
+            musicEmitter.loop = true;
+
+            switch (music)
+            {
+                case MusicList.MENU:
+                    musicEmitter.clip = menuMusicClip;
+                    musicEmitter.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Music")[0];
+                    musicEmitter.Play();
+                    break;
+
+                case MusicList.INGAME:
+                    musicEmitter.clip = inGameMusicClip;
+                    musicEmitter.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Music")[0];
+                    musicEmitter.Play();
+                    break;
+                case MusicList.NONE:
+                    musicEmitter.Stop();
+                    break;
+            }
+            currentMusicPlaying = music;
+        }
+    }
+
 
     public void StopSound(AudioSource source)
     {

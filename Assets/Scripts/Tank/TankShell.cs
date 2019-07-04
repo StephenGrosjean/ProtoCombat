@@ -34,6 +34,7 @@ public class TankShell : MonoBehaviour
 
     void Start()
     {
+        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySound(SoundManager.SoundList.FIRE);//0.1719f
         photonView = GetComponent<PhotonView>();
 
         if (PhotonNetwork.IsMasterClient)
@@ -59,10 +60,9 @@ public class TankShell : MonoBehaviour
     }
 
     //Collision detection
-    void OnCollisionEnter(Collision collision)
-    {
-        if (photonView.Owner == PhotonNetwork.MasterClient)
-        {
+    void OnCollisionEnter(Collision collision) {
+        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySound(SoundManager.SoundList.EXPLOSION);//0.1719f
+        if (photonView.Owner == PhotonNetwork.MasterClient) {
             //Check if is colliding with the launcher 
             if (collision.gameObject != launcherParent || launcherParent == null)
             {
