@@ -7775,8 +7775,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: be33bfe8e9a8e7f46ad47ab82da975fe, type: 3}
   - {fileID: 8300000, guid: 1da8433bec390f141af0987880ef31ba, type: 3}
   - {fileID: 8300000, guid: 3f0538b856c19b84d96712178c331c19, type: 3}
+  strikSoundClip: {fileID: 8300000, guid: 82d03cd7a44472544b22b43e830d4713, type: 3}
   shootSoundClip: {fileID: 8300000, guid: e1476840b87cd324d831019f5abed40e, type: 3}
-  explosionSoundClip: {fileID: 8300000, guid: 40fd828d9279d9a4ead799181c85039e, type: 3}
+  explosionSoundClip: {fileID: 8300000, guid: cfcd943e588a5674995668bb11a16652, type: 3}
   winSoundClip: {fileID: 0}
   loseSoundClip: {fileID: 0}
   hitClip1: {fileID: 0}
