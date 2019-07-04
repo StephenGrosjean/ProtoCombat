@@ -2,25 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using Photon.Realtime;
-using TMPro;
 
-public class HealthUI : MonoBehaviour
+public class PlayerNames : MonoBehaviour
 {
     [SerializeField] private bool isMasterUI;
-    public GameObject tank;
-    private TextMeshProUGUI health;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        health = GetComponent<TextMeshProUGUI>();
-    }
+    [SerializeField] private Vector3 offset;
+    private GameObject tank;
 
     // Update is called once per frame
-    void Update()
-    {
-        if(tank == null) {
+    void Update() {
+        if (tank == null) {
             if (PhotonNetwork.IsMasterClient) {
                 if (isMasterUI) {
                     tank = GameObject.Find("PhotonTankMaster");
@@ -44,7 +35,7 @@ public class HealthUI : MonoBehaviour
         }
 
         if (tank != null) {
-            health.text = tank.GetComponent<TankHealth>().GetHealth().ToString();
+            transform.position = tank.transform.position + offset;
         }
     }
 }

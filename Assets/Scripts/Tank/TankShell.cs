@@ -79,9 +79,9 @@ public class TankShell : MonoBehaviour
                 }
                 else if (collision.gameObject.tag == "Tank")
                 {
-                    if(collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
-                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
-
+                    if (collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId) {
+                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
+                    }
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
                     // Destroy(gameObject);
                     PhotonNetwork.Destroy(photonView);
@@ -128,15 +128,17 @@ public class TankShell : MonoBehaviour
     }
 
     [PunRPC]
-    public void InitializeShell(int playerOwnerId, PhotonMessageInfo info)
+    public void InitializeShell(int playerOwnerId, Quaternion rotation, PhotonMessageInfo info)
     {
         float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
 
         this.playerOwnerId = playerOwnerId;
 
-        rigid.AddRelativeForce(-Vector3.left * speed);
+        rigid.rotation = rotation;
+        rigid.AddRelativeForce(Vector3.left * speed);
         rigid.position += rigid.velocity * lag;
         
+
         //Destroy the shell after 5 sec
         Destroy(gameObject, 5);
     }

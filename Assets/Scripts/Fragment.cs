@@ -12,11 +12,12 @@ public class Fragment : MonoBehaviour
     {
         //Invoke DisableRigid after 5sec
         Invoke("DisableRigid", 5);
+        Destroy(gameObject, 10);
     }
 
     //Remove the fragment from the FragmentManager List
     private void OnDestroy() {
-        GameObject.Find("FragmentManager").GetComponent<FragmentManager>().RemoveFragment(gameObject);
+        //GameObject.Find("FragmentManager").GetComponent<FragmentManager>().RemoveFragment(gameObject);
     }
 
     //Disable Rigidbody to save performances

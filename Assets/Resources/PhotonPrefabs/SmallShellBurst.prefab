@@ -14137,7 +14137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 400008}
   - component: {fileID: -4539487337420803849}
-  - component: {fileID: -1741624291863743729}
+  - component: {fileID: 9133708291923846970}
   m_Layer: 0
   m_Name: SmallShellBurst
   m_TagString: Untagged
@@ -14173,7 +14173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   time: 2
---- !u!114 &-1741624291863743729
+--- !u!114 &9133708291923846970
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14190,7 +14190,8 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 0
   OwnershipTransfer: 0
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 0}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

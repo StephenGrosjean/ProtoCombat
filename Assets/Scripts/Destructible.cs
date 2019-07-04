@@ -48,7 +48,7 @@ public class Destructible : MonoBehaviour
         foreach (Transform cube in cubes) {
             i+=0.1f;
             cube.gameObject.SetActive(true);
-            fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
+            //fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
             //PhotonNetwork.Destroy(cube.gameObject, timeToDestroy + i);
             //Destroy(cube.gameObject, timeToDestroy + i); //Destroy fragment after some time
 
@@ -73,7 +73,7 @@ public class Destructible : MonoBehaviour
             cube.gameObject.SetActive(true);
             //PhotonNetwork.Destroy(cube.gameObject, timeToDestroy + i);  //Destroy after some time
             if (PhotonNetwork.IsMasterClient)
-                fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
+               //fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
             cube.gameObject.GetComponent<Rigidbody>().velocity = collisionVelocity; //Keep velocity
         }
         PhotonNetwork.Destroy(light); //Destroy the light

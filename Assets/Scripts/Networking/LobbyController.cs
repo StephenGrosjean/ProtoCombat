@@ -9,7 +9,7 @@ using System.Collections;
 
 public class LobbyController : MonoBehaviourPunCallbacks {
 
-    [SerializeField] private GameObject matchmakingButton, cancelButton, disconnectButton; //UI Buttons
+    [SerializeField] private GameObject matchmakingButton, cancelButton, disconnectButton, createRoomButton, scrollView; //UI Buttons
     [SerializeField] private int roomSize; //Size of the room to be created
     [SerializeField] private List<GameObject> roomsObj = new List<GameObject>(); //List of rooms
     [SerializeField] private GameObject roomPrefab; //Room prefab for the list
@@ -34,6 +34,8 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         matchmakingButton.SetActive(false);
         disconnectButton.SetActive(false);
         cancelButton.SetActive(true);
+        createRoomButton.SetActive(false);
+        scrollView.SetActive(false);
         PhotonNetwork.JoinRandomRoom(); //Join a random room 
         Debug.Log("Started matchmaking");
     }
@@ -58,6 +60,11 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         if(returnCode == 32766) {
             StartCoroutine("DisplayErrorMessage", "Room with that name already exist");
         }
+        cancelButton.SetActive(false);
+        disconnectButton.SetActive(true);
+        matchmakingButton.SetActive(true);
+        createRoomButton.SetActive(true);
+        scrollView.SetActive(true);
         //CreateRoom();
     }
 
@@ -66,12 +73,19 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         cancelButton.SetActive(false);
         disconnectButton.SetActive(true);
         matchmakingButton.SetActive(true);
+        createRoomButton.SetActive(true);
+        scrollView.SetActive(true);
         PhotonNetwork.LeaveRoom();
     }
 
     public void CreateCustomRoom() {
         if(roomName.text != "" && !ConsistsOfWhiteSpace(roomName.text)) {
             if (!GetComponent<BadWordsFilter>().CheckIfIsBadWord(roomName.text)) {
+                matchmakingButton.SetActive(false);
+                disconnectButton.SetActive(false);
+                cancelButton.SetActive(true);
+                createRoomButton.SetActive(false);
+                scrollView.SetActive(false);
                 RoomOptions roomOps = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = (byte)roomSize };
                 PhotonNetwork.CreateRoom(roomName.text, roomOps); //Creating a room with the desired options
             }

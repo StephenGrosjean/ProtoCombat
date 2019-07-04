@@ -8,13 +8,16 @@ using Photon.Pun;
 
 public class TankHealth : MonoBehaviour
 {
-    [SerializeField] private int health = 100; //Max Health
+    [SerializeField] private int maxHealth = 10; //Max Health
     [SerializeField] private int lifes = 3; //Lifes
     [SerializeField] private GameObject explosionPrefab; //Particle to spawn at destroy
     private PhotonView photonView;
     private GameplayManager GPManager;
+    private int health; //Health
+
 
     private void Start() {
+        health = maxHealth;
         photonView = GetComponent<PhotonView>();
         GPManager = GameObject.Find("GameplayController").GetComponent<GameplayManager>();
     }
@@ -27,14 +30,14 @@ public class TankHealth : MonoBehaviour
             //Destroy(gameObject); //Destroy obejct
             if (photonView.IsMine) {
                 if (PhotonNetwork.IsMasterClient) {
-                    photonView.RPC("SetHealth", RpcTarget.All, 100);
+                    photonView.RPC("SetHealth", RpcTarget.All, maxHealth);
                     photonView.RPC("LowerLife", RpcTarget.All, 1);
-                    transform.position = GPManager.SpawnPointMaster.position;
+                    StartCoroutine("WaitForRespawn", GPManager.SpawnPointMaster.position);
                 }
                 else {
-                    photonView.RPC("SetHealth", RpcTarget.All, 100);
+                    photonView.RPC("SetHealth", RpcTarget.All, maxHealth);
                     photonView.RPC("LowerLife", RpcTarget.All, 1);
-                    transform.position = GPManager.SpawnPointClient.position;
+                    StartCoroutine("WaitForRespawn",GPManager.SpawnPointClient.position);
                 }
             }
         }
@@ -43,7 +46,14 @@ public class TankHealth : MonoBehaviour
     public void TakeDamage(int dmg) {
         photonView.RPC("Damage", RpcTarget.All, dmg);
     }
-    
+
+    IEnumerator WaitForRespawn(Vector3 spawnPosition) {
+        GetComponent<TankControl>().ToggleRenderers(false);
+        yield return new WaitForSeconds(1);
+        transform.position = spawnPosition;
+        GetComponent<TankControl>().ToggleRenderers(true);
+    }
+
     [PunRPC]
     //Take damages
     void Damage(int dmg) {

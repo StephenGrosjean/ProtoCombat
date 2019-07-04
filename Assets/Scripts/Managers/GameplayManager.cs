@@ -40,8 +40,10 @@ public class GameplayManager : MonoBehaviour {
             }
         }
 
-        if(tankClient.GetComponent<TankHealth>().GetLifes() <= 0 || tankMaster.GetComponent<TankHealth>().GetLifes() <= 0) {
-            EndGame();
+        if (tankClient != null && tankMaster != null) {
+            if (tankClient.GetComponent<TankHealth>().GetLifes() <= 0 || tankMaster.GetComponent<TankHealth>().GetLifes() <= 0) {
+                EndGame();
+            }
         }
     }
 

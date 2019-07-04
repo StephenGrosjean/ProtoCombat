@@ -5,16 +5,16 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 
-public class HealthUI : MonoBehaviour
+public class LifeUI : MonoBehaviour
 {
     [SerializeField] private bool isMasterUI;
     public GameObject tank;
-    private TextMeshProUGUI health;
+    private TextMeshProUGUI life;
 
     // Start is called before the first frame update
     void Start()
     {
-        health = GetComponent<TextMeshProUGUI>();
+        life = GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -44,7 +44,7 @@ public class HealthUI : MonoBehaviour
         }
 
         if (tank != null) {
-            health.text = tank.GetComponent<TankHealth>().GetHealth().ToString();
+            life.text = tank.GetComponent<TankHealth>().GetLifes().ToString();
         }
     }
 }
