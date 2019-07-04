@@ -31,58 +31,62 @@ public class TankShell : MonoBehaviour
 
     private int playerOwnerId; //Who launched it?
 
-    void Awake()
+
+    void Start()
     {
-        rigid = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
 
-        /*
         if (PhotonNetwork.IsMasterClient)
         {
             photonView.TransferOwnership(PhotonNetwork.MasterClient);
         }
-        */
-    }
 
-    void Start()
-    {
+        rigid = GetComponent<Rigidbody>();
+
         //Add force to launch shell depending of the skyshell parameter 
-        if (!skyShell) {
+        if (!skyShell)
+        {
             rigid.AddRelativeForce(-Vector3.left * speed);
             health = -1;
         }
-        else {
+        else
+        {
             rigid.AddRelativeForce(Vector3.down * speed);
+
         }
         //Destroy the shell after 5 sec
         Destroy(gameObject, 5);
     }
 
     //Collision detection
-    void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject != launcherParent) // || launcherParent == null
+    void OnCollisionEnter(Collision collision)
+    {
+        if (photonView.Owner == PhotonNetwork.MasterClient)
         {
-            if (photonView.Owner == PhotonNetwork.MasterClient)
+            //Check if is colliding with the launcher 
+            if (collision.gameObject != launcherParent || launcherParent == null)
             {
-                //Check if is colliding with the launcher 
                 //Check with who it is colliding
                 if (collision.gameObject.tag == "Destroyable")
                 {
-                    DestroyShell();
+                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                    //Destroy(gameObject);
+                    PhotonNetwork.Destroy(photonView);
                     return;
                 }
                 else if (collision.gameObject.tag == "Tank")
                 {
-                    //Inflict damage only if it is the opponent player !
-                    if (collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
-                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
-
-                    DestroyShell();
+                    collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
+                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                    // Destroy(gameObject);
+                    PhotonNetwork.Destroy(photonView);
                     return;
                 }
                 else
                 {
-                    DestroyShell();
+                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                    //Destroy(gameObject);
+                    PhotonNetwork.Destroy(photonView);
                     return;
                 }
 
@@ -94,17 +98,24 @@ public class TankShell : MonoBehaviour
 
                 }
                 else
-                {
-                    //Destroy if no life (bounce) remain
+                { //Destroy if no life (bounce) remain
                     Instantiate(explosionParticle, transform.position, Quaternion.identity);
                     //Destroy(gameObject);
                     PhotonNetwork.Destroy(photonView);
                     return;
                 }
+
+            }
+            else
+            {
+                Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                //Destroy(gameObject);
+                PhotonNetwork.Destroy(photonView);
+                return;
             }
         }
     }
-    
+
     public void DestroyShell()
     {
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);

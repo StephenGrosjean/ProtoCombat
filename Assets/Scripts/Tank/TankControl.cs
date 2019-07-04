@@ -166,9 +166,13 @@ public class TankControl : MonoBehaviour
         if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed)
         {
             quickFireReloadTime = 0;
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
+            //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
+                shootingPoint.position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
+            obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
-            //photonView.RPC("Fire", RpcTarget.AllViaServer, rigid.position, angle);
-            Fire(rigid.position, angle);
+            rigid.AddRelativeForce(-Vector3.left * knockBack);
         }
 
         //LARGE FIRE
