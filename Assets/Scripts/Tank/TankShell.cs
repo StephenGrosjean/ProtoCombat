@@ -32,18 +32,21 @@ public class TankShell : MonoBehaviour
     private int playerOwnerId; //Who launched it?
 
 
-    void Start()
+    void Awake()
     {
         photonView = GetComponent<PhotonView>();
 
-        if (PhotonNetwork.IsMasterClient)
-        {
+        if (!PhotonNetwork.IsMasterClient)
             photonView.TransferOwnership(PhotonNetwork.MasterClient);
-        }
 
         rigid = GetComponent<Rigidbody>();
+    }
+
+    void Start()
+    {
 
         //Add force to launch shell depending of the skyshell parameter 
+        /*
         if (!skyShell)
         {
             rigid.AddRelativeForce(-Vector3.left * speed);
@@ -54,8 +57,9 @@ public class TankShell : MonoBehaviour
             rigid.AddRelativeForce(Vector3.down * speed);
 
         }
+        */
         //Destroy the shell after 5 sec
-        Destroy(gameObject, 5);
+        //Destroy(gameObject, 5);
     }
 
     //Collision detection
@@ -76,7 +80,9 @@ public class TankShell : MonoBehaviour
                 }
                 else if (collision.gameObject.tag == "Tank")
                 {
-                    collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
+                    if(collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
+                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
+
                     Instantiate(explosionParticle, transform.position, Quaternion.identity);
                     // Destroy(gameObject);
                     PhotonNetwork.Destroy(photonView);
@@ -132,11 +138,10 @@ public class TankShell : MonoBehaviour
         this.playerOwnerId = playerOwnerId;
         this.SetLauncherParent(launcher);
 
-        //transform.forward = originalDirection;
         rigid.AddRelativeForce(-Vector3.left * speed);
-
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
-        rigidbody.velocity = transform.forward * 200.0f;
-        rigidbody.position += rigidbody.velocity * lag;
+        rigid.position += rigid.velocity * lag;
+        
+        //Destroy the shell after 5 sec
+        Destroy(gameObject, 5);
     }
 }
