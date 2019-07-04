@@ -13,19 +13,19 @@ using System.IO;
 /// </summary>
 public class TankControl : MonoBehaviour
 {
-    //[SerializeField] private int playerID; (NOT USED)
+    [SerializeField] public int playerId;
 
     [Header("Part settings")] [SerializeField]
     private Transform turret;
     //[SerializeField] private Transform body;
 
-    [Header("Fire Settings")] [SerializeField]
-    private GameObject smallShell;
-
-    [SerializeField] private GameObject largeShell;
+    [Header("Fire Settings")] 
     [SerializeField] private Transform shootingPoint;
     [SerializeField] private float quickShootingSpeed;
     [SerializeField] private float bigShootingSpeed;
+
+    [SerializeField] private GameObject smallShellPrefab;
+    [SerializeField] private GameObject bigShellPrefab;
 
     [Header("Control Settings")] [SerializeField]
     private float speed;
@@ -52,6 +52,10 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
     private bool shieldEnabled; //Is the shield is active?
 
+
+
+    private PhotonView photonView;
+
     //NOT USED
     /*[Header("Trail Settings")]
     [SerializeField] private bool spawnTrail;
@@ -71,6 +75,7 @@ public class TankControl : MonoBehaviour
     private float shieldActivationTime; //Current shield activation time
 
     private float angle;
+    public bool controllable; // Is true if the tank is spawned
 
     void Start()
     {
@@ -79,8 +84,19 @@ public class TankControl : MonoBehaviour
         reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
     }
 
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        photonView = GetComponent<PhotonView>();
+    }
+
     void FixedUpdate()
     {
+        if (!photonView.IsMine || !controllable)
+        {
+            return;
+        }
+
         //Increase shield activation Time
         if (shieldEnabled && shieldActivationTime < shieldActivationSpeed)
         {
@@ -129,7 +145,6 @@ public class TankControl : MonoBehaviour
             rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
         }
 
-
         //RELOAD UI
         if (useUI)
         {
@@ -151,13 +166,8 @@ public class TankControl : MonoBehaviour
         if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed)
         {
             quickFireReloadTime = 0;
-            Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
-            //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
-                shootingPoint.position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
-            obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
 
-            rigid.AddRelativeForce(-Vector3.left * knockBack);
+            photonView.RPC("Fire", RpcTarget.AllViaServer, rigid.position, angle);
         }
 
         //LARGE FIRE
@@ -208,5 +218,18 @@ public class TankControl : MonoBehaviour
         /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
              GetComponent<SkyShellSpawning>().StartBombardment();
          }*/
+    }
+
+    [PunRPC]
+    public void Fire(Vector3 position, float angle, PhotonMessageInfo info)
+    {
+        float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
+
+        Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
+        
+        GameObject shell = Instantiate(smallShellPrefab, position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
+        shell.GetComponent<TankShell>().InitializeShell(this.playerId, Mathf.Abs(lag));
+
+        rigid.AddRelativeForce(-Vector3.left * knockBack);
     }
 }

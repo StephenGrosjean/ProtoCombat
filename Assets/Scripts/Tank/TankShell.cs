@@ -28,11 +28,13 @@ public class TankShell : MonoBehaviour
 
     private PhotonView photonView;
 
+    private int playerOwnerId;
+
     void Start()
     {
         photonView = GetComponent<PhotonView>();
 
-        if (PhotonNetwork.IsMasterClient) {
+        if (!PhotonNetwork.IsMasterClient) {
             photonView.TransferOwnership(PhotonNetwork.MasterClient);
         }
 
@@ -45,7 +47,6 @@ public class TankShell : MonoBehaviour
         }
         else {
             rigid.AddRelativeForce(Vector3.down * speed);
-
         }
         //Destroy the shell after 5 sec
         Destroy(gameObject, 5);
@@ -102,5 +103,17 @@ public class TankShell : MonoBehaviour
      //Set the launcher Object
     public void SetLauncherParent(GameObject launcher) {
         launcherParent = launcher;
+    }
+
+    public void InitializeShell(int playerOwnerId, float lag)
+    {
+        this.playerOwnerId = playerOwnerId;
+
+        //transform.forward = originalDirection;
+        rigid.AddRelativeForce(-Vector3.left * speed);
+
+        Rigidbody rigidbody = GetComponent<Rigidbody>();
+        rigidbody.velocity = transform.forward * 200.0f;
+        rigidbody.position += rigidbody.velocity * lag;
     }
 }

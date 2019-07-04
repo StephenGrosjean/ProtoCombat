@@ -261,6 +261,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7063711642787460454}
+  - component: {fileID: 587779541075921611}
+  - component: {fileID: 788089134386048752}
   m_Layer: 9
   m_Name: TurretRotation
   m_TagString: Untagged
@@ -283,6 +285,43 @@ Transform:
   m_Father: {fileID: 8342974283890708325}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &587779541075921611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857977145620996390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 788089134386048752}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &788089134386048752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857977145620996390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 0
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!1 &2070337442106409505
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,14 +707,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aecfc51f84f2f7949b1ab5bb180febcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 0
   turret: {fileID: 7063711642787460454}
-  smallShell: {fileID: 2483962128604501344, guid: 9b5c5d3f2b4824a4d930a21881259bc2,
-    type: 3}
-  largeShell: {fileID: 2483962128604501344, guid: 6d1abcacfc4b0184fb1a7adca67d7a22,
-    type: 3}
   shootingPoint: {fileID: 7972126014696184480}
   quickShootingSpeed: 0.3
   bigShootingSpeed: 3
+  smallShellPrefab: {fileID: 2483962128604501344, guid: 9b5c5d3f2b4824a4d930a21881259bc2,
+    type: 3}
+  bigShellPrefab: {fileID: 2483962128604501344, guid: 6d1abcacfc4b0184fb1a7adca67d7a22,
+    type: 3}
   speed: 30
   maxSpeed: 20
   knockBack: 100
@@ -689,6 +729,7 @@ MonoBehaviour:
   forceField: {fileID: 8005190440884196072}
   forcefieldSize: {x: 5, y: 12, z: 5}
   shieldActivationSpeed: 1
+  controllable: 0
 --- !u!114 &39622936
 MonoBehaviour:
   m_ObjectHideFlags: 0
