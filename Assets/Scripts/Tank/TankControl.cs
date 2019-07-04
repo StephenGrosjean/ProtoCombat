@@ -13,19 +13,19 @@ using System.IO;
 /// </summary>
 public class TankControl : MonoBehaviour
 {
-    //[SerializeField] private int playerID; (NOT USED)
+    [SerializeField] public int playerId;
 
     [Header("Part settings")] [SerializeField]
     private Transform turret;
     //[SerializeField] private Transform body;
 
-    [Header("Fire Settings")] [SerializeField]
-    private GameObject smallShell;
-
-    [SerializeField] private GameObject largeShell;
+    [Header("Fire Settings")] 
     [SerializeField] private Transform shootingPoint;
     [SerializeField] private float quickShootingSpeed;
     [SerializeField] private float bigShootingSpeed;
+
+    [SerializeField] private GameObject smallShellPrefab;
+    [SerializeField] private GameObject bigShellPrefab;
 
     [Header("Control Settings")] [SerializeField]
     private float speed;
@@ -52,6 +52,10 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
     private bool shieldEnabled; //Is the shield is active?
 
+
+
+    private PhotonView photonView;
+
     //NOT USED
     /*[Header("Trail Settings")]
     [SerializeField] private bool spawnTrail;
@@ -71,6 +75,7 @@ public class TankControl : MonoBehaviour
     private float shieldActivationTime; //Current shield activation time
 
     private float angle;
+    public bool controllable; // Is true if the tank is spawned
 
     private SoundManager soundManager;
 
@@ -82,8 +87,19 @@ public class TankControl : MonoBehaviour
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        photonView = GetComponent<PhotonView>();
+    }
+
     void FixedUpdate()
     {
+        if (!photonView.IsMine || !controllable)
+        {
+            return;
+        }
+
         //Increase shield activation Time
         if (shieldEnabled && shieldActivationTime < shieldActivationSpeed)
         {
@@ -131,7 +147,6 @@ public class TankControl : MonoBehaviour
             dashReloadTime = 0;
             rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
         }
-
 
         //RELOAD UI
         if (useUI)
@@ -212,6 +227,18 @@ public class TankControl : MonoBehaviour
         /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
              GetComponent<SkyShellSpawning>().StartBombardment();
          }*/
+    }
+
+    public void Fire(Vector3 position, float aAngle)
+    {
+        //float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
+
+        Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
+
+        GameObject shell = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
+            position, Quaternion.Euler(new Vector3(0, aAngle + 180.0f, 0)));
+        
+        //rigid.AddRelativeForce(-Vector3.left * knockBack);
     }
 
     void OnCollisionEnter(Collision collision)

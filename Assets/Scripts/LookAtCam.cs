@@ -25,11 +25,11 @@ public class LookAtCam : MonoBehaviour
 
     void FindTargets() {
         if (PhotonNetwork.IsMasterClient) {
-            firstTarget = GameObject.Find("PhotonTank1").transform;
+            firstTarget = GameObject.Find("PhotonTankMaster").transform;
             secondTarget = GameObject.Find("PhotonTank(Clone)").transform;
         }
         else {
-            firstTarget = GameObject.Find("PhotonTank2").transform;
+            firstTarget = GameObject.Find("PhotonTankClient").transform;
             secondTarget = GameObject.Find("PhotonTank(Clone)").transform;
         }
     }
