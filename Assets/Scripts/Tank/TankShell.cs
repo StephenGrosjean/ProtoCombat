@@ -73,7 +73,7 @@ public class TankShell : MonoBehaviour
                 //Check with who it is colliding
                 if (collision.gameObject.tag == "Destroyable")
                 {
-                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
                     //Destroy(gameObject);
                     PhotonNetwork.Destroy(photonView);
                     return;
@@ -83,14 +83,14 @@ public class TankShell : MonoBehaviour
                     if(collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
                         collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
 
-                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
                     // Destroy(gameObject);
                     PhotonNetwork.Destroy(photonView);
                     return;
                 }
                 else
                 {
-                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
                     //Destroy(gameObject);
                     PhotonNetwork.Destroy(photonView);
                     return;
@@ -114,7 +114,7 @@ public class TankShell : MonoBehaviour
             }
             else
             {
-                Instantiate(explosionParticle, transform.position, Quaternion.identity);
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
                 //Destroy(gameObject);
                 PhotonNetwork.Destroy(photonView);
                 return;

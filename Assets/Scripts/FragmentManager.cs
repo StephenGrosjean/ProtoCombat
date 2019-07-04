@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 /// <summary>
 /// Fragment Manager Script
@@ -20,23 +21,24 @@ public class FragmentManager : MonoBehaviour
     }
 
     //Add fragment to list
-    public void AddFragment(GameObject frag) {
+    public void AddFragment(GameObject frag)
+    {
         //If fragment count is bellow max allowed
-        if(fragments.Count > fragmentMaxCount) {
+        if (fragments.Count > fragmentMaxCount)
+        {
             int position = Random.Range(1, GetFragmentCount()); //generate random position from  1 to end of list
             GameObject fragmentToDestroy = fragments[position].gameObject; //Find fragment at this random position
             fragments.RemoveAt(position); //Remove fragment at this position
             Destroy(fragmentToDestroy); //Destroy fragment
         }
         fragments.Add(frag); //Add fragment to list
-
     }
 
     //Get the fragment count
     public int GetFragmentCount() {
         return fragments.Count;
     }
-    
+
     //Remove fragment from list
     public void RemoveFragment(GameObject frag) {
         fragments.Remove(frag);

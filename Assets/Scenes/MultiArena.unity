@@ -5801,23 +5801,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioMixer: {fileID: 0}
+  menuMusicClip: {fileID: 0}
+  inGameMusicClip: {fileID: 0}
+  lastMusicClip: {fileID: 0}
+  listShieldSoundClip: []
+  strikSoundClip: {fileID: 0}
+  shootSoundClip: {fileID: 0}
+  explosionSoundClip: {fileID: 0}
   winSoundClip: {fileID: 0}
   loseSoundClip: {fileID: 0}
-  takeFlagSoundClip: {fileID: 0}
-  flagBackSoundClip: {fileID: 0}
-  handMovementSoundClip: {fileID: 0}
-  walkClip1: {fileID: 0}
-  walkClip2: {fileID: 0}
-  walkClip3: {fileID: 0}
-  walkClip4: {fileID: 0}
-  walkClip5: {fileID: 0}
   hitClip1: {fileID: 0}
   hitClip2: {fileID: 0}
-  punchClip1: {fileID: 0}
-  punchClip2: {fileID: 0}
-  punchClip3: {fileID: 0}
-  punchClip4: {fileID: 0}
-  punchClip5: {fileID: 0}
   emitterPrefab: {fileID: 3951027311739364543, guid: 041a6b49310945044a29639b99ec7178,
     type: 3}
   emitterNumber: 20
@@ -7179,6 +7173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1409182542}
   - component: {fileID: 1409182541}
+  - component: {fileID: 1409182543}
   m_Layer: 0
   m_Name: FragmentManager
   m_TagString: Untagged
@@ -7214,6 +7209,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1409182543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409182540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 2
+  InstantiationId: 2
+  isRuntimeInstantiated: 0
 --- !u!1 &1411096082
 GameObject:
   m_ObjectHideFlags: 0

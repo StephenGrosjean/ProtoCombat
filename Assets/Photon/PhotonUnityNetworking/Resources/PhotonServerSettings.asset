@@ -18,7 +18,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 0.1
     UseNameServer: 1
-    FixedRegion: eu
+    FixedRegion: 
     Server: 
     Port: 0
     Protocol: 0
@@ -38,5 +38,8 @@ MonoBehaviour:
   - LowerLife
   - SetHealth
   - DestroyShell
+  - privateAddFragment
+  - EnableObjectAndBreak
+  - EnableObjectAndExplode
   DisableAutoOpenWizard: 1
   ShowSettings: 1

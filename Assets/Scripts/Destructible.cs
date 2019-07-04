@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 /// <summary>
 /// Destructible script
 /// </summary>
@@ -19,44 +20,50 @@ public class Destructible : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision) {
-        //Check with what it is colliding
-        if(collision.transform.tag == "Shell") {
-            Destroy(collision.gameObject);
-            EnableObjectAndExplode(collision.transform.position, collision.transform.GetComponent<Rigidbody>());
-            
-        }
-        else if(collision.transform.tag != "Fragment"){
-            //Check break force
-            if(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point).magnitude >= breakForce) {
-                EnableObjectAndBreak(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point));
+        if (PhotonNetwork.IsMasterClient)
+        {
+            //Check with what it is colliding
+            if(collision.transform.tag == "Shell") {
+                //PhotonNetwork.Destroy(collision.gameObject);
+                if (collision.gameObject.GetComponent<TankShell>().TypeShell == TankShell.ShellType.Small)
+                    GetComponent<PhotonView>().RPC("EnableObjectAndExplode", RpcTarget.All, collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude);
+                else
+                    GetComponent<PhotonView>().RPC("EnableObjectAndExplode", RpcTarget.All, collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude * 100.0f);
+            }
+            else if(collision.transform.tag != "Fragment"){
+                //Check break force
+                if(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point).magnitude >= breakForce) {
+                    EnableObjectAndBreak(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point));
+                }
             }
         }
     }
+    
 
     //Explode into Fragments
-    void EnableObjectAndExplode(Vector3 forcePosition, Rigidbody collisionRigid) {
+    [PunRPC]
+    void EnableObjectAndExplode(Vector3 forcePosition, float explosionForce) {
         transform.DetachChildren(); //Detatch each child
         float i = 0;
         foreach (Transform cube in cubes) {
             i+=0.1f;
             cube.gameObject.SetActive(true);
-
             fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
-            Destroy(cube.gameObject, timeToDestroy + i); //Destroy fragment after some time
+            //PhotonNetwork.Destroy(cube.gameObject, timeToDestroy + i);
+            //Destroy(cube.gameObject, timeToDestroy + i); //Destroy fragment after some time
 
             //Add explosion force depending of the shell type
-            if (collisionRigid.gameObject.GetComponent<TankShell>().TypeShell == TankShell.ShellType.Small) {
-                cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude * force, forcePosition, 3);
-            }
-            else{
-                cube.GetComponent<Rigidbody>().AddExplosionForce(collisionRigid.velocity.magnitude * force * 100, forcePosition, 1);
-            }
+            cube.GetComponent<Rigidbody>().AddExplosionForce(explosionForce * force, forcePosition, 3);
         }
-        Destroy(light); //Destroy the light
-        Destroy(gameObject); //Destroy the parent object
+
+        PhotonNetwork.Destroy(light.gameObject);
+        //Destroy(light); //Destroy the light
+        PhotonNetwork.Destroy(gameObject);
+        //Destroy(gameObject); //Destroy the parent object
     }
 
     //Break into Fragment
+    [PunRPC]
     void EnableObjectAndBreak(Vector3 collisionVelocity) {
         transform.DetachChildren(); //Detatch each child
         float i = 0;
@@ -64,11 +71,12 @@ public class Destructible : MonoBehaviour
         foreach (Transform cube in cubes) {
             i += 0.1f;
             cube.gameObject.SetActive(true);
-            Destroy(cube.gameObject, timeToDestroy + i);  //Destroy after some time
-            fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
+            //PhotonNetwork.Destroy(cube.gameObject, timeToDestroy + i);  //Destroy after some time
+            if (PhotonNetwork.IsMasterClient)
+                fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
             cube.gameObject.GetComponent<Rigidbody>().velocity = collisionVelocity; //Keep velocity
         }
-        Destroy(light); //Destroy the light
-        Destroy(gameObject); //Destroy the parent object
+        PhotonNetwork.Destroy(light); //Destroy the light
+        PhotonNetwork.Destroy(gameObject); //Destroy the parent object
     }
 }
