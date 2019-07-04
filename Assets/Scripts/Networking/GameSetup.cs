@@ -14,6 +14,9 @@ public class GameSetup : MonoBehaviour
 
     private void CreatePlayer() {
         Debug.Log("Creating Player");
+
+        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlayMusic(SoundManager.MusicList.INGAME);
+
         Vector3 spawnPosition;
         string name;
         int playerId;
