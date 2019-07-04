@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System.IO;
 
 /// <summary>
 /// Script for the Tank Shells
@@ -28,18 +29,23 @@ public class TankShell : MonoBehaviour
 
     private PhotonView photonView;
 
-    private int playerOwnerId;
+    private int playerOwnerId; //Who launched it?
+
+    void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+        photonView = GetComponent<PhotonView>();
+
+        /*
+        if (PhotonNetwork.IsMasterClient)
+        {
+            photonView.TransferOwnership(PhotonNetwork.MasterClient);
+        }
+        */
+    }
 
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
-
-        if (!PhotonNetwork.IsMasterClient) {
-            photonView.TransferOwnership(PhotonNetwork.MasterClient);
-        }
-
-        rigid = GetComponent<Rigidbody>();
-
         //Add force to launch shell depending of the skyshell parameter 
         if (!skyShell) {
             rigid.AddRelativeForce(-Vector3.left * speed);
@@ -54,60 +60,66 @@ public class TankShell : MonoBehaviour
 
     //Collision detection
     void OnCollisionEnter(Collision collision) {
-        if (photonView.Owner == PhotonNetwork.MasterClient) {
-            //Check if is colliding with the launcher 
-            if (collision.gameObject != launcherParent || launcherParent == null) {
+        if (collision.gameObject != launcherParent) // || launcherParent == null
+        {
+            if (photonView.Owner == PhotonNetwork.MasterClient)
+            {
+                //Check if is colliding with the launcher 
                 //Check with who it is colliding
-                if (collision.gameObject.tag == "Destroyable") {
-                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
-                    //Destroy(gameObject);
-                    PhotonNetwork.Destroy(photonView);
+                if (collision.gameObject.tag == "Destroyable")
+                {
+                    DestroyShell();
                     return;
                 }
-                else if (collision.gameObject.tag == "Tank") {
-                    collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
-                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
-                    // Destroy(gameObject);
-                    PhotonNetwork.Destroy(photonView);
+                else if (collision.gameObject.tag == "Tank")
+                {
+                    //Inflict damage only if it is the opponent player !
+                    if (collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
+                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(5); //Deal damages to other tank
+
+                    DestroyShell();
                     return;
                 }
-                else {
-                    Instantiate(explosionParticle, transform.position, Quaternion.identity);
-                    //Destroy(gameObject);
-                    PhotonNetwork.Destroy(photonView);
+                else
+                {
+                    DestroyShell();
                     return;
                 }
 
                 //Decrease life for the bounce
-                if (health > 0) {
+                if (health > 0)
+                {
                     rigid.velocity *= 2; //Double the velocity
                     health--;
 
                 }
-                else { //Destroy if no life (bounce) remain
+                else
+                {
+                    //Destroy if no life (bounce) remain
                     Instantiate(explosionParticle, transform.position, Quaternion.identity);
                     //Destroy(gameObject);
                     PhotonNetwork.Destroy(photonView);
                     return;
                 }
-
-            }
-            else {
-                Instantiate(explosionParticle, transform.position, Quaternion.identity);
-                //Destroy(gameObject);
-                PhotonNetwork.Destroy(photonView);
-                return;
             }
         }
     }
+    
+    public void DestroyShell()
+    {
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
+        PhotonNetwork.Destroy(photonView);
+    }
+
      //Set the launcher Object
     public void SetLauncherParent(GameObject launcher) {
         launcherParent = launcher;
     }
 
-    public void InitializeShell(int playerOwnerId, float lag)
+    public void InitializeShell(int playerOwnerId, GameObject launcher, float lag)
     {
         this.playerOwnerId = playerOwnerId;
+        this.SetLauncherParent(launcher);
 
         //transform.forward = originalDirection;
         rigid.AddRelativeForce(-Vector3.left * speed);

@@ -167,7 +167,8 @@ public class TankControl : MonoBehaviour
         {
             quickFireReloadTime = 0;
 
-            photonView.RPC("Fire", RpcTarget.AllViaServer, rigid.position, angle);
+            //photonView.RPC("Fire", RpcTarget.AllViaServer, rigid.position, angle);
+            Fire(rigid.position, angle);
         }
 
         //LARGE FIRE
@@ -220,16 +221,15 @@ public class TankControl : MonoBehaviour
          }*/
     }
 
-    [PunRPC]
-    public void Fire(Vector3 position, float angle, PhotonMessageInfo info)
+    public void Fire(Vector3 position, float aAngle)
     {
-        float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
+        //float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
 
         Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
-        
-        GameObject shell = Instantiate(smallShellPrefab, position, Quaternion.Euler(new Vector3(0, angle + 180.0f, 0)));
-        shell.GetComponent<TankShell>().InitializeShell(this.playerId, Mathf.Abs(lag));
 
-        rigid.AddRelativeForce(-Vector3.left * knockBack);
+        GameObject shell = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
+            position, Quaternion.Euler(new Vector3(0, aAngle + 180.0f, 0)));
+        
+        //rigid.AddRelativeForce(-Vector3.left * knockBack);
     }
 }
