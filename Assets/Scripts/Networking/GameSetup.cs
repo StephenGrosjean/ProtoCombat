@@ -19,13 +19,11 @@ public class GameSetup : MonoBehaviour
         int playerId;
         if (PhotonNetwork.IsMasterClient) {
             spawnPosition = spawnPoint1.position;
-            name = "PhotonTank1";
             playerId = 1;
 
         }
         else {
             spawnPosition = spawnPoint2.position;
-            name = "PhotonTank2";
             playerId = 2;
         }
 
