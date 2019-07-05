@@ -189,12 +189,6 @@ public class TankControl : MonoBehaviour
 
             //turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
 
-            //DASH
-            if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime) {
-                dashReloadTime = 0;
-                rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
-            }
-
             //RELOAD UI
             if (useUI) {
                 reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
@@ -231,6 +225,12 @@ public class TankControl : MonoBehaviour
                 obj.GetComponent<TankShell>().GetComponent<PhotonView>().RPC("InitializeShell", RpcTarget.All, this.playerId, turret.transform.rotation);
 
                 rigid.AddRelativeForce(-turret.transform.forward * knockBack);
+            }
+
+            //DASH
+            if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime) {
+                dashReloadTime = 0;
+                rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
             }
 
             //LARGE FIRE
