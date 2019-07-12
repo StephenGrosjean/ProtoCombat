@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
         FIRE,
         EXPLOSION,
         SHIELD,
-        STRIK
+        STRIKE
     }
 
     public struct LoopedSound
@@ -136,7 +136,7 @@ public class SoundManager : MonoBehaviour
                     emitterAvailable.clip = listShieldSoundClip[index];
                     emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;
-                case SoundList.STRIK:
+                case SoundList.STRIKE:
                     emitterAvailable.clip = strikSoundClip;
                     emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;

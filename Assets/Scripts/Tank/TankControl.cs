@@ -79,11 +79,10 @@ public class TankControl : MonoBehaviour
     private float shieldActivationTime; //Current shield activation time
 
     private float angle;
-    public bool controllable; // Is true if the tank is spawned
 
     private SoundManager soundManager;
 
-    private bool canControl = true;
+    public bool canControl = true;
     private float currentAngle;
 
     void Start()
@@ -150,7 +149,7 @@ public class TankControl : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if (!photonView.IsMine || !controllable) {
+        if (!photonView.IsMine || !canControl) {
             return;
         }
 
@@ -182,106 +181,106 @@ public class TankControl : MonoBehaviour
         if (rigid.velocity.magnitude <= maxSpeed) {
             rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
         }
+    
+        //Rotate the tank 
+        transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
 
-        if (canControl) {
-            //Rotate the tank 
-            transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
+        //turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
 
-            //turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
-
-            //RELOAD UI
-            if (useUI) {
-                reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
-                //reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
-                reloadDash.fillAmount = dashReloadTime / dashCooldownTime;
-
-            }
-
-            //MOVE CANNON
-            /*Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-            Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos);
-            Debug.Log(direction);
-            if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f) {
-                angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90.0f;
-                turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
-            }*/
-
-            float input = GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL) * 10;
-            turret.Rotate(0.0f, angle, 0.0f);
+        //RELOAD UI
+        if (useUI) {
+            reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
+            //reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
+            reloadDash.fillAmount = dashReloadTime / dashCooldownTime;
 
         }
+
+        //MOVE CANNON
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos);
+        Debug.Log(direction);
+        if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f) {
+            angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
+            turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+        }
+
+        //float input = GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL) * 10;
+        //turret.Rotate(0.0f, angle, 0.0f);
+
     }
 
-    private void Update() {
-        if (canControl) { 
-            //FIRE
-            if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed) {
-                quickFireReloadTime = 0;
-                Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
-                //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
-                GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
-                    shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+    private void Update()
+    {
+        if (!canControl)
+            return;
 
-                obj.GetComponent<TankShell>().GetComponent<PhotonView>().RPC("InitializeShell", RpcTarget.All, this.playerId, turret.transform.rotation);
+        //FIRE
+        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed) {
+            quickFireReloadTime = 0;
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
+            //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
+                shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
 
-                rigid.AddRelativeForce(-turret.transform.forward * knockBack);
-            }
+            obj.GetComponent<TankShell>().GetComponent<PhotonView>().RPC("InitializeShell", RpcTarget.All, this.playerId, turret.transform.rotation);
 
-            //DASH
-            if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime) {
-                dashReloadTime = 0;
-                rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
-            }
-
-            //LARGE FIRE
-            /*
-            if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && bigFireReloadTime >= bigShootingSpeed) {
-                bigFireReloadTime = 0;
-                Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
-                //GameObject obj = Instantiate(largeShell, shootingPoint.position, transform.rotation);
-                GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), shootingPoint.position, turret.rotation);
-
-                obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
-                obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
-                rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
-            }*/
-
-            //FORCEFIELD
-            /*if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
-                shieldEnabled = !shieldEnabled;
-                soundManager.PlaySound(SoundManager.SoundList.SHIELD);
-            }
-
-            forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
-            */
-
-            //TRAIL (NOT USED)
-            /* if(rigid.velocity.magnitude != 0 && spawnTrail) {
-                 spawnLightTimer += Time.deltaTime;
-                 if(spawnLightTimer > lightSpacing) {
-                     spawnLightTimer = 0;
-                     GameObject lightTrail1 = Instantiate(trailLight, new Vector3(tracks[0].position.x, -2.25f, tracks[0].position.z), trailLight.transform.rotation);
-                     GameObject lightTrail2 = Instantiate(trailLight, new Vector3(tracks[1].position.x, -2.25f, tracks[1].position.z), trailLight.transform.rotation);
-                     trailLights.Add(lightTrail1);
-                     trailLights.Add(lightTrail2);
-
-                     lightTrail1.transform.SetParent(trailContainer);
-                     lightTrail2.transform.SetParent(trailContainer);
-
-                 }
-             }
-
-             if(trailLights.Count > maxTrailLights) {
-                 trailLights.RemoveAt(0);
-                 Destroy(trailLights[0]);
-             }
-             */
-
-            //SKY BOMBING
-            /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
-                 GetComponent<SkyShellSpawning>().StartBombardment();
-             }*/
+            rigid.AddRelativeForce(-turret.transform.forward * knockBack);
         }
+
+        //DASH
+        if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime) {
+            dashReloadTime = 0;
+            rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
+        }
+
+        //LARGE FIRE
+        /*
+        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && bigFireReloadTime >= bigShootingSpeed) {
+            bigFireReloadTime = 0;
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
+            //GameObject obj = Instantiate(largeShell, shootingPoint.position, transform.rotation);
+            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), shootingPoint.position, turret.rotation);
+
+            obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
+            obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
+            rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
+        }*/
+
+        //FORCEFIELD
+        /*if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
+            shieldEnabled = !shieldEnabled;
+            soundManager.PlaySound(SoundManager.SoundList.SHIELD);
+        }
+
+        forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
+        */
+
+        //TRAIL (NOT USED)
+        /* if(rigid.velocity.magnitude != 0 && spawnTrail) {
+             spawnLightTimer += Time.deltaTime;
+             if(spawnLightTimer > lightSpacing) {
+                 spawnLightTimer = 0;
+                 GameObject lightTrail1 = Instantiate(trailLight, new Vector3(tracks[0].position.x, -2.25f, tracks[0].position.z), trailLight.transform.rotation);
+                 GameObject lightTrail2 = Instantiate(trailLight, new Vector3(tracks[1].position.x, -2.25f, tracks[1].position.z), trailLight.transform.rotation);
+                 trailLights.Add(lightTrail1);
+                 trailLights.Add(lightTrail2);
+
+                 lightTrail1.transform.SetParent(trailContainer);
+                 lightTrail2.transform.SetParent(trailContainer);
+
+             }
+         }
+
+         if(trailLights.Count > maxTrailLights) {
+             trailLights.RemoveAt(0);
+             Destroy(trailLights[0]);
+         }
+         */
+
+        //SKY BOMBING
+        /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
+             GetComponent<SkyShellSpawning>().StartBombardment();
+         }*/
     }
 
     public void Fire(Vector3 position, float aAngle)
@@ -298,7 +297,7 @@ public class TankControl : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        soundManager.PlaySound(SoundManager.SoundList.STRIK);
+        soundManager.PlaySound(SoundManager.SoundList.STRIKE);
     }
 
     public void ToggleRenderers(bool value) {

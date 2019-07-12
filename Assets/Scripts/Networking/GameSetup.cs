@@ -35,6 +35,6 @@ public class GameSetup : MonoBehaviour
         GameObject tank = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonTank"), spawnPosition, Quaternion.identity);
         tank.name = name;
         tank.GetComponent<TankControl>().playerId = playerId;
-        tank.GetComponent<TankControl>().controllable = true;
+        tank.GetComponent<TankControl>().canControl = true;
     }
 }

@@ -129,7 +129,7 @@ public static class GameInput {
         if (logInput && result)
             Debug.Log("Input : " + inputType.ToString() + " was pressed and called !");
 
-        CheckLastControllerUsed();
+        CheckControllerLastUsed();
         return result;
     }
 
@@ -212,7 +212,7 @@ public static class GameInput {
         if (logInput && deltaMove != 0.0f)
             Debug.Log("Moving : " + axisType.ToString() + " " + deltaMove);
 
-        CheckLastControllerUsed();
+        CheckControllerLastUsed();
         return deltaMove;
     }
     public static float GetAxisRaw(AxisType axisType)
@@ -253,7 +253,7 @@ public static class GameInput {
         if (logInput && deltaMove != 0.0f)
             Debug.Log("Moving : " + axisType.ToString() + " " + deltaMove);
 
-        CheckLastControllerUsed();
+        CheckControllerLastUsed();
         return deltaMove;
     }
 
@@ -261,7 +261,9 @@ public static class GameInput {
     public static Vector2 GetDirection(DirectionType directionType, Vector2 origin)
     {
         Vector2 direction = new Vector2(0, 0);
-        CheckLastControllerUsed();
+        CheckControllerLastUsed();
+
+        Debug.Log("keyboardLastPressed" + keyboardLastPressed);
         
         if(directionType == DirectionType.R_INPUT && keyboardLastPressed)
         {
@@ -269,7 +271,7 @@ public static class GameInput {
             v3.z = 10.0f;
             //v3 = Camera.main.ScreenToWorldPoint(v3);
 
-            direction = new Vector2(origin.x - v3.x, origin.y - v3.y);
+            direction = new Vector2(v3.x - origin.x, v3.y - origin.y);
         }
         else if(directionType == DirectionType.R_INPUT)
         {
@@ -290,16 +292,35 @@ public static class GameInput {
         return direction;
     }
 
-    private static void CheckLastControllerUsed()
+    private static void CheckControllerLastUsed()
     {
         InputDevice device = InputManager.ActiveDevice;
-        if (device.AnyButtonIsPressed)
-        {
-            keyboardLastPressed = false;
-        }
-        if (Input.anyKey)
+        if (Input.anyKey || Input.GetMouseButton(0) || Input.GetMouseButton(1))
         {
             keyboardLastPressed = true;
+        }
+        if (Input.GetKey(KeyCode.Joystick1Button0) ||
+             Input.GetKey(KeyCode.Joystick1Button1) ||
+             Input.GetKey(KeyCode.Joystick1Button2) ||
+             Input.GetKey(KeyCode.Joystick1Button3) ||
+             Input.GetKey(KeyCode.Joystick1Button4) ||
+             Input.GetKey(KeyCode.Joystick1Button5) ||
+             Input.GetKey(KeyCode.Joystick1Button6) ||
+             Input.GetKey(KeyCode.Joystick1Button7) ||
+             Input.GetKey(KeyCode.Joystick1Button8) ||
+             Input.GetKey(KeyCode.Joystick1Button9) ||
+             Input.GetKey(KeyCode.Joystick1Button10) ||
+             Input.GetKey(KeyCode.Joystick1Button11) ||
+             Input.GetKey(KeyCode.Joystick1Button12) ||
+             Input.GetKey(KeyCode.Joystick1Button13) ||
+             Input.GetKey(KeyCode.Joystick1Button14) ||
+             Input.GetKey(KeyCode.Joystick1Button15) ||
+             Input.GetKey(KeyCode.Joystick1Button16) ||
+             Input.GetKey(KeyCode.Joystick1Button17) ||
+             Input.GetKey(KeyCode.Joystick1Button18) ||
+             Input.GetKey(KeyCode.Joystick1Button19))
+        {
+            keyboardLastPressed = false;
         }
     }
 }
