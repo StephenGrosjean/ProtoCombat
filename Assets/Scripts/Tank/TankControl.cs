@@ -177,45 +177,47 @@ public class TankControl : MonoBehaviour
             bigFireReloadTime += Time.deltaTime;
         }
 
-        //Add tank forward speed if under the maxSpeed limit
-        if (rigid.velocity.magnitude <= maxSpeed) {
-            rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
+        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL)) > 0.01f)
+            photonView.RPC("SendInputRPC", RpcTarget.All, GameInput.GetAxis(GameInput.AxisType.L_VERTICAL));
+
+        /*
+        rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
+
+        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL)) > 0.01f)
+        {
+            photonView.RPC("SyncMovementRPC", RpcTarget.Others, rigid.velocity, rigid.position);
         }
-    
+        */
+
+
         //Rotate the tank 
         transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
 
-        //turret.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL), 0) * rotationSpeed);
+        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL)) > 0.01f)
+        {
+            photonView.RPC("SyncRotationRPC", RpcTarget.Others, transform.rotation);
+        }
 
         //RELOAD UI
         if (useUI) {
             reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
             //reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
             reloadDash.fillAmount = dashReloadTime / dashCooldownTime;
-
         }
 
         //MOVE CANNON
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos);
-        Debug.Log(direction);
-        if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f) {
+        if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f)
+        {
             angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
-            turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+
+            photonView.RPC("SyncTurretRotationRPC", RpcTarget.All, angle);
         }
 
-        //float input = GameInput.GetAxis(GameInput.AxisType.R_HORIZONTAL) * 10;
-        //turret.Rotate(0.0f, angle, 0.0f);
-
-    }
-
-    private void Update()
-    {
-        if (!canControl)
-            return;
-
         //FIRE
-        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed) {
+        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed)
+        {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
             //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
@@ -228,59 +230,63 @@ public class TankControl : MonoBehaviour
         }
 
         //DASH
-        if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime) {
+        if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime)
+        {
             dashReloadTime = 0;
             rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
         }
-
-        //LARGE FIRE
-        /*
-        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && bigFireReloadTime >= bigShootingSpeed) {
-            bigFireReloadTime = 0;
-            Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
-            //GameObject obj = Instantiate(largeShell, shootingPoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), shootingPoint.position, turret.rotation);
-
-            obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
-            obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
-            rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
-        }*/
-
-        //FORCEFIELD
-        /*if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
-            shieldEnabled = !shieldEnabled;
-            soundManager.PlaySound(SoundManager.SoundList.SHIELD);
+    }
+    private void Update()
+    {
+        //Add tank forward speed if under the maxSpeed limit
+        if (rigid.velocity.magnitude >= maxSpeed)
+        {
+            rigid.velocity = rigid.velocity.normalized * maxSpeed;
         }
+        /*
+            //LARGE FIRE
 
-        forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
-        */
+            if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && bigFireReloadTime >= bigShootingSpeed) {
+                bigFireReloadTime = 0;
+                Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
+                //GameObject obj = Instantiate(largeShell, shootingPoint.position, transform.rotation);
+                GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), shootingPoint.position, turret.rotation);
 
-        //TRAIL (NOT USED)
-        /* if(rigid.velocity.magnitude != 0 && spawnTrail) {
-             spawnLightTimer += Time.deltaTime;
-             if(spawnLightTimer > lightSpacing) {
-                 spawnLightTimer = 0;
-                 GameObject lightTrail1 = Instantiate(trailLight, new Vector3(tracks[0].position.x, -2.25f, tracks[0].position.z), trailLight.transform.rotation);
-                 GameObject lightTrail2 = Instantiate(trailLight, new Vector3(tracks[1].position.x, -2.25f, tracks[1].position.z), trailLight.transform.rotation);
-                 trailLights.Add(lightTrail1);
-                 trailLights.Add(lightTrail2);
+                obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
+                obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
+                rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
+            }
 
-                 lightTrail1.transform.SetParent(trailContainer);
-                 lightTrail2.transform.SetParent(trailContainer);
+            //FORCEFIELD
+            if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
+                shieldEnabled = !shieldEnabled;
+                soundManager.PlaySound(SoundManager.SoundList.SHIELD);
+            }
 
+            forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
+
+
+            //TRAIL (NOT USED)
+             if(rigid.velocity.magnitude != 0 && spawnTrail) {
+                 spawnLightTimer += Time.deltaTime;
+                 if(spawnLightTimer > lightSpacing) {
+                     spawnLightTimer = 0;
+                     GameObject lightTrail1 = Instantiate(trailLight, new Vector3(tracks[0].position.x, -2.25f, tracks[0].position.z), trailLight.transform.rotation);
+                     GameObject lightTrail2 = Instantiate(trailLight, new Vector3(tracks[1].position.x, -2.25f, tracks[1].position.z), trailLight.transform.rotation);
+                     trailLights.Add(lightTrail1);
+                     trailLights.Add(lightTrail2);
+
+                     lightTrail1.transform.SetParent(trailContainer);
+                     lightTrail2.transform.SetParent(trailContainer);
+
+                 }
              }
-         }
 
-         if(trailLights.Count > maxTrailLights) {
-             trailLights.RemoveAt(0);
-             Destroy(trailLights[0]);
-         }
-         */
-
-        //SKY BOMBING
-        /* if (GameInput.GetInputDown(GameInput.InputType.DASH)) {
-             GetComponent<SkyShellSpawning>().StartBombardment();
-         }*/
+             if(trailLights.Count > maxTrailLights) {
+                 trailLights.RemoveAt(0);
+                 Destroy(trailLights[0]);
+             }
+        */
     }
 
     public void Fire(Vector3 position, float aAngle)
@@ -311,5 +317,33 @@ public class TankControl : MonoBehaviour
         bodyRenderer.enabled = value;
         turretRenderer.enabled = value;
         canControl = value;
+    }
+
+    [PunRPC]
+    void SyncMovementRPC(Vector3 velocity, Vector3 position, PhotonMessageInfo info)
+    {
+        float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
+
+        rigid.velocity = velocity;
+        rigid.position = position + velocity * lag;
+    }
+
+    [PunRPC]
+    void SyncRotationRPC(Quaternion rotation, PhotonMessageInfo info)
+    {
+
+        transform.rotation = rotation;
+    }
+
+    [PunRPC]
+    void SyncTurretRotationRPC(float angle)
+    {
+        turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+    }
+
+    [PunRPC]
+    void SendInputRPC(float movementInput, PhotonMessageInfo info)
+    {
+        rigid.AddRelativeForce(new Vector3(movementInput, 0, 0) * speed, moveForceMode);
     }
 }

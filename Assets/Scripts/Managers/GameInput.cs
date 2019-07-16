@@ -263,8 +263,6 @@ public static class GameInput {
         Vector2 direction = new Vector2(0, 0);
         CheckControllerLastUsed();
 
-        Debug.Log("keyboardLastPressed" + keyboardLastPressed);
-        
         if(directionType == DirectionType.R_INPUT && keyboardLastPressed)
         {
             Vector3 v3 = Input.mousePosition;

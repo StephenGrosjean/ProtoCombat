@@ -314,7 +314,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857977145620996390}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -737,7 +737,7 @@ MonoBehaviour:
   trackRenderer2: {fileID: 1058796000}
   masterColor: {r: 0.35689166, g: 0.81960785, b: 0, a: 1}
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
-  controllable: 0
+  canControl: 1
 --- !u!114 &39622936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -771,7 +771,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 2
-  OwnershipTransfer: 0
+  OwnershipTransfer: 2
   ObservedComponents:
   - {fileID: 147783622208084153}
   viewIdField: 0

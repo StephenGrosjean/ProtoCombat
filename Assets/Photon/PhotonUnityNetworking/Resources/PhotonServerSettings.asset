@@ -18,7 +18,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 0.1
     UseNameServer: 1
-    FixedRegion: eu
+    FixedRegion: 
     Server: 
     Port: 0
     Protocol: 0
@@ -43,5 +43,10 @@ MonoBehaviour:
   - EnableObjectAndExplode
   - InitializeShell
   - ToggleRenderersRPC
+  - SyncMovement
+  - SyncMovementRPC
+  - SyncRotationRPC
+  - SyncTurretRotationRPC
+  - SendInputRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
