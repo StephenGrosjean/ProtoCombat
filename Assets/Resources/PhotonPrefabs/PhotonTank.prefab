@@ -721,6 +721,7 @@ MonoBehaviour:
   maxSpeed: 20
   knockBack: 100
   rotationSpeed: 4
+  turretRotationSpeed: 4
   moveForceMode: 0
   dashPower: 2000
   dashCooldownTime: 3

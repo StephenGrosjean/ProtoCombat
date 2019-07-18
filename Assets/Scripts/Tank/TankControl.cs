@@ -13,6 +13,11 @@ using System.IO;
 /// </summary>
 public class TankControl : MonoBehaviour
 {
+    //DEBUG VARIABLES
+
+    //END DEBUG
+
+
     [SerializeField] public int playerId;
 
     [Header("Part settings")] [SerializeField]
@@ -33,6 +38,8 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float maxSpeed;
     [SerializeField] private float knockBack;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private float turretRotationSpeed;
+
     [SerializeField] private ForceMode moveForceMode;
 
     [Header("Dash Settings")]
@@ -84,6 +91,11 @@ public class TankControl : MonoBehaviour
 
     public bool canControl = true;
     private float currentAngle;
+
+    private void OnDrawGizmos() {
+
+    }
+
 
     void Start()
     {
@@ -177,9 +189,9 @@ public class TankControl : MonoBehaviour
             bigFireReloadTime += Time.deltaTime;
         }
 
-        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL)) > 0.01f)
-            photonView.RPC("SendInputRPC", RpcTarget.All, GameInput.GetAxis(GameInput.AxisType.L_VERTICAL));
-
+        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL)) > 0.01f) {
+            photonView.RPC("SendInputRPC", RpcTarget.All,GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
+        }
         /*
         rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
 
@@ -191,12 +203,12 @@ public class TankControl : MonoBehaviour
 
 
         //Rotate the tank 
-        transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
+        /*transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
 
         if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL)) > 0.01f)
         {
             photonView.RPC("SyncRotationRPC", RpcTarget.Others, transform.rotation);
-        }
+        }*/
 
         //RELOAD UI
         if (useUI) {
@@ -207,12 +219,12 @@ public class TankControl : MonoBehaviour
 
         //MOVE CANNON
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos);
+        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, Vector2.zero);
         if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f)
         {
             angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
 
-            photonView.RPC("SyncTurretRotationRPC", RpcTarget.All, angle);
+            photonView.RPC("SyncTurretRotationRPC", RpcTarget.All, direction);
         }
 
         //FIRE
@@ -336,14 +348,26 @@ public class TankControl : MonoBehaviour
     }
 
     [PunRPC]
-    void SyncTurretRotationRPC(float angle)
+    void SyncTurretRotationRPC(Vector2 direction)
     {
-        turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+
+        //turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+
+        //Rotate turret toward direction
+        float step = turretRotationSpeed * Time.deltaTime;
+        Vector3 newDir = Vector3.RotateTowards(turret.transform.forward, new Vector3(direction.x, 0, direction.y)*-1, step, 0.0f);
+        turret.transform.rotation = Quaternion.LookRotation(newDir);
     }
 
     [PunRPC]
-    void SendInputRPC(float movementInput, PhotonMessageInfo info)
+    void SendInputRPC(Vector2 movementInput, PhotonMessageInfo info)
     {
-        rigid.AddRelativeForce(new Vector3(movementInput, 0, 0) * speed, moveForceMode);
+        //Rotate tank toward direction
+        float step = rotationSpeed * Time.deltaTime;
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, new Vector3(movementInput.x, 0, movementInput.y), step, 0.0f);
+        transform.rotation = Quaternion.LookRotation(newDir);
+
+        //Move tank
+        rigid.AddForce(transform.right * speed, moveForceMode);
     }
 }
