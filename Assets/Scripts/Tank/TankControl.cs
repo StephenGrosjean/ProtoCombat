@@ -219,7 +219,7 @@ public class TankControl : MonoBehaviour
 
         //MOVE CANNON
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, Vector2.zero);
+        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos);
         if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f)
         {
             angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
