@@ -189,7 +189,7 @@ public class TankControl : MonoBehaviour
             bigFireReloadTime += Time.deltaTime;
         }
 
-        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL)) > 0.01f) {
+        if (GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero).magnitude > 0.01f) {
             photonView.RPC("SendInputRPC", RpcTarget.All,GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
         }
         /*
