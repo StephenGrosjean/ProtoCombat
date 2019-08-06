@@ -48,10 +48,10 @@ public class TankHealth : MonoBehaviour
     }
 
     IEnumerator WaitForRespawn(Vector3 spawnPosition) {
-        GetComponent<TankControl>().ToggleRenderers(false);
+        GetComponent<TankControl>().ToggleRenderersNetwork(false);
         yield return new WaitForSeconds(1);
         transform.position = spawnPosition;
-        GetComponent<TankControl>().ToggleRenderers(true);
+        GetComponent<TankControl>().ToggleRenderersNetwork(true);
     }
 
     [PunRPC]

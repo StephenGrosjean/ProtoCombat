@@ -38,7 +38,7 @@ public class MultiControllerManager : MonoBehaviour
     void Awake()
     {
         InputManager.OnDeviceAttached += AttachDevice;
-        InputManager.OnDeviceAttached += DetachDevice;
+        InputManager.OnDeviceDetached += DetachDevice;
     }
 
     void AttachDevice(InputDevice device)
@@ -57,6 +57,7 @@ public class MultiControllerManager : MonoBehaviour
                 ControllerToPlayer ctPlayer = listOfControllers[i];
                 ctPlayer.controllerState = ControllerState.ATTACHED;
                 ctPlayer.gameState = GameState.PLAYING;
+                ctPlayer.player.GetComponent<TankControl>().canControl = true;
                 listOfControllers[i] = ctPlayer;
                 break;
             }
@@ -66,7 +67,7 @@ public class MultiControllerManager : MonoBehaviour
         if (!reFoundController)
         {
             Debug.Log("New Connected controller : " + listOfControllers.Count);
-            ControllerToPlayer ctPlayer;
+            ControllerToPlayer ctPlayer = new ControllerToPlayer();
             ctPlayer.playerId = listOfControllers.Count;
             ctPlayer.device = device;
             ctPlayer.controllerState = ControllerState.ATTACHED;
@@ -81,7 +82,6 @@ public class MultiControllerManager : MonoBehaviour
 
             listOfControllers.Add(ctPlayer);
             NumController++;
-
         }
     }
 
@@ -95,6 +95,7 @@ public class MultiControllerManager : MonoBehaviour
                 ControllerToPlayer ctPlayer = listOfControllers[i];
                 ctPlayer.controllerState = ControllerState.DETACHED;
                 ctPlayer.gameState = GameState.NOT_PLAYING;
+                ctPlayer.player.GetComponent<TankControl>().canControl = false;
                 break;
             }
         }

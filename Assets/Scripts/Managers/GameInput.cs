@@ -44,54 +44,57 @@ public static class GameInput {
     }
 
     /* public functions, callable on any scripts */
-    public static bool GetInputDown(InputType inputType)
+    public static bool GetInputDown(InputType inputType, InputDevice inputDevice = null)
     {
-        return GetInput(inputType, TimeType.DOWN);
+        return GetInput(inputType, TimeType.DOWN, inputDevice);
     }
-    public static bool GetInputUp(InputType inputType)
+    public static bool GetInputUp(InputType inputType, InputDevice inputDevice = null)
     {
-        return GetInput(inputType, TimeType.UP);
+        return GetInput(inputType, TimeType.UP, inputDevice);
     }
-    public static bool GetInput(InputType inputType)
+    public static bool GetInput(InputType inputType, InputDevice inputDevice = null)
     {
-        return GetInput(inputType, TimeType.HOLD);
+        return GetInput(inputType, TimeType.HOLD, inputDevice);
     }
 
     /* Fonction principale d'appel des inputs
      *
      * Pour changer la configuration des manettes ou du clavier, veuillez le faire ici !     
      */
-    private static bool GetInput(InputType inputType, TimeType timeType)
+    private static bool GetInput(InputType inputType, TimeType timeType, InputDevice inputDevice = null)
     {
         InputDevice device = InputManager.ActiveDevice;
+        if (inputDevice != null)
+            device = inputDevice;
+
         bool result = false;
         switch (inputType)
         {
             case InputType.LEFT:
-                result = GetInput(InputControlType.LeftStickLeft, timeType) ||
-                         GetInput(InputControlType.DPadLeft, timeType) ||
-                         GetInput(InputControlType.RightStickLeft, timeType) ||
+                result = GetInput(InputControlType.LeftStickLeft, timeType, device) ||
+                         GetInput(InputControlType.DPadLeft, timeType, device) ||
+                         GetInput(InputControlType.RightStickLeft, timeType, device) ||
                          GetInput(KeyCode.D, timeType) ||
                          GetInput(KeyCode.RightArrow, timeType);
                 break;
             case InputType.RIGHT:
-                result = GetInput(InputControlType.LeftStickRight, timeType) ||
-                         GetInput(InputControlType.DPadRight, timeType) ||
-                         GetInput(InputControlType.RightStickRight, timeType) ||
+                result = GetInput(InputControlType.LeftStickRight, timeType, device) ||
+                         GetInput(InputControlType.DPadRight, timeType, device) ||
+                         GetInput(InputControlType.RightStickRight, timeType, device) ||
                          GetInput(KeyCode.A, timeType) ||
                          GetInput(KeyCode.LeftArrow, timeType);
                 break;
             case InputType.UP:
-                result = GetInput(InputControlType.LeftStickUp, timeType) ||
-                         GetInput(InputControlType.DPadUp, timeType) ||
-                         GetInput(InputControlType.RightStickUp, timeType) ||
+                result = GetInput(InputControlType.LeftStickUp, timeType, device) ||
+                         GetInput(InputControlType.DPadUp, timeType, device) ||
+                         GetInput(InputControlType.RightStickUp, timeType, device) ||
                          GetInput(KeyCode.W, timeType) ||
                          GetInput(KeyCode.UpArrow, timeType);
                 break;
             case InputType.DOWN:
-                result = GetInput(InputControlType.LeftStickDown, timeType) ||
-                         GetInput(InputControlType.DPadDown, timeType) ||
-                         GetInput(InputControlType.RightStickDown, timeType) ||
+                result = GetInput(InputControlType.LeftStickDown, timeType, device) ||
+                         GetInput(InputControlType.DPadDown, timeType, device) ||
+                         GetInput(InputControlType.RightStickDown, timeType, device) ||
                          GetInput(KeyCode.S, timeType) ||
                          GetInput(KeyCode.DownArrow, timeType);
                 break;
@@ -104,24 +107,24 @@ public static class GameInput {
                          GetInput(KeyCode.Escape, timeType);
                 break;
             case InputType.SHOOT:
-                result = GetInput(InputControlType.RightTrigger, timeType) ||
-                         GetInput(InputControlType.RightBumper, timeType) ||
+                result = GetInput(InputControlType.RightTrigger, timeType, device) ||
+                         GetInput(InputControlType.RightBumper, timeType, device) ||
                          GetInput(0, timeType);
                 break;
             case InputType.DEFENSE:
-                result = GetInput(InputControlType.LeftTrigger, timeType) ||
-                         GetInput(InputControlType.LeftBumper, timeType) ||
+                result = GetInput(InputControlType.LeftTrigger, timeType, device) ||
+                         GetInput(InputControlType.LeftBumper, timeType, device) ||
                          GetInput(KeyCode.E, timeType);
                 break;
             case InputType.DASH:
-                result = GetInput(InputControlType.Action2, timeType) ||
-                         GetInput(InputControlType.LeftStickButton, timeType) ||
+                result = GetInput(InputControlType.Action2, timeType, device) ||
+                         GetInput(InputControlType.LeftStickButton, timeType, device) ||
                          GetInput(KeyCode.Q, timeType) ||
                          GetInput(1, timeType); 
                 break;
             case InputType.PAUSE:
-                result = GetInput(InputControlType.Start, timeType) ||
-                         GetInput(InputControlType.Menu, timeType) ||
+                result = GetInput(InputControlType.Start, timeType, device) ||
+                         GetInput(InputControlType.Menu, timeType, device) ||
                          GetInput(KeyCode.Escape, timeType);
                 break;
         }
@@ -133,9 +136,12 @@ public static class GameInput {
         return result;
     }
 
-    private static bool GetInput(InputControlType input, TimeType timeType)
+    private static bool GetInput(InputControlType input, TimeType timeType, InputDevice inputDevice = null)
     {
         InputDevice device = InputManager.ActiveDevice;
+        if (inputDevice != null)
+            device = inputDevice;
+
         switch (timeType)
         {
             case TimeType.UP:
@@ -174,10 +180,14 @@ public static class GameInput {
         return false;
     }
 
-    public static float GetAxis(AxisType axisType)
+    public static float GetAxis(AxisType axisType, InputDevice inputDevice = null)
     {
         float deltaMove = 0.0f;
+
         InputDevice device = InputManager.ActiveDevice;
+        if (inputDevice != null)
+            device = inputDevice;
+
         switch (axisType)
         {
             case AxisType.L_HORIZONTAL:
@@ -215,10 +225,14 @@ public static class GameInput {
         CheckControllerLastUsed();
         return deltaMove;
     }
-    public static float GetAxisRaw(AxisType axisType)
+    public static float GetAxisRaw(AxisType axisType, InputDevice inputDevice = null)
     {
         float deltaMove = 0.0f;
+
         InputDevice device = InputManager.ActiveDevice;
+        if (inputDevice != null)
+            device = inputDevice;
+
         switch (axisType)
         {
             case AxisType.L_HORIZONTAL:
@@ -258,7 +272,7 @@ public static class GameInput {
     }
 
     // Asks for the screenPosition if using the keyboard
-    public static Vector2 GetDirection(DirectionType directionType, Vector2 origin)
+    public static Vector2 GetDirection(DirectionType directionType, Vector2 origin, InputDevice inputDevice = null)
     {
         Vector2 direction = new Vector2(0, 0);
         CheckControllerLastUsed();
@@ -273,13 +287,13 @@ public static class GameInput {
         }
         else if(directionType == DirectionType.R_INPUT)
         {
-            direction.x = GetAxis(AxisType.R_HORIZONTAL);
-            direction.y = GetAxis(AxisType.R_VERTICAL);
+            direction.x = GetAxis(AxisType.R_HORIZONTAL, inputDevice);
+            direction.y = GetAxis(AxisType.R_VERTICAL, inputDevice);
         }
         else
         {
-            direction.x = GetAxis(AxisType.L_HORIZONTAL);
-            direction.y = GetAxis(AxisType.L_VERTICAL);
+            direction.x = GetAxis(AxisType.L_HORIZONTAL, inputDevice);
+            direction.y = GetAxis(AxisType.L_VERTICAL, inputDevice);
         }
         
         direction.Normalize();

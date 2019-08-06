@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
+using InControl;
 
 
 /// <summary>
@@ -13,11 +14,6 @@ using System.IO;
 /// </summary>
 public class TankControl : MonoBehaviour
 {
-    //DEBUG VARIABLES
-
-    //END DEBUG
-
-
     [SerializeField] public int playerId;
 
     [Header("Part settings")] [SerializeField]
@@ -92,10 +88,8 @@ public class TankControl : MonoBehaviour
     public bool canControl = true;
     private float currentAngle;
 
-    private void OnDrawGizmos() {
-
-    }
-
+    private bool gameIsInNetwork;
+    private InputDevice playerDevice;
 
     void Start()
     {
@@ -105,7 +99,7 @@ public class TankControl : MonoBehaviour
 
         //reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-
+        
         if (PhotonNetwork.IsMasterClient) {
             if (photonView.IsMine) {
                 playerId = 0;
@@ -161,7 +155,7 @@ public class TankControl : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if (!photonView.IsMine || !canControl) {
+        if ((gameIsInNetwork && !photonView.IsMine) || !canControl) {
             return;
         }
 
@@ -189,9 +183,13 @@ public class TankControl : MonoBehaviour
             bigFireReloadTime += Time.deltaTime;
         }
 
-        if (GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero).magnitude > 0.01f) {
-            photonView.RPC("SendInputRPC", RpcTarget.All,GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
+        if (GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice).magnitude > 0.01f) {
+            if(gameIsInNetwork)
+                photonView.RPC("MoveTankRPC", RpcTarget.All,GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
+            else
+                MoveTank(GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice));
         }
+
         /*
         rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
 
@@ -219,35 +217,48 @@ public class TankControl : MonoBehaviour
 
         //MOVE CANNON
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos);
+        Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos, playerDevice);
         if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f)
         {
             angle = -Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
 
-            photonView.RPC("SyncTurretRotationRPC", RpcTarget.All, direction);
+            if (gameIsInNetwork)
+                photonView.RPC("RotateTurretRPC", RpcTarget.All, direction);
+            else
+                RotateTurret(direction);
         }
 
         //FIRE
-        if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && quickFireReloadTime >= quickShootingSpeed)
+        if (GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice) && quickFireReloadTime >= quickShootingSpeed)
         {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
-            //GameObject obj = Instantiate(smallShell, shootingPoint.position, transform.rotation);
-            GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
-                shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
 
-            obj.GetComponent<TankShell>().GetComponent<PhotonView>().RPC("InitializeShell", RpcTarget.All, this.playerId, turret.transform.rotation);
+            GameObject obj;
+            if (gameIsInNetwork)
+            {
+                obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
+                    shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+
+                obj.GetComponent<PhotonView>().RPC("InitializeShell", RpcTarget.All, this.playerId, turret.transform.rotation);
+            }
+            else
+            {
+                obj = Instantiate(smallShellPrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+                obj.GetComponent<TankShell>().InitializeShell(this.playerId, turret.transform.rotation);
+            }
 
             rigid.AddRelativeForce(-turret.transform.forward * knockBack);
         }
 
         //DASH
-        if (GameInput.GetInputDown(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime)
+        if (GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice) && dashReloadTime >= dashCooldownTime)
         {
             dashReloadTime = 0;
             rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
         }
     }
+
     private void Update()
     {
         //Add tank forward speed if under the maxSpeed limit
@@ -301,29 +312,23 @@ public class TankControl : MonoBehaviour
         */
     }
 
-    public void Fire(Vector3 position, float aAngle)
-    {
-        //float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
-
-        Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
-
-        GameObject shell = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
-            position, Quaternion.Euler(new Vector3(0, aAngle + 180.0f, 0)));
-        
-        //rigid.AddRelativeForce(-Vector3.left * knockBack);
-    }
-
     void OnCollisionEnter(Collision collision)
     {
         soundManager.PlaySound(SoundManager.SoundList.STRIKE);
     }
 
-    public void ToggleRenderers(bool value) {
+    public void ToggleRenderersNetwork(bool value) {
         photonView.RPC("ToggleRenderersRPC", RpcTarget.All, value);
     }
 
     [PunRPC]
-    void ToggleRenderersRPC(bool value) {
+    void ToggleRenderersRPC(bool value)
+    {
+        ToggleRenderers(value);
+    }
+
+    void ToggleRenderers(bool value)
+    {
         trackRenderer1.enabled = value;
         trackRenderer2.enabled = value;
         bodyRenderer.enabled = value;
@@ -343,24 +348,30 @@ public class TankControl : MonoBehaviour
     [PunRPC]
     void SyncRotationRPC(Quaternion rotation, PhotonMessageInfo info)
     {
-
         transform.rotation = rotation;
     }
 
     [PunRPC]
-    void SyncTurretRotationRPC(Vector2 direction)
+    void RotateTurretRPC(Vector2 direction)
     {
+        RotateTurret(direction);
+    }
 
-        //turret.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
-
+    void RotateTurret(Vector2 direction)
+    {
         //Rotate turret toward direction
         float step = turretRotationSpeed * Time.deltaTime;
-        Vector3 newDir = Vector3.RotateTowards(turret.transform.forward, new Vector3(direction.x, 0, direction.y)*-1, step, 0.0f);
+        Vector3 newDir = Vector3.RotateTowards(turret.transform.forward, new Vector3(direction.x, 0, direction.y) * -1, step, 0.0f);
         turret.transform.rotation = Quaternion.LookRotation(newDir);
     }
 
     [PunRPC]
-    void SendInputRPC(Vector2 movementInput, PhotonMessageInfo info)
+    void MoveTankRPC(Vector2 movementInput, PhotonMessageInfo info)
+    {
+        MoveTank(movementInput);
+    }
+
+    void MoveTank(Vector2 movementInput)
     {
         //Rotate tank toward direction
         float step = rotationSpeed * Time.deltaTime;
@@ -369,5 +380,19 @@ public class TankControl : MonoBehaviour
 
         //Move tank
         rigid.AddForce(transform.right * speed, moveForceMode);
+    }
+
+    public void SetupNetwork(bool inNetwork)
+    {
+        gameIsInNetwork = inNetwork;
+        GetComponent<TankNetwork>().enabled = inNetwork;
+        GetComponent<PhotonTransformView>().enabled = inNetwork;
+    }
+
+    public void InitController(InputDevice device)
+    {
+        playerDevice = device;
+        SetupNetwork(false);
+        canControl = true;
     }
 }

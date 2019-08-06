@@ -630,10 +630,10 @@ GameObject:
   - component: {fileID: 7972126014355846598}
   - component: {fileID: 7972126014355846651}
   - component: {fileID: 39622936}
+  - component: {fileID: 3977150560421553345}
   - component: {fileID: 787743013130168852}
   - component: {fileID: 147783622208084153}
   - component: {fileID: 4571998684226022826}
-  - component: {fileID: 3977150560421553345}
   m_Layer: 9
   m_Name: PhotonTank
   m_TagString: Tank
@@ -756,6 +756,21 @@ MonoBehaviour:
   shellPrefab: {fileID: 2483962128604501344, guid: ac26f1a877c67e641ae4d358d57ebd8b,
     type: 3}
   timer: 0.2
+--- !u!114 &3977150560421553345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7972126014355846597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd8d194c84bf5b2469b4320f7b0f3f1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  lifes: 3
+  explosionPrefab: {fileID: 0}
 --- !u!114 &787743013130168852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -785,7 +800,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7972126014355846597}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -800,26 +815,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7972126014355846597}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e15f0a56e8030e4eacd5680d47ac349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3977150560421553345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7972126014355846597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd8d194c84bf5b2469b4320f7b0f3f1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
-  lifes: 3
-  explosionPrefab: {fileID: 0}
 --- !u!1 &7972126014696184495
 GameObject:
   m_ObjectHideFlags: 0
