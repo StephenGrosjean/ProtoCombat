@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class MainMenuController : MonoBehaviour
         optionsPanel.SetActive(false);
 
         subTitle.text = localText;
+
+        SceneManager.LoadScene("LocalArena");
     }
 
     public void GotoMainMenu() {
