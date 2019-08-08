@@ -402,7 +402,6 @@ public class TankControl : MonoBehaviour
         }
         else
         {
-            Debug.Log("Setup Network :" + false);
             gameIsInNetwork = false;
             GetComponent<TankNetwork>().enabled = false;
             GetComponent<PhotonTransformView>().enabled = false;
@@ -412,7 +411,6 @@ public class TankControl : MonoBehaviour
     [PunRPC]
     public void SetupNetworkRPC()
     {
-        Debug.Log("Setup Network :" + true);
         gameIsInNetwork = true;
         GetComponent<TankNetwork>().enabled = true;
         GetComponent<PhotonTransformView>().enabled = true;

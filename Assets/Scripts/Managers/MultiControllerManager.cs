@@ -8,6 +8,7 @@ using XInputDotNetPure;
 public class MultiControllerManager : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private List<Transform> spawnPositions;
 
     public struct ControllerToPlayer
     {
@@ -75,7 +76,12 @@ public class MultiControllerManager : MonoBehaviour
 
             if (playerPrefab != null)
             {
-                GameObject newPlayerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+
+                Vector3 spawnPosition = Vector3.zero;
+                if (spawnPositions.Count >= listOfControllers.Count)
+                    spawnPosition = spawnPositions[listOfControllers.Count].position;
+
+                GameObject newPlayerObj = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
                 newPlayerObj.GetComponent<TankControl>().InitController(device);
                 ctPlayer.player = newPlayerObj;
             }
