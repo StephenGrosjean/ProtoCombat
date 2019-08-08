@@ -26,9 +26,9 @@ public class Destructible : MonoBehaviour
             if(collision.transform.tag == "Shell") {
                 //PhotonNetwork.Destroy(collision.gameObject);
                 if (collision.gameObject.GetComponent<TankShell>().TypeShell == TankShell.ShellType.Small)
-                    GetComponent<PhotonView>().RPC("EnableObjectAndExplode", RpcTarget.All, collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude);
+                    GetComponent<PhotonView>().RPC("EnableObjectAndExplodeRPC", RpcTarget.All, collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude);
                 else
-                    GetComponent<PhotonView>().RPC("EnableObjectAndExplode", RpcTarget.All, collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude * 100.0f);
+                    GetComponent<PhotonView>().RPC("EnableObjectAndExplodeRPC", RpcTarget.All, collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude * 100.0f);
             }
             else if(collision.transform.tag != "Fragment"){
                 //Check break force
@@ -39,10 +39,9 @@ public class Destructible : MonoBehaviour
         }
     }
     
-
     //Explode into Fragments
     [PunRPC]
-    void EnableObjectAndExplode(Vector3 forcePosition, float explosionForce) {
+    void EnableObjectAndExplodeRPC(Vector3 forcePosition, float explosionForce) {
         transform.DetachChildren(); //Detatch each child
         float i = 0;
         foreach (Transform cube in cubes) {
@@ -56,12 +55,12 @@ public class Destructible : MonoBehaviour
             cube.GetComponent<Rigidbody>().AddExplosionForce(explosionForce * force, forcePosition, 3);
         }
 
-        PhotonNetwork.Destroy(light.gameObject);
+        Destroy(light.gameObject);
         //Destroy(light); //Destroy the light
-        PhotonNetwork.Destroy(gameObject);
+        Destroy(gameObject);
         //Destroy(gameObject); //Destroy the parent object
     }
-
+    
     //Break into Fragment
     [PunRPC]
     void EnableObjectAndBreak(Vector3 collisionVelocity) {
@@ -76,7 +75,7 @@ public class Destructible : MonoBehaviour
                //fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
             cube.gameObject.GetComponent<Rigidbody>().velocity = collisionVelocity; //Keep velocity
         }
-        PhotonNetwork.Destroy(light); //Destroy the light
-        PhotonNetwork.Destroy(gameObject); //Destroy the parent object
+        Destroy(light); //Destroy the light
+        Destroy(gameObject); //Destroy the parent object
     }
 }

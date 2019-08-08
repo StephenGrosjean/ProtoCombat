@@ -155,7 +155,9 @@ public class TankControl : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if ((gameIsInNetwork && !photonView.IsMine) || !canControl) {
+        if (!canControl && ((gameIsInNetwork && !photonView.IsMine && playerDevice == null) ||
+            (!gameIsInNetwork && playerDevice != null)))
+        {
             return;
         }
 
@@ -185,7 +187,7 @@ public class TankControl : MonoBehaviour
 
         if (GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice).magnitude > 0.01f) {
             if(gameIsInNetwork)
-                photonView.RPC("MoveTankRPC", RpcTarget.All,GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
+                photonView.RPC("MoveTankRPC", RpcTarget.All, GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
             else
                 MoveTank(GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice));
         }
@@ -240,7 +242,7 @@ public class TankControl : MonoBehaviour
                 obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
                     shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
 
-                obj.GetComponent<PhotonView>().RPC("InitializeShell", RpcTarget.All, this.playerId, turret.transform.rotation);
+                obj.GetComponent<PhotonView>().RPC("InitializeShellRPC", RpcTarget.All, this.playerId, turret.transform.rotation);
             }
             else
             {
@@ -252,6 +254,7 @@ public class TankControl : MonoBehaviour
         }
 
         //DASH
+        // TODO : LE RENDRE NETWORKED
         if (GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice) && dashReloadTime >= dashCooldownTime)
         {
             dashReloadTime = 0;
@@ -387,6 +390,8 @@ public class TankControl : MonoBehaviour
         gameIsInNetwork = inNetwork;
         GetComponent<TankNetwork>().enabled = inNetwork;
         GetComponent<PhotonTransformView>().enabled = inNetwork;
+        if(inNetwork)
+            playerDevice = null;
     }
 
     public void InitController(InputDevice device)
