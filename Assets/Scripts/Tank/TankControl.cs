@@ -88,7 +88,7 @@ public class TankControl : MonoBehaviour
     public bool canControl = true;
     private float currentAngle;
 
-    private bool gameIsInNetwork;
+    public bool gameIsInNetwork;
     private InputDevice playerDevice;
 
     void Start()
@@ -154,12 +154,21 @@ public class TankControl : MonoBehaviour
         photonView = GetComponent<PhotonView>();
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+        {
+        // Debug.Log("playerId :" + playerId);
+        // Debug.Log("isMaster :" + PhotonNetwork.IsMasterClient);
+        // Debug.Log("isMine :" + photonView.IsMine);
+        // Debug.Log("gameIsInNetwork :" + gameIsInNetwork);
         if (!canControl && ((gameIsInNetwork && !photonView.IsMine && playerDevice == null) ||
             (!gameIsInNetwork && playerDevice != null)))
         {
+            //Debug.Log("Passed : false");
             return;
         }
+
+        //Debug.Log("Passed : true");
+
 
         //Increase shield activation Time
         if (shieldEnabled && shieldActivationTime < shieldActivationSpeed) {
@@ -387,11 +396,27 @@ public class TankControl : MonoBehaviour
 
     public void SetupNetwork(bool inNetwork)
     {
-        gameIsInNetwork = inNetwork;
-        GetComponent<TankNetwork>().enabled = inNetwork;
-        GetComponent<PhotonTransformView>().enabled = inNetwork;
-        if(inNetwork)
-            playerDevice = null;
+        if (inNetwork)
+        {
+            photonView.RPC("SetupNetworkRPC", RpcTarget.All);
+        }
+        else
+        {
+            Debug.Log("Setup Network :" + false);
+            gameIsInNetwork = false;
+            GetComponent<TankNetwork>().enabled = false;
+            GetComponent<PhotonTransformView>().enabled = false;
+        }
+    }
+
+    [PunRPC]
+    public void SetupNetworkRPC()
+    {
+        Debug.Log("Setup Network :" + true);
+        gameIsInNetwork = true;
+        GetComponent<TankNetwork>().enabled = true;
+        GetComponent<PhotonTransformView>().enabled = true;
+        playerDevice = null;
     }
 
     public void InitController(InputDevice device)
