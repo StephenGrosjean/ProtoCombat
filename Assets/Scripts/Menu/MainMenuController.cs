@@ -63,4 +63,8 @@ public class MainMenuController : MonoBehaviour
         subTitle.text = optionsText;
 
     }
+
+    public void Quit() {
+        Application.Quit();
+    }
 }
