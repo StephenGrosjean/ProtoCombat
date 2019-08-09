@@ -82,7 +82,7 @@ public class MultiControllerManager : MonoBehaviour
                     spawnPosition = spawnPositions[listOfControllers.Count].position;
 
                 GameObject newPlayerObj = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-                newPlayerObj.GetComponent<TankControl>().InitController(device);
+                newPlayerObj.GetComponent<TankControl>().SetupPlayer(ctPlayer.playerId, false, device);
                 ctPlayer.player = newPlayerObj;
             }
 

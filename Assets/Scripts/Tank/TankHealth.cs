@@ -14,7 +14,7 @@ public class TankHealth : MonoBehaviour
     private PhotonView photonView;
     private GameplayManager GPManager;
     private int health; //Health
-
+    public bool inNetwork;
 
     private void Start() {
         health = maxHealth;
@@ -26,32 +26,44 @@ public class TankHealth : MonoBehaviour
     {
         //Check if health below 0
         if(health <= 0 && lifes > 0) {
-            //Instantiate(explosionPrefab); //Instantiate explosion 
-            //Destroy(gameObject); //Destroy obejct
-            if (photonView.IsMine) {
-                if (PhotonNetwork.IsMasterClient) {
+            if (inNetwork)
+            {
+                if (PhotonNetwork.IsMasterClient)
+                {
                     photonView.RPC("SetHealth", RpcTarget.All, maxHealth);
                     photonView.RPC("LowerLife", RpcTarget.All, 1);
-                    StartCoroutine("WaitForRespawn", GPManager.SpawnPointMaster.position);
-                }
-                else {
-                    photonView.RPC("SetHealth", RpcTarget.All, maxHealth);
-                    photonView.RPC("LowerLife", RpcTarget.All, 1);
-                    StartCoroutine("WaitForRespawn",GPManager.SpawnPointClient.position);
                 }
             }
+            else
+            {
+                SetHealth(maxHealth);
+                LowerLife(1);
+            }
+            StartCoroutine("WaitForRespawn", GPManager.SpawnPointMaster.position);
         }
     }
 
-    public void TakeDamage(int dmg) {
-        photonView.RPC("Damage", RpcTarget.All, dmg);
-    }
-
     IEnumerator WaitForRespawn(Vector3 spawnPosition) {
-        GetComponent<TankControl>().ToggleRenderersNetwork(false);
+        if(inNetwork)
+            photonView.RPC("ToggleRenderersRPC", RpcTarget.All, false);
+        else
+            GetComponent<TankControl>().ToggleRenderers(false);
+
         yield return new WaitForSeconds(1);
         transform.position = spawnPosition;
-        GetComponent<TankControl>().ToggleRenderersNetwork(true);
+
+        if (inNetwork)
+            photonView.RPC("ToggleRenderersRPC", RpcTarget.All, true);
+        else
+            GetComponent<TankControl>().ToggleRenderers(true);
+    }
+
+    public void TakeDamage(int dmg)
+    {
+        if (inNetwork)
+            photonView.RPC("Damage", RpcTarget.All, dmg);
+        else
+            Damage(dmg);
     }
 
     [PunRPC]

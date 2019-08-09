@@ -99,35 +99,6 @@ public class TankControl : MonoBehaviour
 
         //reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-        
-        if (PhotonNetwork.IsMasterClient) {
-            if (photonView.IsMine) {
-                playerId = 0;
-                SetBodyColor(masterColor);
-                SetTurretColor(masterColor);
-                SetTrackColor(masterColor);
-            }
-            else {
-                playerId = 1;
-                SetBodyColor(clientColor);
-                SetTurretColor(clientColor);
-                SetTrackColor(clientColor);
-            }
-        }
-        else {
-            if (photonView.IsMine) {
-                playerId = 1;
-                SetBodyColor(clientColor);
-                SetTurretColor(clientColor);
-                SetTrackColor(clientColor);
-            }
-            else {
-                playerId = 0;
-                SetBodyColor(masterColor);
-                SetTurretColor(masterColor);
-                SetTrackColor(masterColor);
-            }
-        }
     }
 
     void SetBodyColor(Color color) {
@@ -324,10 +295,12 @@ public class TankControl : MonoBehaviour
         */
     }
 
+    /*
     void OnCollisionEnter(Collision collision)
     {
         soundManager.PlaySound(SoundManager.SoundList.STRIKE);
     }
+    */
 
     public void ToggleRenderersNetwork(bool value) {
         photonView.RPC("ToggleRenderersRPC", RpcTarget.All, value);
@@ -339,7 +312,7 @@ public class TankControl : MonoBehaviour
         ToggleRenderers(value);
     }
 
-    void ToggleRenderers(bool value)
+    public void ToggleRenderers(bool value)
     {
         trackRenderer1.enabled = value;
         trackRenderer2.enabled = value;
@@ -394,20 +367,6 @@ public class TankControl : MonoBehaviour
         rigid.AddForce(transform.right * speed, moveForceMode);
     }
 
-    public void SetupNetwork(bool inNetwork)
-    {
-        if (inNetwork)
-        {
-            photonView.RPC("SetupNetworkRPC", RpcTarget.All);
-        }
-        else
-        {
-            gameIsInNetwork = false;
-            GetComponent<TankNetwork>().enabled = false;
-            GetComponent<PhotonTransformView>().enabled = false;
-        }
-    }
-
     [PunRPC]
     public void SetupNetworkRPC()
     {
@@ -417,10 +376,42 @@ public class TankControl : MonoBehaviour
         playerDevice = null;
     }
 
-    public void InitController(InputDevice device)
+    public void SetupPlayer(int playerId, bool inNetwork, InputDevice device = null)
     {
-        playerDevice = device;
-        SetupNetwork(false);
+        this.playerId = playerId;
+
+        if (!inNetwork && device != null)
+        {
+            playerDevice = device;
+            gameIsInNetwork = false;
+            GetComponent<TankNetwork>().enabled = false;
+            GetComponent<PhotonTransformView>().enabled = false;
+        }
+        else
+        {
+            photonView.RPC("SetupNetworkRPC", RpcTarget.All);
+        }
+
+        GetComponent<TankHealth>().inNetwork = inNetwork;
+
         canControl = true;
+        SetupColor();
+    }
+
+    private void SetupColor()
+    {
+        switch (playerId)
+        {
+            case 1:
+                SetBodyColor(masterColor);
+                SetTurretColor(masterColor);
+                SetTrackColor(masterColor);
+                break;
+            case 2:
+                SetBodyColor(clientColor);
+                SetTurretColor(clientColor);
+                SetTrackColor(clientColor);
+                break;
+        }
     }
 }

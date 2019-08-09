@@ -41,7 +41,6 @@ public class TankShell : MonoBehaviour
 
     void Start()
     {
-
         //Add force to launch shell depending of the skyshell parameter 
         /*
         if (!skyShell)
@@ -60,91 +59,20 @@ public class TankShell : MonoBehaviour
     }
 
     //Collision detection
-    void OnCollisionEnter(Collision collision) {
-        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySound(SoundManager.SoundList.EXPLOSION);//0.1719f
-        if (inNetwork)
-        {
-            if (photonView.Owner == PhotonNetwork.MasterClient) {
-                //Check if is colliding with the launcher 
-                if (collision.gameObject.GetComponent<TankControl>() && collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
-                {
-                    //Check with who it is colliding
-                    if (collision.gameObject.tag == "Destroyable")
-                    {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
-                        //Destroy(gameObject);
-                        PhotonNetwork.Destroy(photonView);
-                        return;
-                    }
-                    else if (collision.gameObject.tag == "Tank")
-                    {
-                        if (collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId) {
-                            collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
-                        }
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
-                        // Destroy(gameObject);
-                        PhotonNetwork.Destroy(photonView);
-                        return;
-                    }
-                    else
-                    {
-                        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
-                        //Destroy(gameObject);
-                        PhotonNetwork.Destroy(photonView);
-                        return;
-                    }
-                }
-                else
-                {
-                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
-                    //Destroy(gameObject);
-                    PhotonNetwork.Destroy(photonView);
-                    return;
-                }
-            }
-        }
-        else
-        {
-            if (collision.gameObject.GetComponent<TankControl>() && collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
-            {
-                //Check with who it is colliding
-                if (collision.gameObject.tag == "Destroyable")
-                {
-                    Instantiate(smallShellBurst, transform.position, Quaternion.identity);
-                    Destroy(gameObject);
-                    return;
-                }
-                else if (collision.gameObject.tag == "Tank")
-                {
-                    if (collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
-                    {
-                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
-                    }
-                    Instantiate(smallShellBurst, transform.position, Quaternion.identity);
-                    Destroy(gameObject);
-                    return;
-                }
-                else
-                {
-                    Instantiate(smallShellBurst, transform.position, Quaternion.identity);
-                    Destroy(gameObject);
-                    return;
-                }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (inNetwork && !PhotonNetwork.IsMasterClient)
+            return;
 
-                //Decrease life for the bounce
-                if (health > 0)
-                {
-                    rigid.velocity *= 2; //Double the velocity
-                    health--;
-                }
-            }
-            else
-            {
-                Instantiate(smallShellBurst, transform.position, Quaternion.identity);
-                Destroy(gameObject);
-                return;
-            }
+        GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySound(SoundManager.SoundList.EXPLOSION);//0.1719f
+        
+        //Check if is colliding with the launcher 
+        if (collision.gameObject.tag == "Tank" && collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
+        {
+            collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
         }
+
+        DestroyShell();
     }
 
     public void DestroyShell()
