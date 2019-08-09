@@ -91,6 +91,12 @@ public class TankControl : MonoBehaviour
     public bool gameIsInNetwork;
     private InputDevice playerDevice;
 
+
+    //INPUTS
+    private bool shootInput;
+    private bool dashInput;
+
+
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -198,7 +204,7 @@ public class TankControl : MonoBehaviour
         }
 
         //MOVE CANNON
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+        /*Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos, playerDevice);
         if (Math.Abs(direction.x) > 0.0f && Math.Abs(direction.y) > 0.0f)
         {
@@ -208,10 +214,10 @@ public class TankControl : MonoBehaviour
                 photonView.RPC("RotateTurretRPC", RpcTarget.All, direction);
             else
                 RotateTurret(direction);
-        }
+        }*/
 
         //FIRE
-        if (GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice) && quickFireReloadTime >= quickShootingSpeed)
+        if (shootInput && quickFireReloadTime >= quickShootingSpeed)
         {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
@@ -235,7 +241,7 @@ public class TankControl : MonoBehaviour
 
         //DASH
         // TODO : LE RENDRE NETWORKED
-        if (GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice) && dashReloadTime >= dashCooldownTime)
+        if (dashInput && dashReloadTime >= dashCooldownTime)
         {
             dashReloadTime = 0;
             rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
@@ -244,6 +250,10 @@ public class TankControl : MonoBehaviour
 
     private void Update()
     {
+        //UPDATE INPUTS
+        shootInput = GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
+        dashInput = GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
+
         //Add tank forward speed if under the maxSpeed limit
         if (rigid.velocity.magnitude >= maxSpeed)
         {
