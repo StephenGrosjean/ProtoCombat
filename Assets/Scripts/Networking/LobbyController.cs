@@ -9,7 +9,7 @@ using System.Collections;
 
 public class LobbyController : MonoBehaviourPunCallbacks {
 
-    [SerializeField] private GameObject matchmakingButton, cancelButton, disconnectButton, createRoomButton, scrollView; //UI Buttons
+    [SerializeField] private GameObject matchmakingButton, cancelButton, disconnectButton, createRoomButton, scrollView, roomNameObj; //UI Buttons
     [SerializeField] private int roomSize; //Size of the room to be created
     [SerializeField] private List<GameObject> roomsObj = new List<GameObject>(); //List of rooms
     [SerializeField] private GameObject roomPrefab; //Room prefab for the list
@@ -17,7 +17,7 @@ public class LobbyController : MonoBehaviourPunCallbacks {
     [SerializeField] private TMP_InputField roomName; //Name of custom room;
     [SerializeField] private TextMeshProUGUI errorMessage; //Error message text
     [SerializeField] private GameObject errorMessagePanel; //Error message panel
-
+    
     //Called when client is connected to master server
     public override void OnConnectedToMaster() {
         PhotonNetwork.JoinLobby();
@@ -36,6 +36,7 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         cancelButton.SetActive(true);
         createRoomButton.SetActive(false);
         scrollView.SetActive(false);
+        roomNameObj.SetActive(false);
         PhotonNetwork.JoinRandomRoom(); //Join a random room 
         Debug.Log("Started matchmaking");
     }
@@ -65,6 +66,7 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         matchmakingButton.SetActive(true);
         createRoomButton.SetActive(true);
         scrollView.SetActive(true);
+        roomNameObj.SetActive(true);
         //CreateRoom();
     }
 

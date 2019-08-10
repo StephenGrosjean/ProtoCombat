@@ -772,6 +772,7 @@ MonoBehaviour:
   maxHealth: 10
   lifes: 3
   explosionPrefab: {fileID: 0}
+  inNetwork: 0
 --- !u!114 &787743013130168852
 MonoBehaviour:
   m_ObjectHideFlags: 0

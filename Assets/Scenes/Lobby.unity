@@ -15293,10 +15293,10 @@ RectTransform:
   m_Father: {fileID: 1174399766}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -197.15012, y: -59.631}
-  m_SizeDelta: {x: 394.3, y: 119.26}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 762.84985, y: -599.631}
+  m_SizeDelta: {x: 394.3, y: 119.26001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2043440579
 MonoBehaviour:
@@ -16071,6 +16071,11 @@ PrefabInstance:
       propertyPath: createRoomButton
       value: 
       objectReference: {fileID: 1289995662}
+    - target: {fileID: 1011059756652876419, guid: dec981ac4e8e39c408165ea97e985469,
+        type: 3}
+      propertyPath: roomNameObj
+      value: 
+      objectReference: {fileID: 2043440577}
     - target: {fileID: 6715574018470866521, guid: dec981ac4e8e39c408165ea97e985469,
         type: 3}
       propertyPath: m_LocalPosition.x
