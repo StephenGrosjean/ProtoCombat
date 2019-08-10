@@ -410,14 +410,14 @@ public class TankControl : MonoBehaviour
 
     private void SetupColor()
     {
-        switch (playerId)
+        switch (PhotonNetwork.IsMasterClient)
         {
-            case 1:
+            case false:
                 SetBodyColor(masterColor);
                 SetTurretColor(masterColor);
                 SetTrackColor(masterColor);
                 break;
-            case 2:
+            case true:
                 SetBodyColor(clientColor);
                 SetTurretColor(clientColor);
                 SetTrackColor(clientColor);
