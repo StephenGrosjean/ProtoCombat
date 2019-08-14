@@ -21,12 +21,10 @@ public class BadWordsFilter : MonoBehaviour
         bool badword = true;
         foreach(string st in badWords) {
             if(st == s) {
-                Debug.Log("BAD");
                 badword = true;
                 break;
             }
             else {
-                Debug.Log(st);
                 badword = false;
             }
         }

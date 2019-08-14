@@ -10,16 +10,36 @@ public class MainMenuController : MonoBehaviour
 {
     [SerializeField] private GameObject onlinePanel, localPanel, mainMenuPanel, optionsPanel;
     [SerializeField] private TextMeshProUGUI subTitle;
-
+    [SerializeField] private GameObject statusText;
     [SerializeField] private string onlineText, localText, mainMenuText, optionsText;
 
+    private PANEL currentPanel;
+
+    enum PANEL {
+        MAIN_MENU,
+        OPTION,
+        LOCAL,
+        ONLINE
+    }
+
     private void Start() {
+        currentPanel = PANEL.MAIN_MENU;
         if (PhotonNetwork.IsConnected) {
             PhotonNetwork.Disconnect();
         }
     }
+    private void Update() {
+        if(currentPanel == PANEL.ONLINE) {
+            statusText.SetActive(true);
+        }
+        else {
+            statusText.SetActive(false);
+        }
+    }
 
     public void GotoOnline() {
+        currentPanel = PANEL.ONLINE;
+
         onlinePanel.SetActive(true);
         localPanel.SetActive(false);
         mainMenuPanel.SetActive(false);
@@ -34,6 +54,9 @@ public class MainMenuController : MonoBehaviour
     }
 
     public void GotoLocal() {
+        currentPanel = PANEL.LOCAL;
+
+
         onlinePanel.SetActive(false);
         localPanel.SetActive(true);
         mainMenuPanel.SetActive(false);
@@ -45,6 +68,9 @@ public class MainMenuController : MonoBehaviour
     }
 
     public void GotoMainMenu() {
+        currentPanel = PANEL.MAIN_MENU;
+
+
         onlinePanel.SetActive(false);
         localPanel.SetActive(false);
         mainMenuPanel.SetActive(true);
@@ -58,6 +84,8 @@ public class MainMenuController : MonoBehaviour
     }
 
     public void GotoOptions() {
+        currentPanel = PANEL.OPTION;
+
         onlinePanel.SetActive(false);
         localPanel.SetActive(false);
         mainMenuPanel.SetActive(false);

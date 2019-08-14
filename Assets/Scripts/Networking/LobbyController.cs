@@ -17,6 +17,7 @@ public class LobbyController : MonoBehaviourPunCallbacks {
     [SerializeField] private TMP_InputField roomName; //Name of custom room;
     [SerializeField] private TextMeshProUGUI errorMessage; //Error message text
     [SerializeField] private GameObject errorMessagePanel; //Error message panel
+    [SerializeField] private TMP_InputField playerName; //Player name field
     
     //Called when client is connected to master server
     public override void OnConnectedToMaster() {
@@ -27,6 +28,16 @@ public class LobbyController : MonoBehaviourPunCallbacks {
     public override void OnJoinedLobby() {
         PhotonNetwork.AutomaticallySyncScene = true;
         matchmakingButton.SetActive(true);
+
+        string name = "";
+        if (!PlayerPrefs.HasKey("PlayerName")) {
+            PlayerPrefs.SetString("PlayerName", "Player");
+        }
+
+        playerName.text = PlayerPrefs.GetString("PlayerName");
+        PhotonNetwork.NickName = playerName.text;
+        Debug.Log("Player Name is : " + PhotonNetwork.NickName);
+        
     }
 
     //Function for the matchmaking button
@@ -160,6 +171,12 @@ public class LobbyController : MonoBehaviourPunCallbacks {
         }
         return true;
 
+    }
+
+    public void SetPlayerName() {
+        PhotonNetwork.NickName = playerName.text;
+        PlayerPrefs.SetString("PlayerName", PhotonNetwork.NickName);
+        Debug.Log("Player Name set to " + PhotonNetwork.NickName);
     }
 
 }
