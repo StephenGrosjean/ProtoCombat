@@ -107,8 +107,9 @@ public static class GameInput {
                          GetInput(KeyCode.Escape, timeType);
                 break;
             case InputType.SHOOT:
-                result = GetInput(InputControlType.RightTrigger, timeType, device) ||
-                         GetInput(InputControlType.RightBumper, timeType, device) ||
+                result = /*GetInput(InputControlType.RightTrigger, timeType, device) ||
+                         GetInput(InputControlType.RightBumper, timeType, device) ||*/
+                         GetInput(InputControlType.Action1, timeType, device) ||
                          GetInput(0, timeType);
                 break;
             case InputType.DEFENSE:

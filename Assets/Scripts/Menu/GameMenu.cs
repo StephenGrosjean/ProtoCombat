@@ -42,6 +42,10 @@ public class GameMenu : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void Rematch() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     private void Update() {
         if (Input.GetKey(KeyCode.Escape)  && canOpenMenu) {
             StartCoroutine("WaitTimeMenu");

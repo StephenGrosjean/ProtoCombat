@@ -3177,7 +3177,7 @@ MonoBehaviour:
   bigShellPrefab: {fileID: 2483962128604501344, guid: 6d1abcacfc4b0184fb1a7adca67d7a22,
     type: 3}
   speed: 30
-  maxSpeed: 20
+  maxSpeed: 500
   knockBack: 100
   rotationSpeed: 4
   turretRotationSpeed: 4
