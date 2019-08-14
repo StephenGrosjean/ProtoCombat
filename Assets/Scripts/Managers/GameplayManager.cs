@@ -22,6 +22,7 @@ public class GameplayManager : MonoBehaviour {
 
     void Update()
     {
+        
         if(tankMaster == null) {
             if (PhotonNetwork.IsMasterClient) {
                 tankMaster = GameObject.Find("PhotonTankMaster");

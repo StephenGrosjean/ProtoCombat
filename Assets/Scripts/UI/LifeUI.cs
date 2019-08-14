@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class LifeUI : MonoBehaviour
 {
@@ -21,24 +22,34 @@ public class LifeUI : MonoBehaviour
     void Update()
     {
         if(tank == null) {
-            if (PhotonNetwork.IsMasterClient) {
+            if (SceneManager.GetActiveScene().name == "LocalArena") {
                 if (isMasterUI) {
-                    tank = GameObject.Find("PhotonTankMaster");
-
+                    tank = GameObject.Find("Player 1");
                 }
                 else {
-                    tank = GameObject.Find("PhotonTank(Clone)");
-
+                    tank = GameObject.Find("Player 2");
                 }
             }
             else {
-                if (isMasterUI) {
-                    tank = GameObject.Find("PhotonTank(Clone)");
+                if (PhotonNetwork.IsMasterClient) {
+                    if (isMasterUI) {
+                        tank = GameObject.Find("PhotonTankMaster");
 
+                    }
+                    else {
+                        tank = GameObject.Find("PhotonTank(Clone)");
+
+                    }
                 }
                 else {
-                    tank = GameObject.Find("PhotonTankClient");
+                    if (isMasterUI) {
+                        tank = GameObject.Find("PhotonTank(Clone)");
 
+                    }
+                    else {
+                        tank = GameObject.Find("PhotonTankClient");
+
+                    }
                 }
             }
         }

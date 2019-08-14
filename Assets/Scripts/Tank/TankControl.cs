@@ -245,6 +245,7 @@ public class TankControl : MonoBehaviour
         {
             dashReloadTime = 0;
             rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
+            
         }
     }
 
@@ -413,14 +414,11 @@ public class TankControl : MonoBehaviour
         switch (PhotonNetwork.IsMasterClient)
         {
             case false:
-                SetBodyColor(masterColor);
-                SetTurretColor(masterColor);
-                SetTrackColor(masterColor);
+                GetComponent<TankColor>().SetColor(masterColor);
                 break;
             case true:
-                SetBodyColor(clientColor);
-                SetTurretColor(clientColor);
-                SetTrackColor(clientColor);
+                GetComponent<TankColor>().SetColor(clientColor);
+
                 break;
         }
     }
