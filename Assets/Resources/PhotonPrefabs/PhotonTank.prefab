@@ -3295,6 +3295,11 @@ MonoBehaviour:
   forceField: {fileID: 8005190440884196072}
   forcefieldSize: {x: 5, y: 12, z: 5}
   shieldActivationSpeed: 1
+  toggleOnDeath:
+  - {fileID: 3432898266308881622}
+  - {fileID: 3932830870987875491}
+  - {fileID: 5166093143564123694}
+  - {fileID: 7238491235423617731}
   bodyRenderer: {fileID: 2816004721399168042}
   turretRenderer: {fileID: 7156542313342225197}
   trackRenderer1: {fileID: 743676287}
@@ -3336,7 +3341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   lifes: 3
-  explosionPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 100008, guid: ed9b0ff58e4983a4cb2d19467a1fe8a8, type: 3}
   inNetwork: 0
 --- !u!114 &787743013130168852
 MonoBehaviour:
