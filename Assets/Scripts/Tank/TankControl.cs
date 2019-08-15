@@ -244,7 +244,7 @@ public class TankControl : MonoBehaviour
         if (shootInput && quickFireReloadTime >= quickShootingSpeed)
         {
             quickFireReloadTime = 0;
-            Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.2f,.5f);
 
             GameObject obj;
             if (gameIsInNetwork)
@@ -266,7 +266,7 @@ public class TankControl : MonoBehaviour
         //BIG_FIRE
         if (bigShootInput && canShootBig) {
             bigFireReloadTime = 0;
-            Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.4f, 1f);
 
             GameObject obj;
             if (gameIsInNetwork) {
