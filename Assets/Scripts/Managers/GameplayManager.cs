@@ -41,9 +41,6 @@ public class GameplayManager : MonoBehaviour {
 
     void Update() {
 
-
-
-
         if (SceneManager.GetActiveScene().name == "LocalArena") {
             if (tankMaster == null) {
                 tankMaster = GameObject.Find("Player 1");
@@ -104,7 +101,7 @@ public class GameplayManager : MonoBehaviour {
 
     void DisconectEndGame() {
         endGameScreen.SetActive(true);
-        winText.text = "You Won";
+        winText.text = " You Won";
         if (tankMaster != null) {
             tankMaster.GetComponent<TankControl>().enabled = false;
         }
@@ -120,32 +117,32 @@ public class GameplayManager : MonoBehaviour {
         if (SceneManager.GetActiveScene().name == "LocalArena") {
             localWinPanel.SetActive(true);
             if (tankClient.GetComponent<TankHealth>().GetLifes() <= 0) {
-                player1Status.text = "You Won";
-                player2Status.text = "You Lose";
+                player1Status.text = "Won";
+                player2Status.text = "Lose";
             }
 
             if (tankMaster.GetComponent<TankHealth>().GetLifes() <= 0) {
-                player1Status.text = "You Lose";
-                player2Status.text = "You Won";
+                player1Status.text = "Lose";
+                player2Status.text = "Won";
             }
         }
         else {
             endGameScreen.SetActive(true);
             if (tankClient.GetComponent<TankHealth>().GetLifes() <= 0) {
                 if (PhotonNetwork.IsMasterClient) {
-                    winText.text = "You Won";
+                    winText.text = "Won";
                 }
                 else {
-                    winText.text = "You Lose";
+                    winText.text = "Lose";
                 }
             }
 
             if (tankMaster.GetComponent<TankHealth>().GetLifes() <= 0) {
                 if (PhotonNetwork.IsMasterClient) {
-                    winText.text = "You Lose";
+                    winText.text = "Lose";
                 }
                 else {
-                    winText.text = "You Won";
+                    winText.text = "Won";
                 }
             }
         }

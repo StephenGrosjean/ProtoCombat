@@ -91,9 +91,9 @@ Material:
     - _OcclusionStrength: 1
     - _Opacity: 0.18
     - _Parallax: 0.02
-    - _ShieldAnimSpeed: 1.2
-    - _ShieldDistortion: 0.0053
-    - _ShieldPatternPower: 20
+    - _ShieldAnimSpeed: 3.4
+    - _ShieldDistortion: 0.03
+    - _ShieldPatternPower: 36
     - _ShieldPatternSize: 2
     - _ShieldRimPower: 2
     - _SmoothnessTextureChannel: 0
