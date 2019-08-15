@@ -463,13 +463,11 @@ public class TankControl : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-  
-
         if (!isInvulnerable)
         {
             TankControl otherPlayer = collision.gameObject.GetComponent<TankControl>();
             //soundManager.PlaySound(SoundManager.SoundList.STRIKE);
-            if (collision.gameObject.tag == "Tank" && otherPlayer.isDash)
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Tank") && otherPlayer.isDash)
             {
                 TimeToInvulnerable = 1;
                 isInvulnerable = true;
@@ -477,7 +475,6 @@ public class TankControl : MonoBehaviour
                 {
                     photonView.RPC("SyncInvulnerability", RpcTarget.All, true);
                 }
-
 
                 if (otherPlayer.IsCritical)
                 {
