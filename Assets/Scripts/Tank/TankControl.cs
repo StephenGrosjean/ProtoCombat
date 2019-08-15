@@ -171,8 +171,14 @@ public class TankControl : MonoBehaviour
             TimeToInvulnerable -= Time.deltaTime;
             if (TimeToInvulnerable <= 0)
             {
-                photonView.RPC("SyncInvulnerability", RpcTarget.All, false);
-                TimeToInvulnerable = 0;
+                if (gameIsInNetwork)
+                {
+                    photonView.RPC("SyncInvulnerability", RpcTarget.All, false);
+                }
+                else
+                {
+                    isInvulnerable = false;
+                }
             }
         }
 
@@ -193,8 +199,16 @@ public class TankControl : MonoBehaviour
             dashReloadTime += Time.deltaTime;
             if (dashReloadTime > timeToDash)
             {
-                photonView.RPC("SyncDash", RpcTarget.All, false);
-                photonView.RPC("SyncCritical", RpcTarget.All, false);
+                if (gameIsInNetwork)
+                {
+                    photonView.RPC("SyncDash", RpcTarget.All, false);
+                    photonView.RPC("SyncCritical", RpcTarget.All, false);
+                }
+                else
+                {
+                    isDash = false;
+                    IsCritical = false;
+                }
             }
         }
 
@@ -332,8 +346,14 @@ public class TankControl : MonoBehaviour
         //TODO : LE RENDRE NETWORKED
         if (dashInput && dashReloadTime >= dashCooldownTime)
         {
-            Debug.Log(LoadDash);
-            photonView.RPC("StopVelocity", RpcTarget.All);
+            if (gameIsInNetwork)
+            {
+                photonView.RPC("StopVelocity", RpcTarget.All);
+            }
+            else
+            {
+                rigid.velocity = Vector3.zero;
+            }
 
             if (LoadDash <= MaxDash)
             {
@@ -341,7 +361,14 @@ public class TankControl : MonoBehaviour
             }
             else
             {
-                photonView.RPC("SyncCritical", RpcTarget.All, true);
+                if (gameIsInNetwork)
+                {
+                    photonView.RPC("SyncCritical", RpcTarget.All, true);
+                }
+                else
+                {
+                    IsCritical = true;
+                }
             }
         }
 
@@ -349,8 +376,15 @@ public class TankControl : MonoBehaviour
         if (GameInput.GetInputUp(GameInput.InputType.DASH) && LoadDash > 1)
         {
             dashReloadTime = 0;
+            if (gameIsInNetwork)
+            {
+                photonView.RPC("SyncDash", RpcTarget.All, true);
+            }
+            else
+            {
+                isDash = true;
+            }
 
-            photonView.RPC("SyncDash", RpcTarget.All, true);
             rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
             LoadDash = 1;
         }
@@ -429,7 +463,8 @@ public class TankControl : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        photonView.RPC("SyncDash", RpcTarget.All, false);
+  
+
         if (!isInvulnerable)
         {
             TankControl otherPlayer = collision.gameObject.GetComponent<TankControl>();
@@ -438,7 +473,12 @@ public class TankControl : MonoBehaviour
             {
                 TimeToInvulnerable = 1;
                 isInvulnerable = true;
-                photonView.RPC("SyncInvulnerability", RpcTarget.All, true);
+                if (gameIsInNetwork)
+                {
+                    photonView.RPC("SyncInvulnerability", RpcTarget.All, true);
+                }
+
+
                 if (otherPlayer.IsCritical)
                 {
                     GetComponent<TankHealth>().TakeDamage(2);
@@ -449,6 +489,16 @@ public class TankControl : MonoBehaviour
                 }
                 rigid.AddRelativeForce(otherPlayer.transform.forward * dashPower / 2, moveForceMode);
             }
+          
+        }
+
+        if (gameIsInNetwork)
+        {
+            photonView.RPC("SyncDash", RpcTarget.All, false);
+        }
+        else
+        {
+            isDash = false;
         }
     }
 
