@@ -11,7 +11,12 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private GameObject onlinePanel, localPanel, mainMenuPanel, optionsPanel;
     [SerializeField] private TextMeshProUGUI subTitle;
     [SerializeField] private GameObject statusText;
+
     [SerializeField] private string onlineText, localText, mainMenuText, optionsText;
+
+    [SerializeField] private Transform parentMainMenu, parentOnlineMenu, parentLocalMenu, parentOptionMenu;
+
+    [SerializeField] private MenuController menuController;
 
     private PANEL currentPanel;
 
@@ -24,21 +29,22 @@ public class MainMenuController : MonoBehaviour
 
     private void Start() {
         currentPanel = PANEL.MAIN_MENU;
-        if (PhotonNetwork.IsConnected) {
+        menuController.SetupMenuBtns(parentMainMenu);
+
+        if (PhotonNetwork.IsConnected)
             PhotonNetwork.Disconnect();
-        }
+
     }
     private void Update() {
-        if(currentPanel == PANEL.ONLINE) {
+        if(currentPanel == PANEL.ONLINE)
             statusText.SetActive(true);
-        }
-        else {
+        else
             statusText.SetActive(false);
-        }
     }
 
     public void GotoOnline() {
         currentPanel = PANEL.ONLINE;
+        menuController.SetupMenuBtns(parentOnlineMenu);
 
         onlinePanel.SetActive(true);    
         localPanel.SetActive(false);
@@ -48,14 +54,14 @@ public class MainMenuController : MonoBehaviour
         subTitle.text = onlineText;
         PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = PlayerPrefs.GetString("Region");
 
-        //        PhotonNetwork.ConnectToRegion(PlayerPrefs.GetString("Region"));
+        //PhotonNetwork.ConnectToRegion(PlayerPrefs.GetString("Region"));
         PhotonNetwork.ConnectUsingSettings();
 
     }
 
     public void GotoLocal() {
         currentPanel = PANEL.LOCAL;
-
+        menuController.SetupMenuBtns(parentLocalMenu);
 
         onlinePanel.SetActive(false);
         localPanel.SetActive(true);
@@ -70,7 +76,7 @@ public class MainMenuController : MonoBehaviour
 
     public void GotoMainMenu() {
         currentPanel = PANEL.MAIN_MENU;
-
+        menuController.SetupMenuBtns(parentMainMenu);
 
         onlinePanel.SetActive(false);
         localPanel.SetActive(false);
@@ -86,6 +92,7 @@ public class MainMenuController : MonoBehaviour
 
     public void GotoOptions() {
         currentPanel = PANEL.OPTION;
+        menuController.SetupMenuBtns(parentOptionMenu);
 
         onlinePanel.SetActive(false);
         localPanel.SetActive(false);

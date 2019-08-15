@@ -9,6 +9,9 @@ public class GameMenu : MonoBehaviour
     [SerializeField] private GameObject confirmationUILeave, confirmationUIQuit;
     [SerializeField] private GameObject pauseMenu;
 
+    [SerializeField] private Transform parentConfirmationQuitMenu, parentConfirmationLeaveMenu, parentPauseMenu;
+    [SerializeField] private MenuController menuController;
+
     private bool menuOpen;
     private bool canOpenMenu = true;
 
@@ -18,10 +21,12 @@ public class GameMenu : MonoBehaviour
     }
 
     public void QuitConfirm() {
+        menuController.SetupMenuBtns(parentConfirmationQuitMenu);
         confirmationUIQuit.SetActive(true);
     }
 
     public void QuitCancel() {
+        menuController.SetupMenuBtns(parentPauseMenu);
         confirmationUIQuit.SetActive(false);
     }
 
@@ -30,10 +35,12 @@ public class GameMenu : MonoBehaviour
     }
 
     public void LeaveConfirm() {
+        menuController.SetupMenuBtns(parentConfirmationLeaveMenu);
         confirmationUILeave.SetActive(true);
     }
 
     public void LeaveCancel() {
+        menuController.SetupMenuBtns(parentPauseMenu);
         confirmationUILeave.SetActive(false);
     }
 
@@ -51,7 +58,7 @@ public class GameMenu : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetKey(KeyCode.Escape)  && canOpenMenu) {
+        if (GameInput.GetInputDown(GameInput.InputType.PAUSE)  && canOpenMenu) {
             StartCoroutine("WaitTimeMenu");
             if (menuOpen) {
                 if (SceneManager.GetActiveScene().name == "LocalArena") {
@@ -60,14 +67,20 @@ public class GameMenu : MonoBehaviour
                 confirmationUILeave.SetActive(false);
                 confirmationUIQuit.SetActive(false);
                 pauseMenu.SetActive(false);
+
+                menuController.SetupMenuBtns(null);
                 menuOpen = false;
+                menuController.inMenu = false;
             }
             else {
                 if (SceneManager.GetActiveScene().name == "LocalArena") {
                     Time.timeScale = 0;
                 }
                 pauseMenu.SetActive(true);
+
+                menuController.SetupMenuBtns(parentPauseMenu);
                 menuOpen = true;
+                menuController.inMenu = true;
             }
         }
     }
