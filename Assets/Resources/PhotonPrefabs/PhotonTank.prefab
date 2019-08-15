@@ -3304,7 +3304,7 @@ MonoBehaviour:
   turretRenderer: {fileID: 7156542313342225197}
   trackRenderer1: {fileID: 743676287}
   trackRenderer2: {fileID: 1058796000}
-  masterColor: {r: 0.35689166, g: 0.81960785, b: 0, a: 1}
+  masterColor: {r: 0.7411765, g: 0, b: 1, a: 1}
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
   bigShotHoldTime: 1
   bigShotLight: {fileID: 3694999503384526861}
@@ -3427,6 +3427,8 @@ MonoBehaviour:
   - {fileID: 572944557055092420}
   - {fileID: 721744886940994382}
   - {fileID: 7084650332279386934}
+  masterColor: {r: 0.7411765, g: 0, b: 1, a: 1}
+  clientColor: {r: 1, g: 0.40000004, b: 0, a: 1}
 --- !u!1 &7972126014696184495
 GameObject:
   m_ObjectHideFlags: 0

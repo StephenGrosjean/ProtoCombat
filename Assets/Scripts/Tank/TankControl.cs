@@ -464,10 +464,10 @@ public class TankControl : MonoBehaviour
         GetComponent<TankHealth>().inNetwork = inNetwork;
 
         canControl = true;
-        SetupColor();
+        //SetupColor();
     }
 
-    private void SetupColor()
+    /*private void SetupColor()
     {
         switch (PhotonNetwork.IsMasterClient)
         {
@@ -479,7 +479,7 @@ public class TankControl : MonoBehaviour
 
                 break;
         }
-    }
+    }*/
 
     [PunRPC]
     private void EnableRings() {
