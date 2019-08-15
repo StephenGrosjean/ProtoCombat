@@ -14,6 +14,7 @@ public class GameMenu : MonoBehaviour
 
     public void Continue() {
         pauseMenu.SetActive(false);
+        Time.timeScale = 1;
     }
 
     public void QuitConfirm() {
@@ -37,8 +38,11 @@ public class GameMenu : MonoBehaviour
     }
 
     public void Leave() {
-        PhotonNetwork.LeaveRoom();
-        PhotonNetwork.Disconnect();
+        if (PhotonNetwork.IsConnected) {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.Disconnect();
+        }
+        Time.timeScale = 1;
         SceneManager.LoadScene(0);
     }
 

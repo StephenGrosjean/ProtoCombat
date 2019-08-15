@@ -33,7 +33,7 @@ public class TankControl : MonoBehaviour
     private float speed;
 
     [SerializeField] private float maxSpeed;
-    [SerializeField] private float knockBack;
+    [SerializeField] private float knockBackNormal, knockBackLarge;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float turretRotationSpeed;
 
@@ -260,7 +260,7 @@ public class TankControl : MonoBehaviour
                 obj.GetComponent<TankShell>().InitializeShell(this.playerId, turret.transform.rotation);
             }
 
-            rigid.AddRelativeForce(-turret.transform.forward * knockBack);
+            rigid.AddRelativeForce(-Vector3.right * knockBackNormal);
         }
 
         //BIG_FIRE
@@ -281,7 +281,7 @@ public class TankControl : MonoBehaviour
             }
             currentHoldTime = 0;
             canShootBig = false;
-            rigid.AddRelativeForce(-turret.transform.forward * knockBack);
+            rigid.AddRelativeForce(-Vector3.right * knockBackLarge);
         }
 
         //DASH
