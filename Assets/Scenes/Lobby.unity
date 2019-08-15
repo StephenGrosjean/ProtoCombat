@@ -6003,7 +6003,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1049195022}
-  m_LocalRotation: {x: 0.10684889, y: -0.000000003742109, z: -0.0000000045174997,
+  m_LocalRotation: {x: 0.10684889, y: -0.0000000037421044, z: -0.000000004517544,
     w: 0.99427533}
   m_LocalPosition: {x: 0, y: 3.07, z: -20.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -6665,6 +6665,7 @@ GameObject:
   - component: {fileID: 1217847508}
   - component: {fileID: 1217847507}
   - component: {fileID: 1217847511}
+  - component: {fileID: 1217847512}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -6779,6 +6780,26 @@ MonoBehaviour:
   localText: Local Play
   mainMenuText: Main Menu
   optionsText: Options
+  parentMainMenu: {fileID: 685716887}
+  parentOnlineMenu: {fileID: 1174399766}
+  parentLocalMenu: {fileID: 695591730}
+  parentOptionMenu: {fileID: 1881420252}
+  menuController: {fileID: 1217847512}
+--- !u!114 &1217847512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217847506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06d3dfd698c3c8241bde6fee4d49eeba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuBtns: []
+  inMenu: 1
+  inGameMenu: 0
 --- !u!1 &1225334044
 GameObject:
   m_ObjectHideFlags: 0
@@ -16659,7 +16680,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121919971}
-  m_LocalRotation: {x: 0.10684889, y: -0.000000003742109, z: -0.0000000045174997,
+  m_LocalRotation: {x: 0.10684889, y: -0.0000000037421044, z: -0.000000004517544,
     w: 0.99427533}
   m_LocalPosition: {x: -624.3949, y: -238.78488, z: 303.53168}
   m_LocalScale: {x: 1, y: 1, z: 1}

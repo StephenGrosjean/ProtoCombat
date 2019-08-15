@@ -445,7 +445,7 @@ GameObject:
   - component: {fileID: 552431110}
   - component: {fileID: 552431109}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: PausePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2733,7 +2733,7 @@ GameObject:
   - component: {fileID: 1856381646}
   - component: {fileID: 1856381645}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: LeavePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2988,7 +2988,7 @@ GameObject:
   - component: {fileID: 2096658998}
   - component: {fileID: 2096658997}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: QuitPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4768,6 +4768,7 @@ GameObject:
   - component: {fileID: 2561828118433459099}
   - component: {fileID: 2561828118433459098}
   - component: {fileID: 2561828118433459097}
+  - component: {fileID: 2561828118473370274}
   m_Layer: 5
   m_Name: MainUI
   m_TagString: Untagged
@@ -4875,6 +4876,25 @@ MonoBehaviour:
   confirmationUILeave: {fileID: 743345745}
   confirmationUIQuit: {fileID: 292504347}
   pauseMenu: {fileID: 504506597}
+  parentConfirmationQuitMenu: {fileID: 2096658996}
+  parentConfirmationLeaveMenu: {fileID: 1856381644}
+  parentPauseMenu: {fileID: 552431108}
+  menuController: {fileID: 2561828118473370274}
+--- !u!114 &2561828118473370274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2561828118433459096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06d3dfd698c3c8241bde6fee4d49eeba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuBtns: []
+  inMenu: 0
+  inGameMenu: 1
 --- !u!1 &2561828118478536320
 GameObject:
   m_ObjectHideFlags: 0
