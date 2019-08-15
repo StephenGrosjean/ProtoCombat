@@ -16,12 +16,13 @@ public class TankControl : MonoBehaviour
 {
     [SerializeField] public int playerId;
 
-    [Header("Part settings")] [SerializeField]
+    [Header("Part settings")]
+    [SerializeField]
     private Transform turret;
     [SerializeField] private List<GameObject> loadingRings;
     //[SerializeField] private Transform body;
 
-    [Header("Fire Settings")] 
+    [Header("Fire Settings")]
     [SerializeField] private Transform shootingPoint;
     [SerializeField] private float quickShootingSpeed;
     [SerializeField] private float bigShootingSpeed;
@@ -29,7 +30,8 @@ public class TankControl : MonoBehaviour
     [SerializeField] private GameObject smallShellPrefab;
     [SerializeField] private GameObject bigShellPrefab;
 
-    [Header("Control Settings")] [SerializeField]
+    [Header("Control Settings")]
+    [SerializeField]
     private float speed;
 
     [SerializeField] private float maxSpeed;
@@ -42,15 +44,22 @@ public class TankControl : MonoBehaviour
     [Header("Dash Settings")]
     [SerializeField] private float dashPower;
     [SerializeField] private float dashCooldownTime;
+    [SerializeField] private float timeToDash = 1.2f;
+    private float LoadDash = 1;
+    private float MaxDash = 2;
+    private bool isInvulnerable = false;
+    private float TimeToInvulnerable = 0;
 
-    [Header("UI Settings")] [SerializeField]
+    [Header("UI Settings")]
+    [SerializeField]
     private bool useUI;
 
     /*[SerializeField] private Image reloadNormal; //Reload image for the normal shell
     [SerializeField] private Image reloadLarge; //Reload image for the big shell
     [SerializeField] private Image reloadDash; */
 
-    [Header("ForceField Settings")] [SerializeField]
+    [Header("ForceField Settings")]
+    [SerializeField]
     private GameObject forceField; //Forcefield object
 
     [SerializeField] private Vector3 forcefieldSize; //Size of the forceField
@@ -68,6 +77,9 @@ public class TankControl : MonoBehaviour
     [SerializeField] private Light bigShotLight;
     private float currentHoldTime;
     private bool canShootBig;
+
+    public bool isDash = false;
+    public bool isGround = false;
 
     //NOT USED
     /*[Header("Trail Settings")]
@@ -114,17 +126,20 @@ public class TankControl : MonoBehaviour
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
-    void SetBodyColor(Color color) {
+    void SetBodyColor(Color color)
+    {
         bodyRenderer.material.color = color;
         bodyRenderer.material.SetColor("_EmissionColor", color);
     }
 
-    void SetTurretColor(Color color) {
+    void SetTurretColor(Color color)
+    {
         turretRenderer.material.color = color;
         turretRenderer.material.SetColor("_EmissionColor", color);
     }
 
-    void SetTrackColor(Color color) {
+    void SetTrackColor(Color color)
+    {
         trackRenderer1.material.color = color;
         trackRenderer1.material.SetColor("_EmissionColor", color);
 
@@ -139,7 +154,7 @@ public class TankControl : MonoBehaviour
     }
 
     void FixedUpdate()
-        {
+    {
         // Debug.Log("playerId :" + playerId);
         // Debug.Log("isMaster :" + PhotonNetwork.IsMasterClient);
         // Debug.Log("isMine :" + photonView.IsMine);
@@ -152,24 +167,40 @@ public class TankControl : MonoBehaviour
         }
 
         //Debug.Log("Passed : true");
-
+        if (isInvulnerable)
+        {
+            TimeToInvulnerable -= Time.deltaTime;
+            if (TimeToInvulnerable <= 0)
+            {
+                photonView.RPC("SyncInvulnerability", RpcTarget.All, false);
+                TimeToInvulnerable = 0;
+            }
+        }
 
         //Increase shield activation Time
-        if (shieldEnabled && shieldActivationTime < shieldActivationSpeed) {
+        if (shieldEnabled && shieldActivationTime < shieldActivationSpeed)
+        {
             shieldActivationTime += Time.deltaTime;
         }
         //Decrease shield activation Time
-        else if (!shieldEnabled && shieldActivationTime >= 0) {
+        else if (!shieldEnabled && shieldActivationTime >= 0)
+        {
             shieldActivationTime -= Time.deltaTime;
         }
 
         //Increase dash reload time
-        if (dashReloadTime < dashCooldownTime) {
+        if (dashReloadTime < dashCooldownTime)
+        {
             dashReloadTime += Time.deltaTime;
+            if (dashReloadTime > timeToDash)
+            {
+                photonView.RPC("SyncDash", RpcTarget.All, false);
+            }
         }
 
         //Increase small shell reloadTime
-        if (quickFireReloadTime < quickShootingSpeed) {
+        if (quickFireReloadTime < quickShootingSpeed)
+        {
             quickFireReloadTime += Time.deltaTime;
         }
 
@@ -180,10 +211,11 @@ public class TankControl : MonoBehaviour
 
         //Increase Hold Time
         if (bigShootInput) {
-            if (currentHoldTime < bigShotHoldTime) {
+            if (currentHoldTime < bigShotHoldTime)
+            {
                 currentHoldTime += Time.deltaTime;
             }
-            else if(currentHoldTime >= bigShotHoldTime){
+            else if (currentHoldTime >= bigShotHoldTime)  {
                 canShootBig = true;
             }
         }
@@ -192,11 +224,9 @@ public class TankControl : MonoBehaviour
             canShootBig = false;
         }
 
-        
-
         //MOVE
         if (GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice).magnitude > 0.01f) {
-            if(gameIsInNetwork)
+            if (gameIsInNetwork)
                 photonView.RPC("MoveTankRPC", RpcTarget.All, GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
             else
                 MoveTank(GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice));
@@ -241,21 +271,18 @@ public class TankControl : MonoBehaviour
         }*/
 
         //FIRE
-        if (shootInput && quickFireReloadTime >= quickShootingSpeed)
-        {
+        if (shootInput && quickFireReloadTime >= quickShootingSpeed) {
             quickFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
 
             GameObject obj;
-            if (gameIsInNetwork)
-            {
+            if (gameIsInNetwork) {
                 obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "smallShell"),
                     shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
 
                 obj.GetComponent<PhotonView>().RPC("InitializeShellRPC", RpcTarget.All, this.playerId, turret.transform.rotation);
             }
-            else
-            {
+            else {
                 obj = Instantiate(smallShellPrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
                 obj.GetComponent<TankShell>().InitializeShell(this.playerId, turret.transform.rotation);
             }
@@ -284,23 +311,32 @@ public class TankControl : MonoBehaviour
             rigid.AddRelativeForce(-turret.transform.forward * knockBack);
         }
 
-        //DASH
+        //LOAD DASH
         //TODO : LE RENDRE NETWORKED
-        if (dashInput && dashReloadTime >= dashCooldownTime)
-        {
+        if (GameInput.GetInput(GameInput.InputType.DASH) && dashReloadTime >= dashCooldownTime) {
+            Debug.Log(LoadDash);
+            photonView.RPC("StopVelocity", RpcTarget.All);
+
+            if (LoadDash <= MaxDash) {
+                LoadDash += Time.deltaTime;
+            }
+        }
+
+        //DASH
+        if (GameInput.GetInputUp(GameInput.InputType.DASH) && LoadDash > 1) {
             dashReloadTime = 0;
-            rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
-            
+           
+            photonView.RPC("SyncDash", RpcTarget.All, true);
+            rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
+            LoadDash = 1;
         }
     }
 
-    private void Update()
-    {
+    private void Update() {
         //UPDATE INPUTS
         shootInput = GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
         bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
         dashInput = GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
-
 
         if (gameIsInNetwork) {
             photonView.RPC("EnableRings", RpcTarget.All);
@@ -310,8 +346,7 @@ public class TankControl : MonoBehaviour
         }
 
         //Add tank forward speed if under the maxSpeed limit
-        if (rigid.velocity.magnitude >= maxSpeed)
-        {
+        if (rigid.velocity.magnitude >= maxSpeed) {
             rigid.velocity = rigid.velocity.normalized * maxSpeed;
         }
         /*
@@ -360,25 +395,35 @@ public class TankControl : MonoBehaviour
         */
     }
 
-    /*
-    void OnCollisionEnter(Collision collision)
-    {
-        soundManager.PlaySound(SoundManager.SoundList.STRIKE);
+    void OnCollisionEnter(Collision collision) {
+        photonView.RPC("SyncDash", RpcTarget.All, false);
+        if (!isInvulnerable) {
+            //soundManager.PlaySound(SoundManager.SoundList.STRIKE);
+            if (collision.gameObject.tag == "Tank" && collision.gameObject.GetComponent<TankControl>().isDash) {
+                TimeToInvulnerable = 1;
+                isInvulnerable = true;
+                photonView.RPC("SyncInvulnerability", RpcTarget.All, true);
+                if (Vector3.Dot(transform.forward, collision.transform.forward) < 0.25f) {
+                    photonView.RPC("SyncImpact", RpcTarget.All, -transform.right, true);
+                }
+                else
+                {
+                    photonView.RPC("SyncImpact", RpcTarget.All, -transform.right, false);
+                }
+            }
+        }
     }
-    */
 
     public void ToggleRenderersNetwork(bool value) {
         photonView.RPC("ToggleRenderersRPC", RpcTarget.All, value);
     }
 
     [PunRPC]
-    void ToggleRenderersRPC(bool value)
-    {
+    void ToggleRenderersRPC(bool value) {
         ToggleRenderers(value);
     }
 
-    public void ToggleRenderers(bool value)
-    {
+    public void ToggleRenderers(bool value) {
         trackRenderer1.enabled = value;
         trackRenderer2.enabled = value;
         bodyRenderer.enabled = value;
@@ -387,8 +432,7 @@ public class TankControl : MonoBehaviour
     }
 
     [PunRPC]
-    void SyncMovementRPC(Vector3 velocity, Vector3 position, PhotonMessageInfo info)
-    {
+    void SyncMovementRPC(Vector3 velocity, Vector3 position, PhotonMessageInfo info) {
         float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
 
         rigid.velocity = velocity;
@@ -396,19 +440,16 @@ public class TankControl : MonoBehaviour
     }
 
     [PunRPC]
-    void SyncRotationRPC(Quaternion rotation, PhotonMessageInfo info)
-    {
+    void SyncRotationRPC(Quaternion rotation, PhotonMessageInfo info) {
         transform.rotation = rotation;
     }
 
     [PunRPC]
-    void RotateTurretRPC(Vector2 direction)
-    {
+    void RotateTurretRPC(Vector2 direction) {
         RotateTurret(direction);
     }
 
-    void RotateTurret(Vector2 direction)
-    {
+    void RotateTurret(Vector2 direction) {
         //Rotate turret toward direction
         float step = turretRotationSpeed * Time.deltaTime;
         Vector3 newDir = Vector3.RotateTowards(turret.transform.forward, new Vector3(direction.x, 0, direction.y) * -1, step, 0.0f);
@@ -416,37 +457,33 @@ public class TankControl : MonoBehaviour
     }
 
     [PunRPC]
-    void MoveTankRPC(Vector2 movementInput, PhotonMessageInfo info)
-    {
+    void MoveTankRPC(Vector2 movementInput, PhotonMessageInfo info) {
         MoveTank(movementInput);
     }
 
-    void MoveTank(Vector2 movementInput)
-    {
+    void MoveTank(Vector2 movementInput)  {
         //Rotate tank toward direction
         float step = rotationSpeed * Time.deltaTime;
         Vector3 newDir = Vector3.RotateTowards(transform.forward, new Vector3(movementInput.x, 0, movementInput.y), step, 0.0f);
         transform.rotation = Quaternion.LookRotation(newDir);
 
         //Move tank
+        if(LoadDash == 1)
         rigid.AddForce(transform.right * speed, moveForceMode);
     }
 
     [PunRPC]
-    public void SetupNetworkRPC()
-    {
+    public void SetupNetworkRPC() {
         gameIsInNetwork = true;
         GetComponent<TankNetwork>().enabled = true;
         GetComponent<PhotonTransformView>().enabled = true;
         playerDevice = null;
     }
 
-    public void SetupPlayer(int playerId, bool inNetwork, InputDevice device = null)
-    {
+    public void SetupPlayer(int playerId, bool inNetwork, InputDevice device = null) {
         this.playerId = playerId;
 
-        if (!inNetwork && device != null)
-        {
+        if (!inNetwork && device != null) {
             playerDevice = device;
             gameIsInNetwork = false;
             GetComponent<TankNetwork>().enabled = false;
@@ -463,8 +500,7 @@ public class TankControl : MonoBehaviour
         SetupColor();
     }
 
-    private void SetupColor()
-    {
+    private void SetupColor() {
         switch (PhotonNetwork.IsMasterClient)
         {
             case false:
@@ -479,20 +515,18 @@ public class TankControl : MonoBehaviour
 
     [PunRPC]
     private void EnableRings() {
-
         int percentage = Mathf.RoundToInt((13 / bigShotHoldTime) * currentHoldTime);
         int percentageLight = Mathf.RoundToInt((88 / bigShotHoldTime) * currentHoldTime);
 
-        Debug.Log("HoldTime : " + currentHoldTime + " Percentage : " + percentage);
-        foreach(GameObject ring in loadingRings) {
+        //Debug.Log("HoldTime : " + currentHoldTime + " Percentage : " + percentage);
+        foreach (GameObject ring in loadingRings) {
             DisableRing(ring);
         }
-        for(int i = 0; i < percentage; i++) {
+        for (int i = 0; i < percentage; i++) {
             EnableRing(loadingRings[i]);
         }
 
         bigShotLight.spotAngle = percentageLight;
-
     }
 
     void EnableRing(GameObject ring) {
@@ -505,5 +539,31 @@ public class TankControl : MonoBehaviour
         Renderer ringRenderer = ring.GetComponent<Renderer>();
         ringRenderer.material.color = Color.white;
         ringRenderer.material.SetColor("_EmissionColor", Color.white);
+    }
+
+    [PunRPC]
+    void StopVelocity(PhotonMessageInfo info) {
+        rigid.velocity = Vector3.zero;
+    }
+
+    [PunRPC]
+    public void SyncDash(bool value, PhotonMessageInfo info) {
+        isDash = value;
+    }
+
+    [PunRPC]
+    public void SyncInvulnerability(bool value, PhotonMessageInfo info) {
+        isInvulnerable = value;
+    }
+
+    [PunRPC]
+    void SyncImpact(Vector3 direction, bool critical, PhotonMessageInfo info) {
+        rigid.velocity = (direction);
+        if (critical) {
+            GetComponent<TankHealth>().TakeDamage(2);
+        }
+        else {
+            GetComponent<TankHealth>().TakeDamage(1);
+        }
     }
 }

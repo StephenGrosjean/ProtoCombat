@@ -3290,6 +3290,7 @@ MonoBehaviour:
   moveForceMode: 0
   dashPower: 2000
   dashCooldownTime: 3
+  timeToDash: 1.2
   useUI: 1
   forceField: {fileID: 8005190440884196072}
   forcefieldSize: {x: 5, y: 12, z: 5}
@@ -3302,6 +3303,8 @@ MonoBehaviour:
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
   bigShotHoldTime: 2
   bigShotLight: {fileID: 3694999503384526861}
+  isDash: 0
+  isGround: 0
   canControl: 1
   gameIsInNetwork: 0
 --- !u!114 &39622936
