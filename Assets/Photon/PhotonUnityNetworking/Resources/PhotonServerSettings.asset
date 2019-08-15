@@ -54,5 +54,6 @@ MonoBehaviour:
   - EnableObjectAndExplodeRPC
   - SetupNetworkRPC
   - EnableObjectAndBreakRPC
+  - EnableRings
   DisableAutoOpenWizard: 1
   ShowSettings: 1

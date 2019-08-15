@@ -20,6 +20,7 @@ public static class GameInput {
         ACTION_BACK,
 
         SHOOT, //shoot in game, confirm in menus
+        BIG_SHOOT,
         DEFENSE,
         DASH,
         PAUSE
@@ -111,6 +112,10 @@ public static class GameInput {
                          GetInput(InputControlType.RightBumper, timeType, device) ||*/
                          GetInput(InputControlType.Action1, timeType, device) ||
                          GetInput(0, timeType);
+                break;
+            case InputType.BIG_SHOOT:
+                result = GetInput(InputControlType.Action4, timeType, device) ||
+                         GetInput(KeyCode.B, timeType);
                 break;
             case InputType.DEFENSE:
                 result = GetInput(InputControlType.LeftTrigger, timeType, device) ||

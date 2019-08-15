@@ -18,6 +18,7 @@ public class TankControl : MonoBehaviour
 
     [Header("Part settings")] [SerializeField]
     private Transform turret;
+    [SerializeField] private List<GameObject> loadingRings;
     //[SerializeField] private Transform body;
 
     [Header("Fire Settings")] 
@@ -45,9 +46,9 @@ public class TankControl : MonoBehaviour
     [Header("UI Settings")] [SerializeField]
     private bool useUI;
 
-    [SerializeField] private Image reloadNormal; //Reload image for the normal shell
+    /*[SerializeField] private Image reloadNormal; //Reload image for the normal shell
     [SerializeField] private Image reloadLarge; //Reload image for the big shell
-    [SerializeField] private Image reloadDash; 
+    [SerializeField] private Image reloadDash; */
 
     [Header("ForceField Settings")] [SerializeField]
     private GameObject forceField; //Forcefield object
@@ -62,6 +63,11 @@ public class TankControl : MonoBehaviour
     [SerializeField] private Color masterColor, clientColor;
 
     private PhotonView photonView;
+
+    [SerializeField] private float bigShotHoldTime = 2;
+    [SerializeField] private Light bigShotLight;
+    private float currentHoldTime;
+    private bool canShootBig;
 
     //NOT USED
     /*[Header("Trail Settings")]
@@ -94,14 +100,15 @@ public class TankControl : MonoBehaviour
 
     //INPUTS
     private bool shootInput;
+    private bool bigShootInput;
     private bool dashInput;
 
 
     void Start()
     {
         rigid = GetComponent<Rigidbody>();
-        reloadNormal = GameObject.Find("ReloadMachineGun").GetComponent<Image>();
-        reloadDash = GameObject.Find("ReloadDash").GetComponent<Image>();
+        /*reloadNormal = GameObject.Find("ReloadMachineGun").GetComponent<Image>();
+        reloadDash = GameObject.Find("ReloadDash").GetComponent<Image>();*/
 
         //reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
@@ -171,6 +178,23 @@ public class TankControl : MonoBehaviour
             bigFireReloadTime += Time.deltaTime;
         }
 
+        //Increase Hold Time
+        if (bigShootInput) {
+            if (currentHoldTime < bigShotHoldTime) {
+                currentHoldTime += Time.deltaTime;
+            }
+            else if(currentHoldTime >= bigShotHoldTime){
+                canShootBig = true;
+            }
+        }
+        else {
+            currentHoldTime = 0;
+            canShootBig = false;
+        }
+
+        
+
+        //MOVE
         if (GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice).magnitude > 0.01f) {
             if(gameIsInNetwork)
                 photonView.RPC("MoveTankRPC", RpcTarget.All, GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero));
@@ -197,11 +221,11 @@ public class TankControl : MonoBehaviour
         }*/
 
         //RELOAD UI
-        if (useUI) {
+        /*if (useUI) {
             reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
             //reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
             reloadDash.fillAmount = dashReloadTime / dashCooldownTime;
-        }
+        }*/
 
         //MOVE CANNON
         /*Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
@@ -239,8 +263,29 @@ public class TankControl : MonoBehaviour
             rigid.AddRelativeForce(-turret.transform.forward * knockBack);
         }
 
+        //BIG_FIRE
+        if (bigShootInput && canShootBig) {
+            bigFireReloadTime = 0;
+            Camera.main.GetComponent<CameraShake>().ShakeCam(.1f, 0.1f);
+
+            GameObject obj;
+            if (gameIsInNetwork) {
+                obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "bigShell"),
+                    shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+
+                obj.GetComponent<PhotonView>().RPC("InitializeShellRPC", RpcTarget.All, this.playerId, turret.transform.rotation);
+            }
+            else {
+                obj = Instantiate(bigShellPrefab, shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+                obj.GetComponent<TankShell>().InitializeShell(this.playerId, turret.transform.rotation);
+            }
+            currentHoldTime = 0;
+            canShootBig = false;
+            rigid.AddRelativeForce(-turret.transform.forward * knockBack);
+        }
+
         //DASH
-        // TODO : LE RENDRE NETWORKED
+        //TODO : LE RENDRE NETWORKED
         if (dashInput && dashReloadTime >= dashCooldownTime)
         {
             dashReloadTime = 0;
@@ -253,7 +298,16 @@ public class TankControl : MonoBehaviour
     {
         //UPDATE INPUTS
         shootInput = GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
+        bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
         dashInput = GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
+
+
+        if (gameIsInNetwork) {
+            photonView.RPC("EnableRings", RpcTarget.All);
+        }
+        else {
+            EnableRings();
+        }
 
         //Add tank forward speed if under the maxSpeed limit
         if (rigid.velocity.magnitude >= maxSpeed)
@@ -421,5 +475,35 @@ public class TankControl : MonoBehaviour
 
                 break;
         }
+    }
+
+    [PunRPC]
+    private void EnableRings() {
+
+        int percentage = Mathf.RoundToInt((13 / bigShotHoldTime) * currentHoldTime);
+        int percentageLight = Mathf.RoundToInt((88 / bigShotHoldTime) * currentHoldTime);
+
+        Debug.Log("HoldTime : " + currentHoldTime + " Percentage : " + percentage);
+        foreach(GameObject ring in loadingRings) {
+            DisableRing(ring);
+        }
+        for(int i = 0; i < percentage; i++) {
+            EnableRing(loadingRings[i]);
+        }
+
+        bigShotLight.spotAngle = percentageLight;
+
+    }
+
+    void EnableRing(GameObject ring) {
+        Renderer ringRenderer = ring.GetComponent<Renderer>();
+        ringRenderer.material.color = Color.red;
+        ringRenderer.material.SetColor("_EmissionColor", Color.red * 100);
+    }
+
+    void DisableRing(GameObject ring) {
+        Renderer ringRenderer = ring.GetComponent<Renderer>();
+        ringRenderer.material.color = Color.white;
+        ringRenderer.material.SetColor("_EmissionColor", Color.white);
     }
 }

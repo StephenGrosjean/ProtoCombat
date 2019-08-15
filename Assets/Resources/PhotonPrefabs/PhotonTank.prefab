@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 337848675369792112}
   - component: {fileID: 1675948041850282709}
   - component: {fileID: 5268157825065259686}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -358,7 +358,7 @@ GameObject:
   - component: {fileID: 8939000470245694947}
   - component: {fileID: 3030078101373458991}
   - component: {fileID: 7600414898772013054}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: chenille_gauche
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -435,7 +435,7 @@ GameObject:
   - component: {fileID: 5106738559903803284}
   - component: {fileID: 3453174044193084752}
   - component: {fileID: 8506869520221002281}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 4143051299557968422}
   - component: {fileID: 6483911183543540559}
   - component: {fileID: 9141453925414668383}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -589,7 +589,7 @@ GameObject:
   - component: {fileID: 8072823604955280345}
   - component: {fileID: 9051224034560348328}
   - component: {fileID: 9148275055530945436}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_010
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -666,7 +666,7 @@ GameObject:
   - component: {fileID: 7262408549575433558}
   - component: {fileID: 1818302510505560210}
   - component: {fileID: 4876106974578445716}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -743,7 +743,7 @@ GameObject:
   - component: {fileID: 7724726404753466200}
   - component: {fileID: 2930411130168598650}
   - component: {fileID: 7058573045340550664}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -890,7 +890,7 @@ GameObject:
   - component: {fileID: 127911043238167752}
   - component: {fileID: 4790266782263695137}
   - component: {fileID: 7043335551423713486}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_09
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1042,7 +1042,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3767460331152477971}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1119,7 +1119,7 @@ GameObject:
   - component: {fileID: 6467399165010594900}
   - component: {fileID: 1751155388120458133}
   - component: {fileID: 1873903407102541893}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1196,7 +1196,7 @@ GameObject:
   - component: {fileID: 387346193639504668}
   - component: {fileID: 3644804693943352410}
   - component: {fileID: 372391118437235613}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1273,7 +1273,7 @@ GameObject:
   - component: {fileID: 7458730414636468315}
   - component: {fileID: 7154438373711282872}
   - component: {fileID: 6358342546678491612}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_012
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1350,7 +1350,7 @@ GameObject:
   - component: {fileID: 1574950176961225223}
   - component: {fileID: 206660742371413676}
   - component: {fileID: 6858560603841406770}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1427,7 +1427,7 @@ GameObject:
   - component: {fileID: 2414749497813894067}
   - component: {fileID: 2952752648466853341}
   - component: {fileID: 7156542313342225197}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tourelle
   m_TagString: Untagged
   m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
@@ -1507,7 +1507,7 @@ GameObject:
   - component: {fileID: 6228893277665039691}
   - component: {fileID: 406822070852923682}
   - component: {fileID: 1425620908953339267}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_013
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1637,7 +1637,7 @@ GameObject:
   - component: {fileID: 5096878268211467887}
   - component: {fileID: 4069007494701388749}
   - component: {fileID: 5079459510515337477}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1714,7 +1714,7 @@ GameObject:
   - component: {fileID: 7710325839816141696}
   - component: {fileID: 1282931834277348180}
   - component: {fileID: 8893212957657598820}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1791,7 +1791,7 @@ GameObject:
   - component: {fileID: 9150034153869255312}
   - component: {fileID: 8962135477904826053}
   - component: {fileID: 7084650332279386934}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1868,7 +1868,7 @@ GameObject:
   - component: {fileID: 5612357814285292308}
   - component: {fileID: 8291359825331776315}
   - component: {fileID: 572944557055092420}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1945,7 +1945,7 @@ GameObject:
   - component: {fileID: 3169970334547582188}
   - component: {fileID: 4823288804330170653}
   - component: {fileID: 7429255374383992307}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2022,7 +2022,7 @@ GameObject:
   - component: {fileID: 4130702103512830228}
   - component: {fileID: 3264288142542324342}
   - component: {fileID: 6409612751655917910}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2130,7 +2130,7 @@ GameObject:
   - component: {fileID: 4572532743987923250}
   - component: {fileID: 2465668787864760409}
   - component: {fileID: 8283186286750895643}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2207,7 +2207,7 @@ GameObject:
   - component: {fileID: 2797629124718101851}
   - component: {fileID: 6527491142169326861}
   - component: {fileID: 6168127572960808516}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2273,6 +2273,97 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &6313556869327080111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5656273686402475098}
+  - component: {fileID: 3694999503384526861}
+  m_Layer: 0
+  m_Name: Spot Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5656273686402475098
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6313556869327080111}
+  m_LocalRotation: {x: 0.7071069, y: -0, z: 0.00000008940696, w: 0.70710677}
+  m_LocalPosition: {x: 0, y: 7.33, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7972126014355846650}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
+--- !u!108 &3694999503384526861
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6313556869327080111}
+  m_Enabled: 1
+  serializedVersion: 9
+  m_Type: 0
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Intensity: 31.7
+  m_Range: 22.09
+  m_SpotAngle: 1
+  m_InnerSpotAngle: 1
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 15671
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1 &6422128892380168912
 GameObject:
   m_ObjectHideFlags: 0
@@ -2284,7 +2375,7 @@ GameObject:
   - component: {fileID: 364294093199828436}
   - component: {fileID: 7289703083318596604}
   - component: {fileID: 981487019640850835}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2361,7 +2452,7 @@ GameObject:
   - component: {fileID: 7617118976137617933}
   - component: {fileID: 8657356888362416054}
   - component: {fileID: 2364301096966286909}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2438,7 +2529,7 @@ GameObject:
   - component: {fileID: 8996276571895634627}
   - component: {fileID: 6432415268980376961}
   - component: {fileID: 7135171421811950217}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: chenille_droite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2515,7 +2606,7 @@ GameObject:
   - component: {fileID: 2933350887426410051}
   - component: {fileID: 5286865866354713159}
   - component: {fileID: 1190436444973887244}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2592,7 +2683,7 @@ GameObject:
   - component: {fileID: 3229673486742029582}
   - component: {fileID: 919190443776420558}
   - component: {fileID: 3253395469337565985}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2669,7 +2760,7 @@ GameObject:
   - component: {fileID: 7913141567028444959}
   - component: {fileID: 6852737100494832562}
   - component: {fileID: 6645718160781477919}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2777,7 +2868,7 @@ GameObject:
   - component: {fileID: 612874345917303151}
   - component: {fileID: 4468726353661415694}
   - component: {fileID: 6874636016289548790}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2854,7 +2945,7 @@ GameObject:
   - component: {fileID: 9173984757417482896}
   - component: {fileID: 4600348614844220108}
   - component: {fileID: 6307082072872958220}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2931,7 +3022,7 @@ GameObject:
   - component: {fileID: 8117255618716438461}
   - component: {fileID: 5710567793816374888}
   - component: {fileID: 1024034962932118797}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3008,7 +3099,7 @@ GameObject:
   - component: {fileID: 3858641576698981651}
   - component: {fileID: 414597994536129689}
   - component: {fileID: 1817588806101123675}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3115,6 +3206,7 @@ Transform:
   - {fileID: 424313170853478883}
   - {fileID: 8321963985462061938}
   - {fileID: 7448529639582076058}
+  - {fileID: 5656273686402475098}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90.00001, z: 0}
@@ -3169,8 +3261,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerId: 0
   turret: {fileID: 7063711642787460454}
+  loadingRings:
+  - {fileID: 7772337030809228364}
+  - {fileID: 6438086625935939685}
+  - {fileID: 3049895940334418507}
+  - {fileID: 589998801291861066}
+  - {fileID: 7473600902644021602}
+  - {fileID: 7523243630587522476}
+  - {fileID: 8221570458912269852}
+  - {fileID: 3953772881842504404}
+  - {fileID: 1962466489214825265}
+  - {fileID: 883736306038684333}
+  - {fileID: 8523141840020580814}
+  - {fileID: 3030962844473982721}
+  - {fileID: 3588499380496517885}
   shootingPoint: {fileID: 7972126014696184480}
-  quickShootingSpeed: 0.3
+  quickShootingSpeed: 0.2
   bigShootingSpeed: 3
   smallShellPrefab: {fileID: 2483962128604501344, guid: 9b5c5d3f2b4824a4d930a21881259bc2,
     type: 3}
@@ -3185,9 +3291,6 @@ MonoBehaviour:
   dashPower: 2000
   dashCooldownTime: 3
   useUI: 1
-  reloadNormal: {fileID: 0}
-  reloadLarge: {fileID: 0}
-  reloadDash: {fileID: 0}
   forceField: {fileID: 8005190440884196072}
   forcefieldSize: {x: 5, y: 12, z: 5}
   shieldActivationSpeed: 1
@@ -3197,6 +3300,8 @@ MonoBehaviour:
   trackRenderer2: {fileID: 1058796000}
   masterColor: {r: 0.35689166, g: 0.81960785, b: 0, a: 1}
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
+  bigShotHoldTime: 2
+  bigShotLight: {fileID: 3694999503384526861}
   canControl: 1
   gameIsInNetwork: 0
 --- !u!114 &39622936
@@ -3467,7 +3572,7 @@ GameObject:
   - component: {fileID: 3711025530411834417}
   - component: {fileID: 6393231705302795142}
   - component: {fileID: 721744886940994382}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3544,7 +3649,7 @@ GameObject:
   - component: {fileID: 6806595926479081202}
   - component: {fileID: 6186450714523357357}
   - component: {fileID: 7580597002243568760}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_07
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3621,7 +3726,7 @@ GameObject:
   - component: {fileID: 8548688749242434217}
   - component: {fileID: 146567932184175987}
   - component: {fileID: 3732515622146266778}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3698,7 +3803,7 @@ GameObject:
   - component: {fileID: 6073229053932549926}
   - component: {fileID: 250713991917659186}
   - component: {fileID: 865200449573538928}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: anneau_canon_011
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3775,7 +3880,7 @@ GameObject:
   - component: {fileID: 2977434532516849262}
   - component: {fileID: 8929546683060836853}
   - component: {fileID: 7216977536982008594}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3852,7 +3957,7 @@ GameObject:
   - component: {fileID: 8337901625976185234}
   - component: {fileID: 8505457910066707619}
   - component: {fileID: 9031999289386031255}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3929,7 +4034,7 @@ GameObject:
   - component: {fileID: 3188935413934287516}
   - component: {fileID: 5508283928365839457}
   - component: {fileID: 698209030211913799}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Neon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
