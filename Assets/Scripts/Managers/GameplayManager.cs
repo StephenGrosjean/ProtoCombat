@@ -27,7 +27,7 @@ public class GameplayManager : MonoBehaviour {
     private Vector3 middleDistance;
 
     private void OnDrawGizmos() {
-        Gizmos.DrawSphere(middleDistance, 0.5f);
+        Gizmos.DrawSphere(middleDistance, 1f);
     }
 
     void Start() {

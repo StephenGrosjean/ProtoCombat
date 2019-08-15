@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5632173453815582804}
   - component: {fileID: 5632173453815582807}
   m_Layer: 0
-  m_Name: Spot Light
+  m_Name: PulseLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39,7 +39,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5632173453815582806}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 9
   m_Type: 0
   m_Color: {r: 0, g: 1, b: 0.8239019, a: 1}
