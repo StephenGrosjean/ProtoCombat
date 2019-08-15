@@ -40,7 +40,7 @@ public class MainMenuController : MonoBehaviour
     public void GotoOnline() {
         currentPanel = PANEL.ONLINE;
 
-        onlinePanel.SetActive(true);
+        onlinePanel.SetActive(true);    
         localPanel.SetActive(false);
         mainMenuPanel.SetActive(false);
         optionsPanel.SetActive(false);
