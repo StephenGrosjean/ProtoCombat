@@ -64,6 +64,7 @@ public class MainMenuController : MonoBehaviour
 
         subTitle.text = localText;
 
+
         SceneManager.LoadScene("LocalArena");
     }
 

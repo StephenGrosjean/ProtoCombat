@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioMixer: {fileID: 24100000, guid: b932813468e83f1409d0348b05748225, type: 2}
   menuMusicClip: {fileID: 8300000, guid: 51929f84ca463234db04730eadea482a, type: 3}
-  inGameMusicClip: {fileID: 8300000, guid: 9262b576ba0737e42b1f01b5d641ad8e, type: 3}
+  inGameMusicClip: {fileID: 8300000, guid: 6b3f1ed334b75df47bc8d095a210abd2, type: 3}
   lastMusicClip: {fileID: 8300000, guid: c9f5b33dd6e952c49abc044b4e0b6111, type: 3}
   listShieldSoundClip:
   - {fileID: 8300000, guid: be33bfe8e9a8e7f46ad47ab82da975fe, type: 3}
