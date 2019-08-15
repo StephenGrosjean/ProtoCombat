@@ -70,7 +70,16 @@ public class TankShell : MonoBehaviour
         //Check if is colliding with the launcher 
         if (collision.gameObject.tag == "Tank" && collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
         {
-            collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
+            switch (typeShell) {
+                case ShellType.Large:
+                    collision.gameObject.GetComponent<TankHealth>().TakeDamage(2); //Deal damages to other tank
+
+                    break;
+                case ShellType.Small:
+                    collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
+
+                    break;
+            }
         }
 
         DestroyShell();
