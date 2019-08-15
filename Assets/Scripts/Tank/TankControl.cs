@@ -35,7 +35,7 @@ public class TankControl : MonoBehaviour
     private float speed;
 
     [SerializeField] private float maxSpeed;
-    [SerializeField] private float knockBack;
+    [SerializeField] private float knockBackNormal, knockBackLarge;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float turretRotationSpeed;
 
@@ -287,7 +287,7 @@ public class TankControl : MonoBehaviour
                 obj.GetComponent<TankShell>().InitializeShell(this.playerId, turret.transform.rotation);
             }
 
-            rigid.AddRelativeForce(-turret.transform.forward * knockBack);
+            rigid.AddRelativeForce(-Vector3.right * knockBackNormal);
         }
 
         //BIG_FIRE
@@ -308,7 +308,7 @@ public class TankControl : MonoBehaviour
             }
             currentHoldTime = 0;
             canShootBig = false;
-            rigid.AddRelativeForce(-turret.transform.forward * knockBack);
+            rigid.AddRelativeForce(-Vector3.right * knockBackLarge);
         }
 
         //LOAD DASH
@@ -330,13 +330,16 @@ public class TankControl : MonoBehaviour
             rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
             LoadDash = 1;
         }
+
+        shootInput = false;
+        dashInput = false;
     }
 
     private void Update() {
         //UPDATE INPUTS
-        shootInput = GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
+        shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
         bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
-        dashInput = GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
+        dashInput = dashInput ||  GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
 
         if (gameIsInNetwork) {
             photonView.RPC("EnableRings", RpcTarget.All);
@@ -519,7 +522,7 @@ public class TankControl : MonoBehaviour
         int percentageLight = Mathf.RoundToInt((88 / bigShotHoldTime) * currentHoldTime);
 
         //Debug.Log("HoldTime : " + currentHoldTime + " Percentage : " + percentage);
-        foreach (GameObject ring in loadingRings) {
+        foreach(GameObject ring in loadingRings) {
             DisableRing(ring);
         }
         for (int i = 0; i < percentage; i++) {

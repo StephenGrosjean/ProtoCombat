@@ -3277,15 +3277,16 @@ MonoBehaviour:
   - {fileID: 3588499380496517885}
   shootingPoint: {fileID: 7972126014696184480}
   quickShootingSpeed: 0.2
-  bigShootingSpeed: 3
+  bigShootingSpeed: 1
   smallShellPrefab: {fileID: 2483962128604501344, guid: 9b5c5d3f2b4824a4d930a21881259bc2,
     type: 3}
   bigShellPrefab: {fileID: 2483962128604501344, guid: 6d1abcacfc4b0184fb1a7adca67d7a22,
     type: 3}
-  speed: 30
-  maxSpeed: 500
-  knockBack: 100
-  rotationSpeed: 4
+  speed: 35
+  maxSpeed: 300
+  knockBackNormal: 200
+  knockBackLarge: 1500
+  rotationSpeed: 6
   turretRotationSpeed: 4
   moveForceMode: 0
   dashPower: 2000
@@ -3301,7 +3302,7 @@ MonoBehaviour:
   trackRenderer2: {fileID: 1058796000}
   masterColor: {r: 0.35689166, g: 0.81960785, b: 0, a: 1}
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
-  bigShotHoldTime: 2
+  bigShotHoldTime: 1
   bigShotLight: {fileID: 3694999503384526861}
   isDash: 0
   isGround: 0

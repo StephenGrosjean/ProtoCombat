@@ -21,6 +21,7 @@ public class TankShell : MonoBehaviour
     [SerializeField] private bool skyShell; //Is SkyShell ?
     [SerializeField] private GameObject smallShellBurst; //Particle to spawn at shell destroy
     public ShellType TypeShell { get { return typeShell; } set { typeShell = value; } } //GetSet the shell Type
+    [SerializeField] private Transform particles;
 
     private int health = 1; //Health of the shell (Used of the bounce)  (AKA number of bounce)
 
@@ -80,11 +81,17 @@ public class TankShell : MonoBehaviour
         if (inNetwork)
         {
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "SmallShellBurst"), transform.position, Quaternion.identity);
+            if (typeShell == ShellType.Large) {
+                photonView.RPC("DetatchParticles", RpcTarget.All);
+            }
             PhotonNetwork.Destroy(photonView);
         }
         else
         {
             Instantiate(smallShellBurst, transform.position, Quaternion.identity);
+            if (typeShell == ShellType.Large) {
+                DetatchParticles();
+            }
             Destroy(gameObject);
         }
     }
@@ -111,5 +118,10 @@ public class TankShell : MonoBehaviour
 
         //Destroy the shell after 5 sec
         Destroy(gameObject, 5);
+    }
+
+    [PunRPC]
+    void DetatchParticles() {
+        particles.SetParent(null);
     }
 }
