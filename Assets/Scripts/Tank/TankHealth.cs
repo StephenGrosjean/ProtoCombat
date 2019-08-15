@@ -61,7 +61,9 @@ public class TankHealth : MonoBehaviour
     }
 
     IEnumerator WaitForRespawn(Transform spawnTransform) {
-        if(inNetwork)
+        Camera.main.GetComponent<CameraShake>().ShakeCam(1f, 1.5f);
+
+        if (inNetwork)
             photonView.RPC("ToggleRenderersRPC", RpcTarget.All, false);
         else
             GetComponent<TankControl>().ToggleRenderers(false);
