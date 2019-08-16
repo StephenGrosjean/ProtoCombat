@@ -41,6 +41,13 @@ public class TankShell : MonoBehaviour
 
         rigid = GetComponent<Rigidbody>();
 
+        
+
+    }
+
+    void Start()
+    {
+
         if (SceneManager.GetActiveScene().name == "LocalArena") {
             if (playerOwnerId == 0) {
                 gameObject.layer = layerMaster;
@@ -57,26 +64,6 @@ public class TankShell : MonoBehaviour
                 gameObject.layer = layerClient;
             }
         }
-
-    }
-
-    void Start()
-    {
-        //Add force to launch shell depending of the skyshell parameter 
-        /*
-        if (!skyShell)
-        {
-            rigid.AddRelativeForce(-Vector3.left * speed);
-            health = -1;
-        }
-        else
-        {
-            rigid.AddRelativeForce(Vector3.down * speed);
-
-        }
-        */
-        //Destroy the shell after 5 sec
-        //Destroy(gameObject, 5);
     }
 
     //Collision detection

@@ -89,13 +89,13 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Opacity: 0.18
+    - _Opacity: 0.61
     - _Parallax: 0.02
-    - _ShieldAnimSpeed: 3.4
-    - _ShieldDistortion: 0.03
-    - _ShieldPatternPower: 36
-    - _ShieldPatternSize: 2
-    - _ShieldRimPower: 2
+    - _ShieldAnimSpeed: 5
+    - _ShieldDistortion: 0.0078
+    - _ShieldPatternPower: 100
+    - _ShieldPatternSize: 1
+    - _ShieldRimPower: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -107,5 +107,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HitColor: {r: 1, g: 1, b: 1, a: 1}
     - _HitPosition: {r: 0, g: 0, b: 0, a: 0}
-    - _IntersectColor: {r: 0.03137255, g: 0.2588235, b: 0.3176471, a: 1}
+    - _IntersectColor: {r: 0, g: 0.7945206, b: 1, a: 1}
     - _ShieldPatternColor: {r: 0.2470587, g: 0.7764706, b: 0.9098039, a: 1}
