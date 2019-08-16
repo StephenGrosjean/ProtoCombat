@@ -392,7 +392,7 @@ public class TankControl : MonoBehaviour
         }
 
         //DASH
-        if (GameInput.GetInputUp(GameInput.InputType.DASH) && LoadDash > 1)
+        if (GameInput.GetInputUp(GameInput.InputType.DASH, playerDevice) && LoadDash > 1)
         {
             dashReloadTime = 0;
             if (gameIsInNetwork)
@@ -419,13 +419,14 @@ public class TankControl : MonoBehaviour
         shootInput = false;
         dashInput = false;
         shieldInput = false;
+        bigShootInput = false;
     }
 
     private void Update()
     {
         //UPDATE INPUTS
         shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
-        bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
+        bigShootInput = bigShootInput || GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
         shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
 
