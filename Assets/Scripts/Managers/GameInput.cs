@@ -19,7 +19,7 @@ public static class GameInput {
         ACTION_CONFIRM,
         ACTION_BACK,
 
-        SHOOT, //shoot in game, confirm in menus
+        SHOOT, //shoot in game
         BIG_SHOOT,
         DEFENSE,
         DASH,
@@ -118,8 +118,7 @@ public static class GameInput {
                          GetInput(KeyCode.B, timeType);
                 break;
             case InputType.DEFENSE:
-                result = GetInput(InputControlType.LeftTrigger, timeType, device) ||
-                         GetInput(InputControlType.LeftBumper, timeType, device) ||
+                result = GetInput(InputControlType.Action3, timeType, device) ||
                          GetInput(KeyCode.E, timeType);
                 break;
             case InputType.DASH:
