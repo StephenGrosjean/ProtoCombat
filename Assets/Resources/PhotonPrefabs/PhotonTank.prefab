@@ -3835,7 +3835,8 @@ MonoBehaviour:
   turretRotationSpeed: 4
   moveForceMode: 0
   dashPower: 2000
-  dashCooldownTime: 2
+  dashCooldownTime: 3
+  timeToDash: 1.2
   useUI: 1
   forceField: {fileID: 7397430157740983869}
   forcefieldSize: {x: 1, y: 1, z: 1}
@@ -3853,6 +3854,8 @@ MonoBehaviour:
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
   bigShotHoldTime: 1
   bigShotLight: {fileID: 3694999503384526861}
+  isDash: 0
+  IsCritical: 0
   canControl: 1
   gameIsInNetwork: 0
 --- !u!114 &39622936
