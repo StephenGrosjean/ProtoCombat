@@ -97,12 +97,11 @@ public class TankControl : MonoBehaviour
     public bool gameIsInNetwork;
     private InputDevice playerDevice;
 
-
     //INPUTS
     private bool shootInput;
     private bool bigShootInput;
     private bool dashInput;
-
+    private bool shieldInput;
 
     void Start()
     {
@@ -140,19 +139,12 @@ public class TankControl : MonoBehaviour
 
     void FixedUpdate()
         {
-        // Debug.Log("playerId :" + playerId);
-        // Debug.Log("isMaster :" + PhotonNetwork.IsMasterClient);
-        // Debug.Log("isMine :" + photonView.IsMine);
-        // Debug.Log("gameIsInNetwork :" + gameIsInNetwork);
+
         if (!canControl && ((gameIsInNetwork && !photonView.IsMine && playerDevice == null) ||
             (!gameIsInNetwork && playerDevice != null)))
         {
-            //Debug.Log("Passed : false");
             return;
         }
-
-        //Debug.Log("Passed : true");
-
 
         //Increase shield activation Time
         if (shieldEnabled && shieldActivationTime < shieldActivationSpeed) {
@@ -191,8 +183,6 @@ public class TankControl : MonoBehaviour
             currentHoldTime = 0;
             canShootBig = false;
         }
-
-        
 
         //MOVE
         if (GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice).magnitude > 0.01f) {
@@ -290,8 +280,16 @@ public class TankControl : MonoBehaviour
         {
             dashReloadTime = 0;
             rigid.AddRelativeForce(Vector3.right * dashPower, moveForceMode);
-            
         }
+
+        //FORCEFIELD
+        if (shieldInput)
+        {
+            shieldEnabled = !shieldEnabled;
+            soundManager.PlaySound(SoundManager.SoundList.SHIELD);
+        }
+        forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
+
 
         shootInput = false;
         dashInput = false;
@@ -303,6 +301,7 @@ public class TankControl : MonoBehaviour
         shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
         bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
         dashInput = dashInput ||  GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
+        shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
 
 
         if (gameIsInNetwork) {
@@ -317,6 +316,7 @@ public class TankControl : MonoBehaviour
         {
             rigid.velocity = rigid.velocity.normalized * maxSpeed;
         }
+
         /*
             //LARGE FIRE
 
@@ -330,15 +330,6 @@ public class TankControl : MonoBehaviour
                 obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
                 rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
             }
-
-            //FORCEFIELD
-            if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
-                shieldEnabled = !shieldEnabled;
-                soundManager.PlaySound(SoundManager.SoundList.SHIELD);
-            }
-
-            forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
-
 
             //TRAIL (NOT USED)
              if(rigid.velocity.magnitude != 0 && spawnTrail) {
