@@ -3511,11 +3511,16 @@ MonoBehaviour:
   forceField: {fileID: 7397430157740983869}
   forcefieldSize: {x: 0.2, y: 4, z: 4}
   shieldActivationSpeed: 1
+  toggleOnDeath:
+  - {fileID: 3432898266308881622}
+  - {fileID: 3932830870987875491}
+  - {fileID: 5166093143564123694}
+  - {fileID: 7238491235423617731}
   bodyRenderer: {fileID: 2816004721399168042}
   turretRenderer: {fileID: 7156542313342225197}
   trackRenderer1: {fileID: 743676287}
   trackRenderer2: {fileID: 1058796000}
-  masterColor: {r: 0.35689166, g: 0.81960785, b: 0, a: 1}
+  masterColor: {r: 0.7411765, g: 0, b: 1, a: 1}
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
   bigShotHoldTime: 1
   bigShotLight: {fileID: 3694999503384526861}
@@ -3552,7 +3557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   lifes: 3
-  explosionPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 100008, guid: ed9b0ff58e4983a4cb2d19467a1fe8a8, type: 3}
   inNetwork: 0
 --- !u!114 &787743013130168852
 MonoBehaviour:
@@ -3638,6 +3643,8 @@ MonoBehaviour:
   - {fileID: 572944557055092420}
   - {fileID: 721744886940994382}
   - {fileID: 7084650332279386934}
+  masterColor: {r: 0.7411765, g: 0, b: 1, a: 1}
+  clientColor: {r: 1, g: 0.40000004, b: 0, a: 1}
 --- !u!1 &7972126014696184495
 GameObject:
   m_ObjectHideFlags: 0

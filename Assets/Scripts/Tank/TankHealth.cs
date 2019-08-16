@@ -61,12 +61,16 @@ public class TankHealth : MonoBehaviour
     }
 
     IEnumerator WaitForRespawn(Transform spawnTransform) {
-        Camera.main.GetComponent<CameraShake>().ShakeCam(1f, 1.5f);
+        Camera.main.GetComponent<CameraShake>().ShakeCam(1.5f, 7f);
 
-        if (inNetwork)
+        if (inNetwork) {
             photonView.RPC("ToggleRenderersRPC", RpcTarget.All, false);
-        else
+            PhotonNetwork.Instantiate("TankExplosion", transform.position, Quaternion.identity);
+        }
+        else {
             GetComponent<TankControl>().ToggleRenderers(false);
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        }
 
         yield return new WaitForSeconds(1);
         transform.position = spawnTransform.position;

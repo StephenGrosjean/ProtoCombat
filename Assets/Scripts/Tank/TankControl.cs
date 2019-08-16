@@ -57,6 +57,8 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
     private bool shieldEnabled; //Is the shield is active?
 
+    [Header("Death Settings")]
+    [SerializeField] private List<GameObject> toggleOnDeath;
 
     [SerializeField] private MeshRenderer bodyRenderer, turretRenderer;
     [SerializeField] private TrailRenderer trackRenderer1, trackRenderer2;
@@ -373,10 +375,9 @@ public class TankControl : MonoBehaviour
 
     public void ToggleRenderers(bool value)
     {
-        trackRenderer1.enabled = value;
-        trackRenderer2.enabled = value;
-        bodyRenderer.enabled = value;
-        turretRenderer.enabled = value;
+        foreach(GameObject obj in toggleOnDeath) {
+            obj.SetActive(value);
+        }
         canControl = value;
     }
 
@@ -454,10 +455,10 @@ public class TankControl : MonoBehaviour
         GetComponent<TankHealth>().inNetwork = inNetwork;
 
         canControl = true;
-        SetupColor();
+        //SetupColor();
     }
 
-    private void SetupColor()
+    /*private void SetupColor()
     {
         switch (PhotonNetwork.IsMasterClient)
         {
@@ -469,7 +470,7 @@ public class TankControl : MonoBehaviour
 
                 break;
         }
-    }
+    }*/
 
     [PunRPC]
     private void EnableRings() {

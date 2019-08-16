@@ -56,5 +56,6 @@ MonoBehaviour:
   - EnableObjectAndBreakRPC
   - EnableRings
   - DetatchParticles
+  - SetColors
   DisableAutoOpenWizard: 1
   ShowSettings: 1
