@@ -130,7 +130,7 @@ public class TankControl : MonoBehaviour
         //reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
 
-        if(SceneManager.GetActiveScene().name == "LocalArena") {
+        /*if(SceneManager.GetActiveScene().name == "LocalArena") {
             if(gameObject.name == "Player 1") {
                 gameObject.layer = layerMaster;
             }
@@ -145,7 +145,7 @@ public class TankControl : MonoBehaviour
             else {
                 gameObject.layer = layerClient;
             }
-        }
+        }*/
 
     }
 

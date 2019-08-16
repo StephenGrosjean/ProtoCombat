@@ -48,7 +48,7 @@ public class TankShell : MonoBehaviour
     void Start()
     {
 
-        if (SceneManager.GetActiveScene().name == "LocalArena") {
+        /*if (SceneManager.GetActiveScene().name == "LocalArena") {
             if (playerOwnerId == 0) {
                 gameObject.layer = layerMaster;
             }
@@ -58,12 +58,13 @@ public class TankShell : MonoBehaviour
         }
         else {
             if (PhotonNetwork.IsMasterClient) {
-                gameObject.layer = layerMaster;
+                photonView.RPC("SetLayer", RpcTarget.All, layerMaster);
             }
             else {
-                gameObject.layer = layerClient;
+
+                photonView.RPC("SetLayer", RpcTarget.All, layerClient);
             }
-        }
+        }*/
     }
 
     //Collision detection
@@ -139,5 +140,10 @@ public class TankShell : MonoBehaviour
     [PunRPC]
     void DetatchParticles() {
         particles.SetParent(null);
+    }
+
+    [PunRPC]
+    void SetLayer(int layerId) {
+        gameObject.layer = layerId;
     }
 }
