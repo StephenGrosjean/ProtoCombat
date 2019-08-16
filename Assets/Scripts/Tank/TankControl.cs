@@ -140,8 +140,7 @@ public class TankControl : MonoBehaviour
     }
 
     void FixedUpdate()
-        {
-
+    {
         if (!canControl && ((gameIsInNetwork && !photonView.IsMine && playerDevice == null) ||
             (!gameIsInNetwork && playerDevice != null)))
         {
@@ -291,7 +290,6 @@ public class TankControl : MonoBehaviour
             soundManager.PlaySound(SoundManager.SoundList.SHIELD);
         }
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
-
 
         shootInput = false;
         dashInput = false;
