@@ -7,7 +7,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
 using InControl;
-
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script for controlling the tank
@@ -15,6 +15,10 @@ using InControl;
 public class TankControl : MonoBehaviour
 {
     [SerializeField] public int playerId;
+
+    [Header("Layers")]
+    [SerializeField] private int layerMaster;
+    [SerializeField] private int layerClient;
 
     [Header("Part settings")] [SerializeField]
     private Transform turret;
@@ -65,6 +69,8 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
     private bool shieldEnabled; //Is the shield is active?
 
+    [Header("Death Settings")]
+    [SerializeField] private List<GameObject> toggleOnDeath;
 
     [SerializeField] private MeshRenderer bodyRenderer, turretRenderer;
     [SerializeField] private TrailRenderer trackRenderer1, trackRenderer2;
@@ -98,6 +104,7 @@ public class TankControl : MonoBehaviour
     private float quickFireReloadTime, bigFireReloadTime, dashReloadTime; //Current reload time of each shot
     private float shieldActivationTime; //Current shield activation time
 
+
     private float angle;
 
     private SoundManager soundManager;
@@ -108,12 +115,11 @@ public class TankControl : MonoBehaviour
     public bool gameIsInNetwork;
     private InputDevice playerDevice;
 
-
     //INPUTS
     private bool shootInput;
     private bool bigShootInput;
     private bool dashInput;
-
+    private bool shieldInput;
 
     void Start()
     {
@@ -123,6 +129,24 @@ public class TankControl : MonoBehaviour
 
         //reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+
+        if(SceneManager.GetActiveScene().name == "LocalArena") {
+            if(gameObject.name == "Player 1") {
+                gameObject.layer = layerMaster;
+            }
+            else {
+                gameObject.layer = layerClient;
+            }
+        }
+        else {
+            if (PhotonNetwork.IsMasterClient) {
+                gameObject.layer = layerMaster;
+            }
+            else {
+                gameObject.layer = layerClient;
+            }
+        }
+
     }
 
     void SetBodyColor(Color color)
@@ -153,15 +177,11 @@ public class TankControl : MonoBehaviour
     }
 
     void FixedUpdate()
-    {
-        // Debug.Log("playerId :" + playerId);
-        // Debug.Log("isMaster :" + PhotonNetwork.IsMasterClient);
-        // Debug.Log("isMine :" + photonView.IsMine);
-        // Debug.Log("gameIsInNetwork :" + gameIsInNetwork);
+        {
+
         if (!canControl && ((gameIsInNetwork && !photonView.IsMine && playerDevice == null) ||
                             (!gameIsInNetwork && playerDevice != null)))
         {
-            //Debug.Log("Passed : false");
             return;
         }
 
@@ -389,8 +409,18 @@ public class TankControl : MonoBehaviour
             LoadDash = 1;
         }
 
+        //FORCEFIELD
+        if (shieldInput)
+        {
+            shieldEnabled = !shieldEnabled;
+            soundManager.PlaySound(SoundManager.SoundList.SHIELD);
+        }
+        forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
+
+
         shootInput = false;
         dashInput = false;
+        shieldInput = false;
     }
 
     private void Update()
@@ -398,10 +428,11 @@ public class TankControl : MonoBehaviour
         //UPDATE INPUTS
         shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
         bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
+        dashInput = dashInput ||  GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
+        shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
 
-        if (gameIsInNetwork)
-        {
+        if (gameIsInNetwork) {
             photonView.RPC("EnableRings", RpcTarget.All);
         }
         else
@@ -428,15 +459,6 @@ public class TankControl : MonoBehaviour
                 obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
                 rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
             }
-
-            //FORCEFIELD
-            if (GameInput.GetInputDown(GameInput.InputType.DEFENSE)) {
-                shieldEnabled = !shieldEnabled;
-                soundManager.PlaySound(SoundManager.SoundList.SHIELD);
-            }
-
-            forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
-
 
             //TRAIL (NOT USED)
              if(rigid.velocity.magnitude != 0 && spawnTrail) {
@@ -512,10 +534,9 @@ public class TankControl : MonoBehaviour
 
     public void ToggleRenderers(bool value)
     {
-        trackRenderer1.enabled = value;
-        trackRenderer2.enabled = value;
-        bodyRenderer.enabled = value;
-        turretRenderer.enabled = value;
+        foreach(GameObject obj in toggleOnDeath) {
+            obj.SetActive(value);
+        }
         canControl = value;
     }
 
@@ -596,10 +617,10 @@ public class TankControl : MonoBehaviour
         GetComponent<TankHealth>().inNetwork = inNetwork;
 
         canControl = true;
-        SetupColor();
+        //SetupColor();
     }
 
-    private void SetupColor()
+    /*private void SetupColor()
     {
         switch (PhotonNetwork.IsMasterClient)
         {
@@ -611,7 +632,7 @@ public class TankControl : MonoBehaviour
 
                 break;
         }
-    }
+    }*/
 
     [PunRPC]
     private void EnableRings()

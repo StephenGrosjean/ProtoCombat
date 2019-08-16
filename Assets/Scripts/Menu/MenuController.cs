@@ -34,7 +34,6 @@ public class MenuController : MonoBehaviour
             menuBtns[0].Select();
     }
 
-
     private void ManageNavigation()
     {
         if (GameInput.GetInputDown(GameInput.InputType.DOWN) || GameInput.GetInputDown(GameInput.InputType.LEFT))
@@ -42,7 +41,7 @@ public class MenuController : MonoBehaviour
         if (GameInput.GetInputDown(GameInput.InputType.UP) || GameInput.GetInputDown(GameInput.InputType.RIGHT))
             NavigateMenu(true);
 
-        if (GameInput.GetInputDown(GameInput.InputType.ACTION_CONFIRM) && !Input.GetMouseButtonDown(0))
+        if (GameInput.GetInputDown(GameInput.InputType.ACTION_CONFIRM) && !Input.GetMouseButtonDown(0)) // Check if it's the mouse that clicked, so we take the event the mouse clicked.
             SubmitButtonAction();
     }
 
@@ -90,6 +89,4 @@ public class MenuController : MonoBehaviour
     {
         menuBtns[selectedIndex].GetComponent<Button>().onClick.Invoke();
     }
-
-    
 }
