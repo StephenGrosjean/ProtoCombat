@@ -295,6 +295,7 @@ public class TankControl : MonoBehaviour
 
         shootInput = false;
         dashInput = false;
+        shieldInput = false;
     }
 
     private void Update()
