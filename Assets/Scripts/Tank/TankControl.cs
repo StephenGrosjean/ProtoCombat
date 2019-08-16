@@ -428,7 +428,6 @@ public class TankControl : MonoBehaviour
         //UPDATE INPUTS
         shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
         bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
-        dashInput = dashInput ||  GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
         shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
 
