@@ -7,7 +7,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
 using InControl;
-
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script for controlling the tank
@@ -15,6 +15,10 @@ using InControl;
 public class TankControl : MonoBehaviour
 {
     [SerializeField] public int playerId;
+
+    [Header("Layers")]
+    [SerializeField] private int layerMaster;
+    [SerializeField] private int layerClient;
 
     [Header("Part settings")] [SerializeField]
     private Transform turret;
@@ -89,6 +93,7 @@ public class TankControl : MonoBehaviour
     private float quickFireReloadTime, bigFireReloadTime, dashReloadTime; //Current reload time of each shot
     private float shieldActivationTime; //Current shield activation time
 
+
     private float angle;
 
     private SoundManager soundManager;
@@ -113,6 +118,24 @@ public class TankControl : MonoBehaviour
 
         //reloadLarge = GameObject.Find("ReloadLargeShot").GetComponent<Image>();
         soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+
+        if(SceneManager.GetActiveScene().name == "LocalArena") {
+            if(gameObject.name == "Player 1") {
+                gameObject.layer = layerMaster;
+            }
+            else {
+                gameObject.layer = layerClient;
+            }
+        }
+        else {
+            if (PhotonNetwork.IsMasterClient) {
+                gameObject.layer = layerMaster;
+            }
+            else {
+                gameObject.layer = layerClient;
+            }
+        }
+
     }
 
     void SetBodyColor(Color color) {
@@ -305,7 +328,6 @@ public class TankControl : MonoBehaviour
         bigShootInput = GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
         dashInput = dashInput ||  GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
         shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
-
 
         if (gameIsInNetwork) {
             photonView.RPC("EnableRings", RpcTarget.All);

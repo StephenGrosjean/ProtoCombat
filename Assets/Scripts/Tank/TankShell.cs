@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script for the Tank Shells
@@ -22,6 +23,7 @@ public class TankShell : MonoBehaviour
     [SerializeField] private GameObject smallShellBurst; //Particle to spawn at shell destroy
     public ShellType TypeShell { get { return typeShell; } set { typeShell = value; } } //GetSet the shell Type
     [SerializeField] private Transform particles;
+    [SerializeField] private int layerMaster, layerClient;
 
     private int health = 1; //Health of the shell (Used of the bounce)  (AKA number of bounce)
 
@@ -38,6 +40,24 @@ public class TankShell : MonoBehaviour
         photonView = GetComponent<PhotonView>();
 
         rigid = GetComponent<Rigidbody>();
+
+        if (SceneManager.GetActiveScene().name == "LocalArena") {
+            if (playerOwnerId == 0) {
+                gameObject.layer = layerMaster;
+            }
+            else {
+                gameObject.layer = layerClient;
+            }
+        }
+        else {
+            if (PhotonNetwork.IsMasterClient) {
+                gameObject.layer = layerMaster;
+            }
+            else {
+                gameObject.layer = layerClient;
+            }
+        }
+
     }
 
     void Start()
