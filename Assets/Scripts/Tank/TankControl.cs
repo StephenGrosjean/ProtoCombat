@@ -458,6 +458,7 @@ public class TankControl : MonoBehaviour
 
     private void Update()
     {
+        
         //UPDATE INPUTS
         shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
         bigShootInput = bigShootInput || GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
@@ -465,7 +466,7 @@ public class TankControl : MonoBehaviour
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
         dashInputUp = dashInputUp || GameInput.GetInputUp(GameInput.InputType.DASH, playerDevice);
         dashInputDown = dashInputDown || GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
-
+        
 
         if (gameIsInNetwork) {
             photonView.RPC("EnableRings", RpcTarget.All);

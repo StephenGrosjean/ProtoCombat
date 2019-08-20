@@ -62,7 +62,9 @@ public class MultiControllerManager : MonoBehaviour
                     ControllerToPlayer ctPlayer = listOfControllers[i];
                     ctPlayer.isReady = true;
                     listOfControllers[i] = ctPlayer;
+                    
                 }
+
                 playersReadyUI[i].SetActive(listOfControllers[i].isReady);
                 playersNotReadyUI[i].SetActive(!listOfControllers[i].isReady);
             }
@@ -102,6 +104,7 @@ public class MultiControllerManager : MonoBehaviour
                 ControllerToPlayer ctPlayer = listOfControllers[i];
                 ctPlayer.controllerState = ControllerState.ATTACHED;
                 ctPlayer.gameState = GameState.PLAYING;
+
                 listOfControllers[i] = ctPlayer;
                 break;
             }
