@@ -8,6 +8,7 @@ TagManager:
   - Fragment
   - Tank
   - Destroyable
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - TankClient
   - ShellMaster
   - ShellClient
-  - 
+  - Shield
   - 
   - 
   - 

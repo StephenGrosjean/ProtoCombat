@@ -76,20 +76,23 @@ public class TankShell : MonoBehaviour
         GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySound(SoundManager.SoundList.EXPLOSION);//0.1719f
         
         //Check if is colliding with the launcher 
-        if (collision.gameObject.tag == "Tank" && collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId)
+        if (collision.gameObject.tag == "Tank")
         {
-            switch (typeShell) {
-                case ShellType.Large:
-                    collision.gameObject.GetComponent<TankHealth>().TakeDamage(2); //Deal damages to other tank
+            if (collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId) {
+                switch (typeShell) {
+                    case ShellType.Large:
+                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(2); //Deal damages to other tank
 
-                    break;
-                case ShellType.Small:
-                    collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
+                        break;
+                    case ShellType.Small:
+                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(1); //Deal damages to other tank
 
-                    break;
+                        break;
+                }
             }
         }
-
+     
+        Debug.Log(collision.gameObject.tag);
         DestroyShell();
     }
 

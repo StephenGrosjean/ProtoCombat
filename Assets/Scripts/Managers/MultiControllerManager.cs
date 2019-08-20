@@ -76,10 +76,7 @@ public class MultiControllerManager : MonoBehaviour
                 }
             }
             if (playersReady) {
-                foreach (ControllerToPlayer ct in listOfControllers) {
-                    ct.player.GetComponent<TankControl>().canControl = true;
-                }
-
+               
                 if (!isCountdown) {
                     isCountdown = true;
                      StartCoroutine("CountDown");
@@ -171,6 +168,9 @@ public class MultiControllerManager : MonoBehaviour
         countDown.text = "FIGHT !";
         yield return new WaitForSeconds(1);
         countDownUI.SetActive(false);
+        foreach (ControllerToPlayer ct in listOfControllers) {
+            ct.player.GetComponent<TankControl>().canControl = true;
+        }
 
 
     }
