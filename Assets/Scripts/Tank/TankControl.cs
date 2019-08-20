@@ -111,7 +111,7 @@ public class TankControl : MonoBehaviour
 
     private SoundManager soundManager;
 
-    public bool canControl = true;
+    public bool canControl = false;
     private float currentAngle;
 
     public bool gameIsInNetwork;
@@ -182,12 +182,11 @@ public class TankControl : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!canControl && ((gameIsInNetwork && !photonView.IsMine && playerDevice == null) ||
-                            (!gameIsInNetwork && playerDevice != null)))
+        if (!canControl && ((gameIsInNetwork && !photonView.IsMine && playerDevice == null) || (!gameIsInNetwork && playerDevice != null)))
         {
             return;
         }
-
+        if (!canControl) { return; }
         //Debug.Log("Passed : true");
         if (isInvulnerable)
         {
@@ -477,46 +476,9 @@ public class TankControl : MonoBehaviour
         }
 
         //Add tank forward speed if under the maxSpeed limit
-        if (rigid.velocity.magnitude >= maxSpeed)
-        {
+        if (rigid.velocity.magnitude >= maxSpeed) {
             rigid.velocity = rigid.velocity.normalized * maxSpeed;
         }
-
-        /*
-            //LARGE FIRE
-
-            if (GameInput.GetInputDown(GameInput.InputType.SHOOT) && bigFireReloadTime >= bigShootingSpeed) {
-                bigFireReloadTime = 0;
-                Camera.main.GetComponent<CameraShake>().ShakeCam(.2f, 0.5f);
-                //GameObject obj = Instantiate(largeShell, shootingPoint.position, transform.rotation);
-                GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "largeShell"), shootingPoint.position, turret.rotation);
-
-                obj.GetComponent<TankShell>().TypeShell = TankShell.ShellType.Large;
-                obj.GetComponent<TankShell>().SetLauncherParent(this.gameObject);
-                rigid.AddRelativeForce(-Vector3.left * knockBack * 5);
-            }
-
-            //TRAIL (NOT USED)
-             if(rigid.velocity.magnitude != 0 && spawnTrail) {
-                 spawnLightTimer += Time.deltaTime;
-                 if(spawnLightTimer > lightSpacing) {
-                     spawnLightTimer = 0;
-                     GameObject lightTrail1 = Instantiate(trailLight, new Vector3(tracks[0].position.x, -2.25f, tracks[0].position.z), trailLight.transform.rotation);
-                     GameObject lightTrail2 = Instantiate(trailLight, new Vector3(tracks[1].position.x, -2.25f, tracks[1].position.z), trailLight.transform.rotation);
-                     trailLights.Add(lightTrail1);
-                     trailLights.Add(lightTrail2);
-
-                     lightTrail1.transform.SetParent(trailContainer);
-                     lightTrail2.transform.SetParent(trailContainer);
-
-                 }
-             }
-
-             if(trailLights.Count > maxTrailLights) {
-                 trailLights.RemoveAt(0);
-                 Destroy(trailLights[0]);
-             }
-        */
     }
 
     void OnCollisionEnter(Collision collision)
@@ -652,7 +614,7 @@ public class TankControl : MonoBehaviour
 
         GetComponent<TankHealth>().inNetwork = inNetwork;
 
-        canControl = true;
+       // canControl = true;
         //SetupColor();
     }
 
