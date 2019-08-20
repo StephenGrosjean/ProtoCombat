@@ -15,6 +15,7 @@ using UnityEngine.SceneManagement;
 public class TankControl : MonoBehaviour
 {
     [SerializeField] public int playerId;
+    [SerializeField] private Animator animator;
 
     [Header("Layers")]
     [SerializeField] private int layerMaster;
@@ -47,6 +48,7 @@ public class TankControl : MonoBehaviour
 
     [Header("Dash Settings")] [SerializeField]
     private float dashPower;
+    [SerializeField] private Light dashLight;
 
     [SerializeField] private float dashCooldownTime;
     [SerializeField] private float timeToDash = 1.2f;
@@ -119,6 +121,8 @@ public class TankControl : MonoBehaviour
     private bool shootInput;
     private bool bigShootInput;
     private bool dashInput;
+    private bool dashInputUp;
+    private bool dashInputDown;
     private bool shieldInput;
 
     void Start()
@@ -376,37 +380,66 @@ public class TankControl : MonoBehaviour
 
             if (LoadDash <= MaxDash)
             {
+                
                 LoadDash += Time.deltaTime;
+                if (gameIsInNetwork) {
+                    photonView.RPC("SyncAnimation", RpcTarget.All, "TankShake");
+                }
+                else {
+                    SyncAnimation("TankShake");
+                }
             }
             else
             {
                 if (gameIsInNetwork)
                 {
                     photonView.RPC("SyncCritical", RpcTarget.All, true);
+                    photonView.RPC("SyncAnimation", RpcTarget.All, "None");
+                    photonView.RPC("SyncDashLight", RpcTarget.All, true);
+
                 }
                 else
                 {
                     IsCritical = true;
+                    SyncAnimation("None");
+                    SyncDashLight(true);
                 }
             }
         }
 
         //DASH
-        if (GameInput.GetInputUp(GameInput.InputType.DASH, playerDevice) && LoadDash > 1)
+        if (dashInputUp)
         {
-            dashReloadTime = 0;
-            if (gameIsInNetwork)
-            {
-                photonView.RPC("SyncDash", RpcTarget.All, true);
-            }
-            else
-            {
-                isDash = true;
-            }
+            if (LoadDash > 1) {
+                dashReloadTime = 0;
+                if (gameIsInNetwork) {
+                    photonView.RPC("SyncDash", RpcTarget.All, true);
+                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
+                }
+                else {
+                    isDash = true;
+                    SyncDashLight(false);
 
-            rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
-            LoadDash = 1;
+                }
+
+                rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
+                LoadDash = 1;
+            }
+            else {
+                LoadDash = 0;
+                if (gameIsInNetwork) {
+                    photonView.RPC("SyncAnimation", RpcTarget.All, "None");
+                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
+
+                }
+                else {
+                    SyncAnimation("None");
+                    SyncDashLight(false);
+
+                }
+            }
         }
+        
 
         //FORCEFIELD
         if (shieldInput)
@@ -420,6 +453,8 @@ public class TankControl : MonoBehaviour
         dashInput = false;
         shieldInput = false;
         bigShootInput = false;
+        dashInputDown = false;
+        dashInputUp = false;
     }
 
     private void Update()
@@ -429,6 +464,9 @@ public class TankControl : MonoBehaviour
         bigShootInput = bigShootInput || GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
         shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
+        dashInputUp = dashInputUp || GameInput.GetInputUp(GameInput.InputType.DASH, playerDevice);
+        dashInputDown = dashInputDown || GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
+
 
         if (gameIsInNetwork) {
             photonView.RPC("EnableRings", RpcTarget.All);
@@ -689,5 +727,15 @@ public class TankControl : MonoBehaviour
     void SyncCritical(bool value, PhotonMessageInfo info)
     {
         IsCritical = value;
+    }
+
+    [PunRPC]
+    void SyncAnimation(string anim) {
+        animator.Play(anim);
+    }
+
+    [PunRPC]
+    void SyncDashLight(bool value) {
+        dashLight.enabled = value;
     }
 }

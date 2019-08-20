@@ -62,5 +62,7 @@ MonoBehaviour:
   - SyncDash
   - SyncInvulnerability
   - SetLayer
+  - SyncAnimation
+  - SyncDashLight
   DisableAutoOpenWizard: 1
   ShowSettings: 1
