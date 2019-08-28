@@ -406,39 +406,8 @@ public class TankControl : MonoBehaviour
             }
         }
 
-        //DASH
-        if (dashInputUp)
-        {
-            if (LoadDash > 1) {
-                dashReloadTime = 0;
-                if (gameIsInNetwork) {
-                    photonView.RPC("SyncDash", RpcTarget.All, true);
-                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
-                }
-                else {
-                    isDash = true;
-                    SyncDashLight(false);
-
-                }
-
-                rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
-                LoadDash = 1;
-            }
-            else {
-                LoadDash = 0;
-                if (gameIsInNetwork) {
-                    photonView.RPC("SyncAnimation", RpcTarget.All, "None");
-                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
-
-                }
-                else {
-                    SyncAnimation("None");
-                    SyncDashLight(false);
-
-                }
-            }
-        }
         
+
 
         //FORCEFIELD
         if (shieldInput)
@@ -479,6 +448,42 @@ public class TankControl : MonoBehaviour
         //Add tank forward speed if under the maxSpeed limit
         if (rigid.velocity.magnitude >= maxSpeed) {
             rigid.velocity = rigid.velocity.normalized * maxSpeed;
+        }
+
+
+        //DASH
+        if (dashInputUp) {
+            Debug.Log("Pressed dash");
+            if (LoadDash > 1) {
+                Debug.Log("Dash fire");
+                dashReloadTime = 0;
+                if (gameIsInNetwork) {
+                    photonView.RPC("SyncDash", RpcTarget.All, true);
+                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
+                }
+                else {
+                    isDash = true;
+                    SyncDashLight(false);
+
+                }
+
+                rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
+                LoadDash = 1;
+            }
+            else {
+                Debug.Log("Dash Cancel");
+                LoadDash = 0;
+                if (gameIsInNetwork) {
+                    photonView.RPC("SyncAnimation", RpcTarget.All, "None");
+                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
+
+                }
+                else {
+                    SyncAnimation("None");
+                    SyncDashLight(false);
+
+                }
+            }
         }
     }
 
@@ -584,8 +589,8 @@ public class TankControl : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(newDir);
 
         //Move tank
-        if (LoadDash == 1)
-            rigid.AddForce(transform.right * speed, moveForceMode);
+
+        rigid.AddForce(transform.right * speed, moveForceMode);
     }
 
     [PunRPC]
