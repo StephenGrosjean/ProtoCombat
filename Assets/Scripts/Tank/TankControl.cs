@@ -338,8 +338,20 @@ public class TankControl : MonoBehaviour
         }
 
         //BIG_FIRE
+
+        if (bigShootInput && currentHoldTime > 0.2f) {
+            if (gameIsInNetwork) {
+                photonView.RPC("StopVelocity", RpcTarget.All);
+            }
+            else {
+                rigid.velocity = Vector3.zero;
+            }
+        }
+
         if (bigShootInput && canShootBig)
         {
+            
+
             bigFireReloadTime = 0;
             Camera.main.GetComponent<CameraShake>().ShakeCam(.4f, 1f);
 
@@ -430,7 +442,7 @@ public class TankControl : MonoBehaviour
         
         //UPDATE INPUTS
         shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
-        bigShootInput = bigShootInput || GameInput.GetInput(GameInput.InputType.BIG_SHOOT, playerDevice);
+        bigShootInput = bigShootInput || GameInput.GetInput(GameInput.InputType.SHOOT, playerDevice);
         shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
         dashInputUp = dashInputUp || GameInput.GetInputUp(GameInput.InputType.DASH, playerDevice);
