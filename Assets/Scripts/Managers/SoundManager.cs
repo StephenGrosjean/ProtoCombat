@@ -23,7 +23,9 @@ public class SoundManager : MonoBehaviour
         FIRE,
         EXPLOSION,
         SHIELD,
-        STRIKE
+        STRIKE,
+        COUNTDOWN,
+        READY,
     }
 
     public struct LoopedSound
@@ -54,6 +56,9 @@ public class SoundManager : MonoBehaviour
     [Header("Sounds")]
     [SerializeField] AudioClip winSoundClip;
     [SerializeField] AudioClip loseSoundClip;
+    [SerializeField] AudioClip countDownClip;
+    [SerializeField] AudioClip readyClip;
+
 
     [Header("HitClips")]
     [SerializeField] AudioClip hitClip1;
@@ -138,6 +143,14 @@ public class SoundManager : MonoBehaviour
                     break;
                 case SoundList.STRIKE:
                     emitterAvailable.clip = strikSoundClip;
+                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
+                    break;
+                case SoundList.COUNTDOWN:
+                    emitterAvailable.clip = countDownClip;
+                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
+                    break;
+                case SoundList.READY:
+                    emitterAvailable.clip = readyClip;
                     emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;
             }

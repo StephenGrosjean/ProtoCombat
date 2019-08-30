@@ -74,7 +74,7 @@ public class LifeUI : MonoBehaviour
                     lifes[2].SetActive(false);
                     break;
                 case 1:
-                    lifes[0].SetActive(false);
+                    lifes[0].SetActive(true);
                     lifes[1].SetActive(false);
                     lifes[2].SetActive(false);
                     break;

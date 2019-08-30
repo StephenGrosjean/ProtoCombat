@@ -55,7 +55,7 @@ public class MultiControllerManager : MonoBehaviour
     }
 
     private void Update() {
-        if (listOfControllers.Count > 0) {
+        if (listOfControllers.Count > 1) {
 
             for (int i = 0; i < listOfControllers.Count; i++) {
                 if (GameInput.GetInputDown(GameInput.InputType.SHOOT, listOfControllers[i].device)) {
@@ -152,7 +152,8 @@ public class MultiControllerManager : MonoBehaviour
     }
 
     IEnumerator CountDown() {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.2f);
+        SoundManager._instance.PlaySound(SoundManager.SoundList.COUNTDOWN);
 
         foreach (GameObject ui in readyUI) {
             ui.SetActive(false);
@@ -162,15 +163,19 @@ public class MultiControllerManager : MonoBehaviour
         currentCountDown = maxCountDown;
         while (currentCountDown > 0) {
             countDown.text = currentCountDown.ToString();
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.8f);
             currentCountDown--;
         }
-        countDown.text = "FIGHT !";
+        yield return new WaitForSeconds(0.8f);
+
+        countDown.text = "0";
         yield return new WaitForSeconds(1);
         countDownUI.SetActive(false);
         foreach (ControllerToPlayer ct in listOfControllers) {
             ct.player.GetComponent<TankControl>().canControl = true;
         }
+        SoundManager._instance.PlayMusic(SoundManager.MusicList.INGAME);
+
 
 
     }
