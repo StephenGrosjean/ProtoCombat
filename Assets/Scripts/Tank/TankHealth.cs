@@ -108,7 +108,19 @@ public class TankHealth : MonoBehaviour
 
     //Heal
     public void Heal(int heal) {
-        health += heal;
+        if (health < maxHealth) {
+            if (SceneManager.GetActiveScene().name == "LocalArena") {
+                health += heal;
+            }
+            else {
+                photonView.RPC("HealRPC", RpcTarget.All, heal);
+            }
+        }
+    }
+
+    [PunRPC]
+    void HealRPC(int heal) {
+
     }
 
     public int GetHealth() {

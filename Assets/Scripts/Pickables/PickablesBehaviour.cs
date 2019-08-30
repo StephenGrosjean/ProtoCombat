@@ -1,18 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using UnityEngine.SceneManagement;
+
 
 public class PickablesBehaviour : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+
+    [SerializeField] private type pickupType;
+
+    private enum type {
+        HEAL
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+
+    private void OnCollisionEnter(Collision collision) {
+        if (collision.gameObject.tag == "Tank") {
+
+            switch (pickupType) {
+                case type.HEAL:
+                    collision.gameObject.GetComponent<TankHealth>().Heal(1);
+                    SoundManager._instance.PlaySound(SoundManager.SoundList.PICKUP);
+                    break;
+            }
+
+            if(SceneManager.GetActiveScene().name == "LocalArena") {
+                Destroy(transform.parent.gameObject);
+            }
+            else {
+                PhotonNetwork.Destroy(transform.parent.gameObject);
+            }
+        }
     }
 }

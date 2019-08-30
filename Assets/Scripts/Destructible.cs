@@ -46,7 +46,7 @@ public class Destructible : MonoBehaviour
 
 
             float RDMN = Random.Range(0.0f, 100.0f);
-            if (RDMN < 20) {
+            if (RDMN < 15) {
                 if (SceneManager.GetActiveScene().name == "LocalArena") {
                     InstantiatePickup(false);
                 }

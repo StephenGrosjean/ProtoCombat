@@ -71,6 +71,10 @@ public class TankControl : MonoBehaviour
     [SerializeField] private Vector3 forcefieldSize; //Size of the forceField
     [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
     private bool shieldEnabled; //Is the shield is active?
+    [SerializeField] private float shieldTimeOut;
+    [SerializeField] private float shieldCooldown;
+    private bool canActivateShield = true;
+    
 
     [Header("Death Settings")]
     [SerializeField] private List<GameObject> toggleOnDeath;
@@ -404,10 +408,13 @@ public class TankControl : MonoBehaviour
 
 
         //FORCEFIELD
-        if (shieldInput)
+        if (shieldInput && !shieldEnabled && canActivateShield)
         {
-            shieldEnabled = !shieldEnabled;
+            shieldEnabled = true;
+            canActivateShield = false;
+            StartCoroutine("ShieldTimeOut", 0);
             soundManager.PlaySound(SoundManager.SoundList.SHIELD);
+
         }
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
 
@@ -713,5 +720,13 @@ public class TankControl : MonoBehaviour
             }
 
         }
+    }
+
+    IEnumerator ShieldTimeOut() {
+        yield return new WaitForSeconds(shieldTimeOut);
+        shieldEnabled = false;
+        yield return new WaitForSeconds(shieldCooldown);
+        canActivateShield = true;
+        
     }
 }

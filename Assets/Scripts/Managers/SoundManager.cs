@@ -26,6 +26,7 @@ public class SoundManager : MonoBehaviour
         STRIKE,
         COUNTDOWN,
         READY,
+        PICKUP
     }
 
     public struct LoopedSound
@@ -58,6 +59,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioClip loseSoundClip;
     [SerializeField] AudioClip countDownClip;
     [SerializeField] AudioClip readyClip;
+    [SerializeField] AudioClip pickupClip;
 
 
     [Header("HitClips")]
@@ -151,6 +153,10 @@ public class SoundManager : MonoBehaviour
                     break;
                 case SoundList.READY:
                     emitterAvailable.clip = readyClip;
+                    emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
+                    break;
+                case SoundList.PICKUP:
+                    emitterAvailable.clip = pickupClip;
                     emitterAvailable.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Effect")[0];
                     break;
             }

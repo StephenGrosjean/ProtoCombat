@@ -66,5 +66,6 @@ MonoBehaviour:
   - SyncDashLight
   - SyncDashRing
   - InstantiatePickup
+  - HealRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
