@@ -4953,7 +4953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e017fec9f89d3c84a98452a269c63a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15000
+  speed: 35000
   typeShell: 1
   skyShell: 0
   smallShellBurst: {fileID: 100008, guid: d47299d8663c4e949928007cffe005de, type: 3}

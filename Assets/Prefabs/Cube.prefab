@@ -1947,6 +1947,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dba4663328c30674485fee08fa9a4b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifePowerup: {fileID: 1369523470147014656, guid: ea59f6d54a4c72d478cc1cc8c76da140,
+    type: 3}
   cubes:
   - {fileID: 2357078853360158549}
   - {fileID: 139780760327694041}

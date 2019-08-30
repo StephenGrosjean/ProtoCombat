@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
+using System.IO;
+
 /// <summary>
 /// Destructible script
 /// </summary>
 public class Destructible : MonoBehaviour
 {
+    [SerializeField] GameObject lifePowerup;
     [SerializeField] Transform[] cubes; //What are the fragment of the object
     [SerializeField] int force; //With what force should they explode
     [SerializeField] float breakForce; //At what force should they break
@@ -39,6 +43,17 @@ public class Destructible : MonoBehaviour
                 GetComponent<PhotonView>().RPC("EnableObjectAndExplodeRPC", RpcTarget.All, collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude * modifier);
             else
                 EnableObjectAndExplode(collision.transform.position, collision.transform.GetComponent<Rigidbody>().velocity.magnitude * modifier);
+
+
+            float RDMN = Random.Range(0.0f, 100.0f);
+            if (RDMN < 20) {
+                if (SceneManager.GetActiveScene().name == "LocalArena") {
+                    InstantiatePickup(false);
+                }
+                else {
+                    GetComponent<PhotonView>().RPC("InstantiatePickup", RpcTarget.All, true);
+                }
+            }
         }
         else if(collision.transform.tag != "Fragment"){
             //Check break force
@@ -46,6 +61,7 @@ public class Destructible : MonoBehaviour
                 EnableObjectAndBreak(GetComponent<Rigidbody>().GetPointVelocity(collision.GetContact(0).point));
             }
         }
+
     }
     
     //Explode into Fragments
@@ -98,7 +114,21 @@ public class Destructible : MonoBehaviour
                 //fragmentManager.AddFragment(cube.gameObject); //Add fragment to fragmentManager
                 cube.gameObject.GetComponent<Rigidbody>().velocity = collisionVelocity; //Keep velocity
         }
+
+        
+
         Destroy(light); //Destroy the light
         Destroy(gameObject); //Destroy the parent object
+    }
+
+    [PunRPC]
+    void InstantiatePickup(bool isNetwork) {
+        if (isNetwork) {
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Life_Pickable"), transform.position, Quaternion.identity);
+        }
+        else {
+            Instantiate(lifePowerup, transform.position, Quaternion.identity);
+            Debug.Log(transform.position);
+        }
     }
 }

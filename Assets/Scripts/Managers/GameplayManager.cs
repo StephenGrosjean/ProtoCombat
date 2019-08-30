@@ -14,6 +14,7 @@ public class GameplayManager : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI player1Status, player2Status;
     [SerializeField] private GameObject localWinPanel;
     [SerializeField] private Animator lightAnim;
+    [SerializeField] private int minDistance;
 
     public Transform SpawnPointMaster { get { return spawnPointMaster; } }
     public Transform SpawnPointClient { get { return spawnPointClient; } }
@@ -83,7 +84,7 @@ public class GameplayManager : MonoBehaviour {
 
             SetLightPosition(middleDistance);
 
-            if (distance < 6) {
+            if (distance < minDistance) {
                 if (currentTimeContact < maxTimeContact) {
                     currentTimeContact += Time.deltaTime;
                 }
