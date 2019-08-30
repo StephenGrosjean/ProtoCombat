@@ -4075,7 +4075,7 @@ MonoBehaviour:
   rotationSpeed: 5
   turretRotationSpeed: 4
   moveForceMode: 0
-  dashPower: 5000
+  dashPower: 10000
   dashLight: {fileID: 5618019170877013172}
   dashCooldownTime: 2
   timeToDash: 1
