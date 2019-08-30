@@ -52,6 +52,7 @@ public class TankControl : MonoBehaviour
 
     [SerializeField] private float dashCooldownTime;
     [SerializeField] private float timeToDash = 1.2f;
+    [SerializeField] private GameObject dashRing;
     private float LoadDash = 1;
     private float MaxDash = 2;
     private bool isInvulnerable = false;
@@ -150,7 +151,7 @@ public class TankControl : MonoBehaviour
                 gameObject.layer = layerClient;
             }
         }*/
-
+        LoadDash = 0;
     }
 
     void SetBodyColor(Color color)
@@ -274,31 +275,6 @@ public class TankControl : MonoBehaviour
                 MoveTank(GameInput.GetDirection(GameInput.DirectionType.L_INPUT, Vector2.zero, playerDevice));
         }
 
-        /*
-        rigid.AddRelativeForce(new Vector3(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL), 0, 0) * speed, moveForceMode);
-
-        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_VERTICAL)) > 0.01f)
-        {
-            photonView.RPC("SyncMovementRPC", RpcTarget.Others, rigid.velocity, rigid.position);
-        }
-        */
-
-
-        //Rotate the tank 
-        /*transform.Rotate(new Vector3(0, GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL), 0) * rotationSpeed);
-
-        if (Math.Abs(GameInput.GetAxis(GameInput.AxisType.L_HORIZONTAL)) > 0.01f)
-        {
-            photonView.RPC("SyncRotationRPC", RpcTarget.Others, transform.rotation);
-        }*/
-
-        //RELOAD UI
-        /*if (useUI) {
-            reloadNormal.fillAmount = quickFireReloadTime / quickShootingSpeed;
-            //reloadLarge.fillAmount = bigFireReloadTime / bigShootingSpeed;
-            reloadDash.fillAmount = dashReloadTime / dashCooldownTime;
-        }*/
-
         //MOVE CANNON
         /*Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         Vector2 direction = GameInput.GetDirection(GameInput.DirectionType.R_INPUT, screenPos, playerDevice);
@@ -406,18 +382,24 @@ public class TankControl : MonoBehaviour
                 {
                     photonView.RPC("SyncCritical", RpcTarget.All, true);
                     photonView.RPC("SyncAnimation", RpcTarget.All, "None");
-                    photonView.RPC("SyncDashLight", RpcTarget.All, true);
 
                 }
                 else
                 {
                     IsCritical = true;
                     SyncAnimation("None");
-                    SyncDashLight(true);
                 }
             }
         }
 
+        if(LoadDash > 0) {
+            if (gameIsInNetwork) {
+                photonView.RPC("SyncDashRing", RpcTarget.All);
+            }
+            else {
+                SyncDashRing();
+            }
+        }
         
 
 
@@ -467,33 +449,33 @@ public class TankControl : MonoBehaviour
         if (dashInputUp) {
             Debug.Log("Pressed dash");
             if (LoadDash > 1) {
+                LoadDash = 1;
                 Debug.Log("Dash fire");
                 dashReloadTime = 0;
                 if (gameIsInNetwork) {
                     photonView.RPC("SyncDash", RpcTarget.All, true);
-                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
                 }
                 else {
                     isDash = true;
-                    SyncDashLight(false);
+                    SyncDashRing(true);
 
                 }
 
                 rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
-                LoadDash = 1;
+                LoadDash = 0;
             }
             else {
                 Debug.Log("Dash Cancel");
+                SyncDashRing(true);
                 LoadDash = 0;
                 if (gameIsInNetwork) {
                     photonView.RPC("SyncAnimation", RpcTarget.All, "None");
-                    photonView.RPC("SyncDashLight", RpcTarget.All, false);
+                    SyncDashRing(true);
 
                 }
                 else {
                     SyncAnimation("None");
-                    SyncDashLight(false);
-
+                    SyncDashRing(true);
                 }
             }
         }
@@ -711,11 +693,25 @@ public class TankControl : MonoBehaviour
 
     [PunRPC]
     void SyncAnimation(string anim) {
-        animator.Play(anim);
+        //animator.Play(anim);
     }
 
     [PunRPC]
-    void SyncDashLight(bool value) {
-        dashLight.enabled = value;
+    void SyncDashRing(bool cancel = false) {
+        //dashLight.enabled = value;
+        if (cancel) {
+            dashRing.transform.localScale = Vector3.zero;
+        }
+        else {
+            if (LoadDash > 0) {
+                float calcScale = (1 / (MaxDash / LoadDash)) / 4;
+                dashRing.transform.localScale = new Vector3(calcScale, calcScale, calcScale);
+                Debug.Log(gameObject.name + " : " + calcScale);
+            }
+            else {
+                dashRing.transform.localScale = Vector3.zero;
+            }
+
+        }
     }
 }

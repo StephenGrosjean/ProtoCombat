@@ -64,5 +64,6 @@ MonoBehaviour:
   - SetLayer
   - SyncAnimation
   - SyncDashLight
+  - SyncDashRing
   DisableAutoOpenWizard: 1
   ShowSettings: 1
