@@ -72,6 +72,7 @@ public class TankControl : MonoBehaviour
     [SerializeField] private float shieldActivationSpeed; //Time for the shield to pop
     private bool shieldEnabled; //Is the shield is active?
     [SerializeField] private float shieldTimeOut;
+    [SerializeField] private float shieldBreakCooldownMultiplier = 4.0f;
     [SerializeField] private float shieldCooldown;
     private bool canActivateShield = true;
     
@@ -128,7 +129,6 @@ public class TankControl : MonoBehaviour
     private bool bigShootInputUp;
     private bool dashInput;
     private bool dashInputUp;
-    private bool dashInputDown;
     private bool shieldInput;
 
     void Start()
@@ -325,8 +325,7 @@ public class TankControl : MonoBehaviour
                 int damageDealt = (int)(currentHoldTime / (bigShotHoldTime / (float)maxDamageBigShell));
                 if (damageDealt > maxDamageBigShell)
                     damageDealt = maxDamageBigShell;
-
-                Debug.Log(damageDealt);
+                
                 GameObject obj;
                 if (gameIsInNetwork)
                 {
@@ -403,7 +402,6 @@ public class TankControl : MonoBehaviour
             canActivateShield = false;
             StartCoroutine("ShieldTimeOut", 0);
             soundManager.PlaySound(SoundManager.SoundList.SHIELD);
-
         }
         forceField.transform.localScale = Vector3.Lerp(Vector3.zero, forcefieldSize, shieldActivationTime);
 
@@ -412,7 +410,6 @@ public class TankControl : MonoBehaviour
         shieldInput = false;
         bigShootInput = false;
         bigShootInputUp = false;
-        dashInputDown = false;
         dashInputUp = false;
     }
 
@@ -426,9 +423,7 @@ public class TankControl : MonoBehaviour
         shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
         dashInputUp = dashInputUp || GameInput.GetInputUp(GameInput.InputType.DASH, playerDevice);
-        dashInputDown = dashInputDown || GameInput.GetInputDown(GameInput.InputType.DASH, playerDevice);
         
-
         if (gameIsInNetwork) {
             photonView.RPC("EnableRings", RpcTarget.All);
         }
@@ -452,9 +447,9 @@ public class TankControl : MonoBehaviour
                     photonView.RPC("SyncDash", RpcTarget.All, true);
                 }
                 else {
+                    Debug.Log("IsDash = true");
                     isDash = true;
                     SyncDashRing(true);
-
                 }
 
                 rigid.AddRelativeForce(Vector3.right * dashPower * LoadDash, moveForceMode);
@@ -478,9 +473,16 @@ public class TankControl : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("Coucou");
+        Debug.Log(playerId);
+        Debug.Log(isInvulnerable);
         if (!isInvulnerable)
         {
             TankControl otherPlayer = collision.gameObject.GetComponent<TankControl>();
+            Debug.Log(otherPlayer);
+            Debug.Log(collision.gameObject.layer == LayerMask.NameToLayer("Tank"));
+            Debug.Log(otherPlayer.isDash);
+            Debug.Log("----------------");
             //soundManager.PlaySound(SoundManager.SoundList.STRIKE);
             if (collision.gameObject.layer == LayerMask.NameToLayer("Tank") && otherPlayer.isDash)
             {
@@ -489,6 +491,17 @@ public class TankControl : MonoBehaviour
                 if (gameIsInNetwork)
                 {
                     photonView.RPC("SyncInvulnerability", RpcTarget.All, true);
+                }
+
+                if (shieldEnabled)
+                {
+                    Debug.Log("Shield break");
+                    shieldEnabled = false;
+                    canActivateShield = false;
+                    shieldActivationTime = 0.0f;
+                    StartCoroutine("ShieldTimeOut", shieldBreakCooldownMultiplier);
+                    //Take one extra damage
+                    GetComponent<TankHealth>().TakeDamage(1);
                 }
 
                 if (otherPlayer.IsCritical)
@@ -701,7 +714,6 @@ public class TankControl : MonoBehaviour
             if (LoadDash > 0) {
                 float calcScale = (1 / (MaxDash / LoadDash)) / 4;
                 dashRing.transform.localScale = new Vector3(calcScale, calcScale, calcScale);
-                Debug.Log(gameObject.name + " : " + calcScale);
             }
             else {
                 dashRing.transform.localScale = Vector3.zero;
@@ -710,10 +722,10 @@ public class TankControl : MonoBehaviour
         }
     }
 
-    IEnumerator ShieldTimeOut() {
+    IEnumerator ShieldTimeOut(float multiplier = 1.0f) {
         yield return new WaitForSeconds(shieldTimeOut);
         shieldEnabled = false;
-        yield return new WaitForSeconds(shieldCooldown);
+        yield return new WaitForSeconds(shieldCooldown * multiplier);
         canActivateShield = true;
         
     }
