@@ -86,9 +86,9 @@ public class TankControl : MonoBehaviour
     private PhotonView photonView;
 
     [SerializeField] private float bigShotHoldTime = 2;
+    [SerializeField] private int maxDamageBigShell = 4;
     [SerializeField] private Light bigShotLight;
     private float currentHoldTime;
-    private bool canShootBig;
 
     public bool isDash = false;
     public bool IsCritical = false;
@@ -125,6 +125,7 @@ public class TankControl : MonoBehaviour
     //INPUTS
     private bool shootInput;
     private bool bigShootInput;
+    private bool bigShootInputUp;
     private bool dashInput;
     private bool dashInputUp;
     private bool dashInputDown;
@@ -254,19 +255,7 @@ public class TankControl : MonoBehaviour
         //Increase Hold Time
         if (bigShootInput)
         {
-            if (currentHoldTime < bigShotHoldTime)
-            {
-                currentHoldTime += Time.deltaTime;
-            }
-            else if (currentHoldTime >= bigShotHoldTime)
-            {
-                canShootBig = true;
-            }
-        }
-        else
-        {
-            currentHoldTime = 0;
-            canShootBig = false;
+            currentHoldTime += Time.deltaTime;
         }
 
         //MOVE
@@ -305,7 +294,7 @@ public class TankControl : MonoBehaviour
                     shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
 
                 obj.GetComponent<PhotonView>().RPC("InitializeShellRPC", RpcTarget.All, this.playerId,
-                    turret.transform.rotation);
+                    turret.transform.rotation, 1);
             }
             else
             {
@@ -318,7 +307,6 @@ public class TankControl : MonoBehaviour
         }
 
         //BIG_FIRE
-
         if (bigShootInput && currentHoldTime > 0.2f) {
             if (gameIsInNetwork) {
                 photonView.RPC("StopVelocity", RpcTarget.All);
@@ -328,32 +316,35 @@ public class TankControl : MonoBehaviour
             }
         }
 
-        if (bigShootInput && canShootBig)
+        if (bigShootInputUp)
         {
-            
-
-            bigFireReloadTime = 0;
-            Camera.main.GetComponent<CameraShake>().ShakeCam(.4f, 1f);
-
-            GameObject obj;
-            if (gameIsInNetwork)
+            if (currentHoldTime >= (bigShotHoldTime / maxDamageBigShell))
             {
-                obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "bigShell"),
-                    shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+                bigFireReloadTime = 0;
+                Camera.main.GetComponent<CameraShake>().ShakeCam(.4f, 1f);
+                int damageDealt = (int)(currentHoldTime / (bigShotHoldTime / (float)maxDamageBigShell));
+                if (damageDealt > maxDamageBigShell)
+                    damageDealt = maxDamageBigShell;
 
-                obj.GetComponent<PhotonView>().RPC("InitializeShellRPC", RpcTarget.All, this.playerId,
-                    turret.transform.rotation);
-            }
-            else
-            {
-                obj = Instantiate(bigShellPrefab, shootingPoint.position,
-                    Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
-                obj.GetComponent<TankShell>().InitializeShell(this.playerId, turret.transform.rotation);
+                Debug.Log(damageDealt);
+                GameObject obj;
+                if (gameIsInNetwork)
+                {
+                    obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "bigShell"),
+                        shootingPoint.position, Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+
+                    obj.GetComponent<PhotonView>().RPC("InitializeShellRPC", RpcTarget.All, this.playerId, turret.transform.rotation, damageDealt);
+                }
+                else
+                {
+                    obj = Instantiate(bigShellPrefab, shootingPoint.position,
+                        Quaternion.Euler(new Vector3(0, turret.transform.rotation.y + 180.0f, 0)));
+                    obj.GetComponent<TankShell>().InitializeShell(this.playerId, turret.transform.rotation, damageDealt);
+                }
+                rigid.AddRelativeForce(-Vector3.right * knockBackLarge);
             }
 
             currentHoldTime = 0;
-            canShootBig = false;
-            rigid.AddRelativeForce(-Vector3.right * knockBackLarge);
         }
 
         //LOAD DASH
@@ -404,8 +395,6 @@ public class TankControl : MonoBehaviour
                 SyncDashRing();
             }
         }
-        
-
 
         //FORCEFIELD
         if (shieldInput && !shieldEnabled && canActivateShield)
@@ -422,6 +411,7 @@ public class TankControl : MonoBehaviour
         dashInput = false;
         shieldInput = false;
         bigShootInput = false;
+        bigShootInputUp = false;
         dashInputDown = false;
         dashInputUp = false;
     }
@@ -430,8 +420,9 @@ public class TankControl : MonoBehaviour
     {
         
         //UPDATE INPUTS
-        shootInput = shootInput || GameInput.GetInputDown(GameInput.InputType.SHOOT, playerDevice);
+        shootInput = shootInput || GameInput.GetInputUp(GameInput.InputType.SHOOT, playerDevice);
         bigShootInput = bigShootInput || GameInput.GetInput(GameInput.InputType.SHOOT, playerDevice);
+        bigShootInputUp = bigShootInputUp || GameInput.GetInputUp(GameInput.InputType.SHOOT, playerDevice);
         shieldInput = shieldInput ||  GameInput.GetInputDown(GameInput.InputType.DEFENSE, playerDevice);
         dashInput = dashInput || GameInput.GetInput(GameInput.InputType.DASH, playerDevice);
         dashInputUp = dashInputUp || GameInput.GetInputUp(GameInput.InputType.DASH, playerDevice);
@@ -454,10 +445,8 @@ public class TankControl : MonoBehaviour
 
         //DASH
         if (dashInputUp) {
-            Debug.Log("Pressed dash");
             if (LoadDash > 1) {
                 LoadDash = 1;
-                Debug.Log("Dash fire");
                 dashReloadTime = 0;
                 if (gameIsInNetwork) {
                     photonView.RPC("SyncDash", RpcTarget.All, true);
@@ -472,7 +461,6 @@ public class TankControl : MonoBehaviour
                 LoadDash = 0;
             }
             else {
-                Debug.Log("Dash Cancel");
                 SyncDashRing(true);
                 LoadDash = 0;
                 if (gameIsInNetwork) {

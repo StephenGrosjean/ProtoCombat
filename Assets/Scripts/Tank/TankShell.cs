@@ -30,6 +30,7 @@ public class TankShell : MonoBehaviour
     private Rigidbody rigid; //Rigidbody of the shell
 
     private PhotonView photonView;
+    public int damageBigShell = 2;
 
     private int playerOwnerId; //Who launched it?
     private bool inNetwork;
@@ -81,7 +82,7 @@ public class TankShell : MonoBehaviour
             if (collision.gameObject.GetComponent<TankControl>().playerId != playerOwnerId) {
                 switch (typeShell) {
                     case ShellType.Large:
-                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(2); //Deal damages to other tank
+                        collision.gameObject.GetComponent<TankHealth>().TakeDamage(damageBigShell); //Deal damages to other tank
 
                         break;
                     case ShellType.Small:
@@ -117,11 +118,11 @@ public class TankShell : MonoBehaviour
     }
 
     [PunRPC]
-    public void InitializeShellRPC(int playerOwnerId, Quaternion rotation, PhotonMessageInfo info)
+    public void InitializeShellRPC(int playerOwnerId, Quaternion rotation, int damage, PhotonMessageInfo info)
     {
         float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
-
-        InitializeShell(playerOwnerId, rotation, true);
+        
+        InitializeShell(playerOwnerId, rotation, damage, true);
         
         rigid.position += rigid.velocity * lag;
 
@@ -129,10 +130,11 @@ public class TankShell : MonoBehaviour
             photonView.TransferOwnership(PhotonNetwork.MasterClient);
     }
 
-    public void InitializeShell(int playerOwnerId, Quaternion rotation, bool inNetwork = false)
+    public void InitializeShell(int playerOwnerId, Quaternion rotation, int damage = 1, bool inNetwork = false)
     {
         this.playerOwnerId = playerOwnerId;
 
+        this.damageBigShell = damage;
         rigid.rotation = rotation;
         rigid.AddRelativeForce(Vector3.left * speed);
 

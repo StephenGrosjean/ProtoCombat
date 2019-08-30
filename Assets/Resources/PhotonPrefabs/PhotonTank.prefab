@@ -4075,7 +4075,7 @@ MonoBehaviour:
   rotationSpeed: 5
   turretRotationSpeed: 4
   moveForceMode: 0
-  dashPower: 10000
+  dashPower: 4500
   dashLight: {fileID: 5618019170877013172}
   dashCooldownTime: 2
   timeToDash: 1
@@ -4097,7 +4097,8 @@ MonoBehaviour:
   trackRenderer2: {fileID: 1058796000}
   masterColor: {r: 0.7411765, g: 0, b: 1, a: 1}
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
-  bigShotHoldTime: 1
+  bigShotHoldTime: 1.5
+  maxDamageBigShell: 4
   bigShotLight: {fileID: 3694999503384526861}
   isDash: 0
   IsCritical: 0
