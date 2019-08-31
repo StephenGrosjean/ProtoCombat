@@ -477,18 +477,20 @@ public class TankControl : MonoBehaviour
     {
         /*Debug.Log(playerId);
         Debug.Log(isInvulnerable);*/
-        /*if (!isInvulnerable)
+        if (!isInvulnerable)
         {
             TankControl otherPlayer = null;
-            if (collision.gameObject.tag == "Tank") {
+            if (collision.gameObject.tag == "Tank")
+            {
                 otherPlayer = collision.gameObject.GetComponent<TankControl>();
+                Debug.Log("---- TankCollision !----");
+                Debug.Log(playerId);
                 Debug.Log(otherPlayer);
-                Debug.Log(collision.gameObject.layer == LayerMask.NameToLayer("Tank"));
-                Debug.Log(otherPlayer.isDash);
-                Debug.Log("----------------");
+                Debug.Log("otherPlayer.isDash : " + otherPlayer.isDash);
+                Debug.Log("----");
             }
             //soundManager.PlaySound(SoundManager.SoundList.STRIKE);
-            if (collision.gameObject.tag == "Tank" && otherPlayer.isDash)
+            if (collision.gameObject.tag == "Tank" && otherPlayer && otherPlayer.isDash)
             {
                 TimeToInvulnerable = 1;
                 isInvulnerable = true;
@@ -517,17 +519,28 @@ public class TankControl : MonoBehaviour
                     GetComponent<TankHealth>().TakeDamage(1);
                 }
                 rigid.AddRelativeForce(otherPlayer.transform.forward * dashPower / 2, moveForceMode);
-            }
-          
-        }*/
 
-        if (gameIsInNetwork)
-        {
-            photonView.RPC("SyncDash", RpcTarget.All, false);
+                if (gameIsInNetwork)
+                {
+                    photonView.RPC("SyncDash", RpcTarget.All, false);
+                }
+                else
+                {
+                    isDash = false;
+                }
+            } 
         }
-        else
+
+        if (collision.gameObject.tag != "Tank")
         {
-            isDash = false;
+            if (gameIsInNetwork)
+            {
+                photonView.RPC("SyncDash", RpcTarget.All, false);
+            }
+            else
+            {
+                isDash = false;
+            }
         }
     }
 

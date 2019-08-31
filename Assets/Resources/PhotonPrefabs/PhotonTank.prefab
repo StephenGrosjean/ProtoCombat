@@ -4063,7 +4063,7 @@ MonoBehaviour:
   - {fileID: 3588499380496517885}
   shootingPoint: {fileID: 7972126014696184480}
   quickShootingSpeed: 0.2
-  bigShootingSpeed: 1
+  bigShootingSpeed: 2
   smallShellPrefab: {fileID: 2483962128604501344, guid: 9b5c5d3f2b4824a4d930a21881259bc2,
     type: 3}
   bigShellPrefab: {fileID: 2483962128604501344, guid: 6d1abcacfc4b0184fb1a7adca67d7a22,
@@ -4086,7 +4086,7 @@ MonoBehaviour:
   shieldActivationSpeed: 1
   shieldTimeOut: 6
   shieldBreakCooldownMultiplier: 4
-  shieldCooldown: 6
+  shieldCooldown: 12
   toggleOnDeath:
   - {fileID: 3432898266308881622}
   - {fileID: 3932830870987875491}
@@ -4098,8 +4098,8 @@ MonoBehaviour:
   trackRenderer2: {fileID: 1058796000}
   masterColor: {r: 0.7411765, g: 0, b: 1, a: 1}
   clientColor: {r: 1, g: 0.42564106, b: 0, a: 1}
-  bigShotHoldTime: 1.5
-  maxDamageBigShell: 4
+  bigShotHoldTime: 2
+  maxDamageBigShell: 3
   bigShotLight: {fileID: 3694999503384526861}
   isDash: 0
   IsCritical: 0
