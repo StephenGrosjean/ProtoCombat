@@ -194,6 +194,7 @@ public class TankControl : MonoBehaviour
         {
             return;
         }
+
         if (!canControl) { return; }
         //Debug.Log("Passed : true");
         if (isInvulnerable)
@@ -449,7 +450,6 @@ public class TankControl : MonoBehaviour
                     photonView.RPC("SyncDash", RpcTarget.All, true);
                 }
                 else {
-                    Debug.Log("IsDash = true");
                     isDash = true;
                     SyncDashRing(true);
                 }
@@ -475,20 +475,12 @@ public class TankControl : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        /*Debug.Log(playerId);
-        Debug.Log(isInvulnerable);*/
         if (!isInvulnerable)
         {
             TankControl otherPlayer = null;
             if (collision.gameObject.tag == "Tank")
-            {
                 otherPlayer = collision.gameObject.GetComponent<TankControl>();
-                Debug.Log("---- TankCollision !----");
-                Debug.Log(playerId);
-                Debug.Log(otherPlayer);
-                Debug.Log("otherPlayer.isDash : " + otherPlayer.isDash);
-                Debug.Log("----");
-            }
+
             //soundManager.PlaySound(SoundManager.SoundList.STRIKE);
             if (collision.gameObject.tag == "Tank" && otherPlayer && otherPlayer.isDash)
             {
@@ -501,7 +493,6 @@ public class TankControl : MonoBehaviour
 
                 if (shieldEnabled)
                 {
-                    Debug.Log("Shield break");
                     shieldEnabled = false;
                     canActivateShield = false;
                     shieldActivationTime = 0.0f;

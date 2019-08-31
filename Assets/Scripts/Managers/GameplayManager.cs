@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using Photon.Realtime;
 
 public class GameplayManager : MonoBehaviour {
+    [SerializeField] private GameObject mainUiObject;
     [SerializeField] private GameObject endGameScreen;
     [SerializeField] private TextMeshProUGUI winText;
     [SerializeField] private Transform spawnPointMaster, spawnPointClient;
@@ -117,6 +118,8 @@ public class GameplayManager : MonoBehaviour {
 
         if (SceneManager.GetActiveScene().name == "LocalArena") {
             localWinPanel.SetActive(true);
+            mainUiObject.GetComponent<MenuController>().SetupMenuBtns(localWinPanel.transform.GetChild(0).Find("Buttons"));
+            mainUiObject.GetComponent<MenuController>().inMenu = true;
             if (tankClient.GetComponent<TankHealth>().GetLifes() <= 0) {
                 player1Status.text = "Won";
                 player2Status.text = "Lose";

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour
 {
     [SerializeField] private List<Selectable> menuBtns;
-    private int selectedIndex = 0;
+    public int selectedIndex = 0;
     public bool inMenu = false;
     [SerializeField] private bool inGameMenu;
 
@@ -36,9 +36,9 @@ public class MenuController : MonoBehaviour
 
     private void ManageNavigation()
     {
-        if (GameInput.GetInputDown(GameInput.InputType.DOWN) || GameInput.GetInputDown(GameInput.InputType.LEFT))
+        if (GameInput.GetInputDown(GameInput.InputType.DOWN) || GameInput.GetInputDown(GameInput.InputType.RIGHT))
             NavigateMenu(false);
-        if (GameInput.GetInputDown(GameInput.InputType.UP) || GameInput.GetInputDown(GameInput.InputType.RIGHT))
+        if (GameInput.GetInputDown(GameInput.InputType.UP) || GameInput.GetInputDown(GameInput.InputType.LEFT))
             NavigateMenu(true);
 
         if (GameInput.GetInputDown(GameInput.InputType.ACTION_CONFIRM) && !Input.GetMouseButtonDown(0)) // Check if it's the mouse that clicked, so we take the event the mouse clicked.
@@ -68,6 +68,8 @@ public class MenuController : MonoBehaviour
             if(menuBtns.Count > 0)
                 menuBtns[selectedIndex].Select();
         }
+        Debug.Log("NavigateMenu : " + onLeft);
+        Debug.Log("CurrentIndex : " + selectedIndex);
     }
 
     public void SelectButton(string name)
