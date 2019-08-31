@@ -57,6 +57,9 @@ MonoBehaviour:
   explosionSoundClip: {fileID: 8300000, guid: cfcd943e588a5674995668bb11a16652, type: 3}
   winSoundClip: {fileID: 0}
   loseSoundClip: {fileID: 0}
+  countDownClip: {fileID: 8300000, guid: ab42de8a35693a94fb25c88f5065ede5, type: 3}
+  readyClip: {fileID: 8300000, guid: b7010e615ff57d4438a97445b4939278, type: 3}
+  pickupClip: {fileID: 8300000, guid: a60649922ab49da43904ba8bcd39af8f, type: 3}
   hitClip1: {fileID: 0}
   hitClip2: {fileID: 0}
   emitterPrefab: {fileID: 3951027311739364543, guid: 041a6b49310945044a29639b99ec7178,

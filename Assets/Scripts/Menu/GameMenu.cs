@@ -23,6 +23,7 @@ public class GameMenu : MonoBehaviour
     public void QuitConfirm() {
         menuController.SetupMenuBtns(parentConfirmationQuitMenu);
         confirmationUIQuit.SetActive(true);
+        ShutDownAudio();
     }
 
     public void QuitCancel() {
@@ -37,6 +38,7 @@ public class GameMenu : MonoBehaviour
     public void LeaveConfirm() {
         menuController.SetupMenuBtns(parentConfirmationLeaveMenu);
         confirmationUILeave.SetActive(true);
+        ShutDownAudio();
     }
 
     public void LeaveCancel() {
@@ -51,10 +53,12 @@ public class GameMenu : MonoBehaviour
         }
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
+        ShutDownAudio();
     }
 
     public void Rematch() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        ShutDownAudio();
     }
 
     private void Update() {
@@ -89,5 +93,9 @@ public class GameMenu : MonoBehaviour
         canOpenMenu = false;
         yield return new WaitForSecondsRealtime(0.2f);
         canOpenMenu = true;
+    }
+
+    void ShutDownAudio() {
+        SoundManager._instance.StopSound(SoundManager._instance.gameObject.GetComponent<AudioSource>());
     }
 }

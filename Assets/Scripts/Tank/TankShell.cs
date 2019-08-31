@@ -93,7 +93,7 @@ public class TankShell : MonoBehaviour
             }
         }
      
-        Debug.Log(collision.gameObject.tag);
+//        Debug.Log(collision.gameObject.tag);
         DestroyShell();
     }
 

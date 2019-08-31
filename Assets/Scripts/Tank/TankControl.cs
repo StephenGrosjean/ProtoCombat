@@ -87,6 +87,7 @@ public class TankControl : MonoBehaviour
     private PhotonView photonView;
 
     [SerializeField] private float bigShotHoldTime = 2;
+    private float bigShotMaxHoldTime;
     [SerializeField] private int maxDamageBigShell = 4;
     [SerializeField] private Light bigShotLight;
     private float currentHoldTime;
@@ -133,6 +134,7 @@ public class TankControl : MonoBehaviour
 
     void Start()
     {
+        bigShotMaxHoldTime = bigShotHoldTime;
         rigid = GetComponent<Rigidbody>();
         /*reloadNormal = GameObject.Find("ReloadMachineGun").GetComponent<Image>();
         reloadDash = GameObject.Find("ReloadDash").GetComponent<Image>();*/
@@ -253,7 +255,7 @@ public class TankControl : MonoBehaviour
         }
 
         //Increase Hold Time
-        if (bigShootInput)
+        if (bigShootInput && currentHoldTime < bigShotHoldTime)
         {
             currentHoldTime += Time.deltaTime;
         }
@@ -473,18 +475,20 @@ public class TankControl : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Coucou");
-        Debug.Log(playerId);
-        Debug.Log(isInvulnerable);
-        if (!isInvulnerable)
+        /*Debug.Log(playerId);
+        Debug.Log(isInvulnerable);*/
+        /*if (!isInvulnerable)
         {
-            TankControl otherPlayer = collision.gameObject.GetComponent<TankControl>();
-            Debug.Log(otherPlayer);
-            Debug.Log(collision.gameObject.layer == LayerMask.NameToLayer("Tank"));
-            Debug.Log(otherPlayer.isDash);
-            Debug.Log("----------------");
+            TankControl otherPlayer = null;
+            if (collision.gameObject.tag == "Tank") {
+                otherPlayer = collision.gameObject.GetComponent<TankControl>();
+                Debug.Log(otherPlayer);
+                Debug.Log(collision.gameObject.layer == LayerMask.NameToLayer("Tank"));
+                Debug.Log(otherPlayer.isDash);
+                Debug.Log("----------------");
+            }
             //soundManager.PlaySound(SoundManager.SoundList.STRIKE);
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Tank") && otherPlayer.isDash)
+            if (collision.gameObject.tag == "Tank" && otherPlayer.isDash)
             {
                 TimeToInvulnerable = 1;
                 isInvulnerable = true;
@@ -515,7 +519,7 @@ public class TankControl : MonoBehaviour
                 rigid.AddRelativeForce(otherPlayer.transform.forward * dashPower / 2, moveForceMode);
             }
           
-        }
+        }*/
 
         if (gameIsInNetwork)
         {
@@ -643,9 +647,8 @@ public class TankControl : MonoBehaviour
     [PunRPC]
     private void EnableRings()
     {
-        int percentage = Mathf.RoundToInt((13 / bigShotHoldTime) * currentHoldTime);
-        int percentageLight = Mathf.RoundToInt((88 / bigShotHoldTime) * currentHoldTime);
-
+        int percentage = Mathf.RoundToInt((13 / bigShotMaxHoldTime) *currentHoldTime);
+        int percentageLight = Mathf.RoundToInt((88 / bigShotMaxHoldTime) * currentHoldTime);
         //Debug.Log("HoldTime : " + currentHoldTime + " Percentage : " + percentage);
         foreach (GameObject ring in loadingRings)
         {
@@ -662,6 +665,7 @@ public class TankControl : MonoBehaviour
 
     void EnableRing(GameObject ring)
     {
+        
         Renderer ringRenderer = ring.GetComponent<Renderer>();
         ringRenderer.material.color = Color.red;
         ringRenderer.material.SetColor("_EmissionColor", Color.red * 100);

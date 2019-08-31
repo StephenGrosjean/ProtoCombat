@@ -4085,6 +4085,7 @@ MonoBehaviour:
   forcefieldSize: {x: 1, y: 1, z: 1}
   shieldActivationSpeed: 1
   shieldTimeOut: 6
+  shieldBreakCooldownMultiplier: 4
   shieldCooldown: 6
   toggleOnDeath:
   - {fileID: 3432898266308881622}

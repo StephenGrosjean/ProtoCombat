@@ -15,12 +15,12 @@ public class PickablesBehaviour : MonoBehaviour
     }
 
 
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag == "Tank") {
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.tag == "Tank") {
 
             switch (pickupType) {
                 case type.HEAL:
-                    collision.gameObject.GetComponent<TankHealth>().Heal(1);
+                    other.gameObject.GetComponent<TankHealth>().Heal(1);
                     SoundManager._instance.PlaySound(SoundManager.SoundList.PICKUP);
                     break;
             }

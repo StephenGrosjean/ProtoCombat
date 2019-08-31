@@ -54,6 +54,7 @@ public class MultiControllerManager : MonoBehaviour
         InputManager.OnDeviceDetached += DetachDevice;
     }
 
+
     private void Update() {
         if (listOfControllers.Count > 1) {
 
